@@ -24,14 +24,18 @@ Task:
     *   `name`: A plausible full name for the victim, fitting the theme.
     *   `occupation`: The victim's occupation or primary role within the story's setting, consistent with the theme.
     *   `personality`: A brief (1-2 sentence) description of the victim's key personality traits relevant to a mystery, fitting the theme.
-    *   `cause_of_death`: The apparent or determined cause of death, plausible within the theme and suitable for a murder mystery.
+    *   `cause_of_death`: Generate a CREATIVE and UNCOMMON cause of death that is HIGHLY SPECIFIC and PLAUSIBLE for the given theme. 
+        Do NOT use generic causes like 'poisoning', 'strangulation', 'stabbing', or 'blunt force trauma' UNLESS the METHOD or WEAPON is exceptionally unique, deeply integrated with the theme, and described as such. 
+        For example, for a theme like "Steampunk Airship Crew", a cause like "Impaled by a malfunctioning brass astrolabe during a high-altitude storm" is far more interesting than just "fell from height." 
+        For a "Cyberpunk Megatower" theme, "Neural interface overload triggered by a rogue AI fragment" is better than "electrocuted."
+        Consider the victim's potential occupation and personality within the theme to devise a fitting and intriguing demise that could be central to the mystery.
 
 Output Format:
 - You MUST output your response as a single, valid JSON object that strictly conforms to the following Pydantic model schema (VictimProfile):
   `name: str` (Full name of the victim.)
   `occupation: str` (The victim's occupation or primary role.)
   `personality: str` (A brief description of the victim's personality traits.)
-  `cause_of_death: str` (The determined or apparent cause of death.)
+  `cause_of_death: str` (The determined or apparent cause of death, fitting the creative and thematic criteria above.)
 
 Example for theme "Noir Detective Agency":
 Output:
@@ -40,7 +44,7 @@ Output:
   "name": "Johnny 'Silas' Marlowe",
   "occupation": "Private Investigator, Owner of 'The Shadowed Lens' Detective Agency",
   "personality": "Cynical and world-weary, but with a hidden sense of justice. Known for his sharp wit and ability to blend into the city's underbelly.",
-  "cause_of_death": "Single gunshot wound to the chest, found slumped over his oak desk."
+  "cause_of_death": "Found with a rare, untraceable neurotoxin delivered via a poisoned dart, disguised as a vintage fountain pen nib -- a collector's item only a few knew he possessed."
 }
 ```
 Ensure all fields are populated and the JSON is correctly structured.
