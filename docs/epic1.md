@@ -116,11 +116,12 @@
   - The output from the `CaseInitializationAgent` (the `CaseContext` Pydantic model including `VictimProfile`) should be received and stored/printed by the orchestrator.
   - This demonstrates the basic agent handoff/call mechanism of the SDK.
 - **Acceptance Criteria (ACs):**
-  - AC1: The `OrchestratorAgent` successfully runs/calls the `CaseInitializationAgent`.
-  - AC2: The theme is correctly passed as input to the `CaseInitializationAgent`.
-  - AC3: The `OrchestratorAgent` receives the `CaseContext` (with `VictimProfile`) object from the `CaseInitializationAgent`.
-  - AC4: The orchestrator can print or log the received victim details and theme.
+  - AC1: The `OrchestratorAgent` successfully runs/calls the `CaseInitializationAgent`. **(COMPLETED)**
+  - AC2: The theme is correctly passed as input to the `CaseInitializationAgent`. **(COMPLETED)**
+  - AC3: The `OrchestratorAgent` receives the `CaseContext` (with `VictimProfile`) object from the `CaseInitializationAgent`. **(COMPLETED)**
+  - AC4: The orchestrator can print or log the received victim details and theme. **(COMPLETED)**
 - **Dependencies:** Story 1.2, Story 1.5.
+- **Status:** COMPLETED
 
 ## Change Log
 

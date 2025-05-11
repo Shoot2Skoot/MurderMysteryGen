@@ -3,12 +3,16 @@ import logging
 import os
 from dotenv import load_dotenv
 import uuid
+from typing import Optional
 
 # Import the main orchestrator function
 from .orchestration.main_orchestrator import run_generation_pipeline
 
 # Import trace from agents SDK
 from agents import trace 
+
+# Import CaseContext from core data models
+from .core.data_models import CaseContext
 
 DEFAULT_WORKFLOW_NAME = "MysteryGeneration_MVP"
 
@@ -39,7 +43,7 @@ def load_environment():
 def main():
     """Main entry point for the Mystery.AI generation script."""
     parser = argparse.ArgumentParser(description="Mystery.AI - Murder Mystery Generation Tool (MVP)")
-    parser.add_argument("--theme", type=str, default="Cyberpunk", 
+    parser.add_argument("--theme", type=str, default="Cyberpunk Noir Detective", 
                         help="The theme for the murder mystery (e.g., 'Cyberpunk', 'Pirate Ship').")
     parser.add_argument("--debug", action="store_true", 
                         help="Enable debug logging.")
@@ -71,13 +75,15 @@ def main():
         with trace(DEFAULT_WORKFLOW_NAME, trace_id=current_trace_id, metadata=trace_metadata):
             logging.info(f"Workflow '{DEFAULT_WORKFLOW_NAME}' started. Trace ID for this run: {current_trace_id}")
             
-            # Call the main orchestration logic, passing the consistent trace_id
-            final_mystery_data = run_generation_pipeline(theme=args.theme, trace_id=current_trace_id)
+            case_context_result: Optional[CaseContext] = run_generation_pipeline(theme=args.theme, trace_id=current_trace_id)
             
             logging.info("Mystery generation pipeline finished.")
-            print("\n--- Orchestrator Output (Story 1.2 - Simulated) ---")
-            print(final_mystery_data) # This will be the placeholder dict for now
-            print("---------------------------------------------------")
+            print("\n--- Orchestrator Output (Story 1.6) ---")
+            if case_context_result:
+                print(case_context_result.model_dump_json(indent=2))
+            else:
+                print("No CaseContext returned from pipeline.")
+            print("-------------------------------------")
 
     except Exception as e:
         logging.error(f"An unexpected error occurred during mystery generation: {e}", exc_info=True)

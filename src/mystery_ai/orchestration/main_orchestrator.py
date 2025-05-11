@@ -1,69 +1,73 @@
 import logging
 
-# Placeholder for importing agent definitions and data models as they are created
-# from ..core.data_models import CaseContext, VictimProfile # etc.
-# from ..agents.case_initializer import CaseInitializationAgent # etc.
-# from agents import Runner, ModelSettings # OpenAI Agents SDK components
+from ..core.data_models import CaseContext, VictimProfile
+from ..agents.case_initializer import case_initializer_agent # Import the agent instance
+from agents import Runner, ModelSettings # OpenAI Agents SDK components
 
 logger = logging.getLogger(__name__)
 
-def run_generation_pipeline(theme: str, trace_id: str):
+def run_generation_pipeline(theme: str, trace_id: str) -> CaseContext:
     """
     Main orchestration function for the mystery generation pipeline.
 
     Args:
         theme (str): The theme for the mystery.
         trace_id (str): The unique trace ID for this entire run.
+
+    Returns:
+        CaseContext: The populated CaseContext object after initializiation.
     """
     logger.info(f"Orchestration pipeline started for theme: '{theme}'. Trace ID: {trace_id}")
 
-    # This function will be built out in subsequent stories.
-    # It will involve:
-    # 1. Instantiating agents.
-    # 2. Preparing a CaseContext object.
-    # 3. Running agents sequentially using agents.Runner.run_sync(), passing and updating CaseContext.
-    # 4. Handling data transformations between agent steps if necessary.
-    # 5. Finally, returning the completed CaseContext or saving it to a file.
+    # Initialize the main data structure
+    case_context = CaseContext(theme=theme, victim=None) # Suspects and evidence will be added later
 
     # ----- EPIC 1: Case Initialization ----- 
     logger.info("[Orchestrator] Current step: Case Initialization (Epic 1)")
-    # case_init_agent = CaseInitializationAgent(model="gpt-4.1-mini", model_settings=ModelSettings(temperature=0.7))
-    # case_context = CaseContext(theme=theme, victim=None, suspects=[], evidence_items=[])
     
-    # try:
-    #     logger.info(f"Running CaseInitializationAgent for theme: {theme}")
-    #     # Assuming CaseInitializationAgent takes the theme and returns a VictimProfile
-    #     # The actual input/output will depend on the agent's design in Story 1.3 & 1.5
-    #     victim_profile_output = Runner.run_sync(case_init_agent, input_data={"theme": theme})
-    #     # case_context.victim = victim_profile_output # Assuming output is VictimProfile compatible
-    #     logger.info(f"CaseInitializationAgent completed. Victim: {getattr(case_context.victim, 'name', 'N/A')}")
-    # except Exception as e:
-    #     logger.error(f"Error running CaseInitializationAgent: {e}", exc_info=True)
-    #     # Handle error appropriately - maybe return partial context or raise
-    #     raise
-    logger.info("[Placeholder] CaseInitializationAgent would be run here.")
-    case_context_after_epic1 = {"theme": theme, "victim_placeholder": "Victim details from Epic 1 would be here"}
-    logger.info(f"[Placeholder] CaseContext after Epic 1 (simulated): {case_context_after_epic1}")
+    try:
+        logger.info(f"Running CaseInitializationAgent for theme: {theme}")
+        # The input for an agent expecting structured output via output_type is the content it processes.
+        # The case_initializer_agent is instructed to take the theme as input.
+        result = Runner.run_sync(case_initializer_agent, input=theme)
+        
+        if result and result.final_output:
+            victim_profile_output = result.final_output_as(VictimProfile)
+            case_context.victim = victim_profile_output
+            logger.info(f"CaseInitializationAgent completed. Victim: {getattr(case_context.victim, 'name', 'N/A')}")
+        else:
+            logger.error("CaseInitializationAgent did not produce the expected output.")
+            # Potentially raise an error or return a partially completed case_context
+            # For MVP, logging and continuing with a None victim might be handled by subsequent checks
+            # or simply lead to an incomplete final output, which is a form of failure.
+            # Let's assume for now that if victim is None, it's an issue.
+            raise ValueError("CaseInitializationAgent failed to produce a victim profile.")
+
+    except Exception as e:
+        logger.error(f"Error running CaseInitializationAgent: {e}", exc_info=True)
+        # Re-raise the exception to halt the process if case initialization fails, as it's foundational.
+        raise
+    
+    logger.info(f"[Orchestrator] CaseContext after Epic 1: Victim '{getattr(case_context.victim, "name", "Unknown")}' generated for theme '{case_context.theme}'")
 
     # ----- EPIC 2: Suspect & MMO Generation (Placeholder) -----
     logger.info("[Orchestrator] Next step: Suspect & MMO Generation (Epic 2) - Placeholder")
-    # ... logic for Epic 2 agents ...
-    case_context_after_epic2 = {**case_context_after_epic1, "suspects_placeholder": "List of suspects with MMOs from Epic 2"}
-    logger.info(f"[Placeholder] CaseContext after Epic 2 (simulated): {case_context_after_epic2}")
+    # ... logic for Epic 2 agents, passing and updating case_context ...
+    # case_context_after_epic2 = {**case_context_after_epic1, "suspects_placeholder": "List of suspects with MMOs from Epic 2"}
+    # logger.info(f"[Placeholder] CaseContext after Epic 2 (simulated): {case_context_after_epic2}")
 
     # ----- EPIC 3: Killer Selection, MMO Mod, Evidence (Placeholder) -----
     logger.info("[Orchestrator] Next step: Killer Sel, MMO Mod, Evidence (Epic 3) - Placeholder")
     # ... logic for Epic 3 agents ...
-    case_context_after_epic3 = {**case_context_after_epic2, "killer_placeholder": "Designated Killer", "evidence_placeholder": "List of evidence"}
-    logger.info(f"[Placeholder] CaseContext after Epic 3 (simulated): {case_context_after_epic3}")
+    # case_context_after_epic3 = {**case_context_after_epic2, "killer_placeholder": "Designated Killer", "evidence_placeholder": "List of evidence"}
+    # logger.info(f"[Placeholder] CaseContext after Epic 3 (simulated): {case_context_after_epic3}")
     
     # ----- EPIC 4: Final Output Generation (Placeholder) -----
     logger.info("[Orchestrator] Final step: JSON Output (Epic 4) - Placeholder")
-    # final_data = case_context_after_epic3 # This would be the actual CaseContext object
-    # ... logic to serialize final_data to JSON and save to file ...
-    logger.info("Orchestration pipeline placeholder complete.")
+    # ... logic to serialize case_context to JSON and save to file ...
+    logger.info("Orchestration pipeline (Epic 1 part) complete.")
     
-    return case_context_after_epic3 # For MVP Story 1.2, just returning the placeholder
+    return case_context
 
 # Example of how main.py might call this (actual call will be uncommented/refined in main.py later)
 # if __name__ == '__main__':
