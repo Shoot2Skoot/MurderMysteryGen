@@ -62,6 +62,16 @@ This document outlines the product requirements for the Minimum Viable Product (
     - The system's generation process must be orchestrated using the OpenAI Agents SDK, employing multiple distinct agents with specialized roles (e.g., a "Case Setup Agent," an "MMO Generation Agent," an "Evidence Generation Agent," and a "Killer Selection & MMO Modification Agent").
     - The system must implement basic, reliable handoff logic to pass data and control between these agents as they collaboratively build the mystery.
 
+- **Player View Output Generation:**
+    - The system must generate an additional human-readable output file (e.g., Markdown) presenting a "player view" of the mystery.
+    - This player view shall include:
+        - The mystery Theme.
+        - Victim details: Name, Occupation, Personality, Cause of Death.
+        - A list of Suspects: For each, only their Name, Description, and Relationship to Victim. The order of suspects must be shuffled.
+        - A list of Evidence items: For each, only its textual Description. The order of evidence items must be shuffled.
+    - Information revealing the solution (e.g., killer identity, full MMOs, evidence classifications like `is_red_herring` or `points_to_mmo_element`) must be excluded from this player view.
+    - The player view file should be saved in the `generated_mysteries/` directory with a distinct name (e.g., incorporating "_player_view").
+
 ### Non-Functional Requirements (NFRs)
 
 - **Performance:**
