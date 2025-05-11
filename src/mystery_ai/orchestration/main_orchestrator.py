@@ -11,7 +11,6 @@ from ..agents.mmo_generator import mmo_generator_agent
 from ..agents.killer_selector import select_killer_randomly # Direct function for MVP
 from ..agents.mmo_modifier import mmo_modifier_agent, prepare_mmo_modification_input
 from ..agents.evidence_generator import evidence_generator_agent, prepare_evidence_generation_input
-from ..core.player_view_generator import generate_player_view_file # Added for Player View
 
 from agents import Runner, ModelSettings # OpenAI Agents SDK components
 
@@ -25,19 +24,19 @@ def ensure_output_directory():
         os.makedirs(OUTPUT_DIRECTORY)
         logger.info(f"Created output directory: {OUTPUT_DIRECTORY}")
 
-def generate_base_filename(theme: str) -> str:
-    """Generates a unique base filename (without extension) for the mystery output."""
+def generate_filename(theme: str) -> str:
+    """Generates a unique filename for the mystery JSON output."""
+    # Sanitize theme for filename
     safe_theme = "".join(c if c.isalnum() or c in (' ', '-') else '' for c in theme).rstrip()
     safe_theme = safe_theme.replace(' ', '_')
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    # Returns full path including directory but without extension
-    return os.path.join(OUTPUT_DIRECTORY, f"mystery_{safe_theme}_{timestamp}")
+    return os.path.join(OUTPUT_DIRECTORY, f"mystery_{safe_theme}_{timestamp}.json")
 
 def run_generation_pipeline(theme: str, trace_id: str) -> Optional[CaseContext]:
     """
     Main orchestration function for the mystery generation pipeline.
     Returns CaseContext or None if a critical step fails.
-    Also writes the final CaseContext to a JSON file and a Player View Markdown file if successful.
+    Also writes the final CaseContext to a JSON file if successful.
     """
     logger.info(f"Orchestration pipeline started for theme: '{theme}'. Trace ID: {trace_id}")
     ensure_output_directory() # Ensure output directory exists
@@ -192,25 +191,17 @@ def run_generation_pipeline(theme: str, trace_id: str) -> Optional[CaseContext]:
         logger.warning("No evidence items were generated. This might be an issue.")
 
     # ----- EPIC 4: Final Output Generation -----
-    logger.info("[Orchestrator] === Stage: Main JSON Output Generation (Epic 4.2) ===")
-    base_output_filename = generate_base_filename(case_context.theme)
-    main_json_filename = f"{base_output_filename}.json"
+    logger.info("[Orchestrator] === Stage: JSON Output Generation (Epic 4) ===")
     try:
-        with open(main_json_filename, 'w', encoding='utf-8') as f:
+        output_filename = generate_filename(case_context.theme)
+        with open(output_filename, 'w') as f:
             # Use model_dump_json for direct serialization from Pydantic model to JSON string
             f.write(case_context.model_dump_json(indent=2))
-        logger.info(f"Successfully wrote main mystery JSON to: {main_json_filename}")
+        logger.info(f"Successfully wrote mystery to {output_filename}")
     except Exception as e:
-        logger.error(f"Failed to write main JSON output to file: {e}", exc_info=True)
-        # Continue to try and write player view, but the main process might be considered failed.
-
-    # EPIC 4.5: Player View Output Generation
-    logger.info("[Orchestrator] === Stage: Player View Output Generation (Epic 4.5) ===")
-    try:
-        generate_player_view_file(case_context, base_output_filename)
-    except Exception as e:
-        logger.error(f"Failed to generate player view file (non-critical): {e}", exc_info=True)
-        # This is non-critical for returning the case_context itself
+        logger.error(f"Failed to write output JSON to file: {e}", exc_info=True)
+        # Still return the case_context if generation was successful but file write failed
+        # The main.py can still print it. The user will see the error about file writing.
 
     logger.info("Orchestration pipeline fully complete.") # Updated log message
     return case_context

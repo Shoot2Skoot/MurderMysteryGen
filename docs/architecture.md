@@ -189,18 +189,4 @@ While the MVP focuses on a streamlined local generation process, future enhancem
 -   **Task Queues & Asynchronous Processing:** For longer generation tasks or a web-based service, using task queues (e.g., Celery with Redis/RabbitMQ) might become necessary to handle requests asynchronously.
 -   **Scalability & Cloud Deployment:** If the tool gains traction or is offered as a service, deploying to a cloud platform (AWS, GCP, Azure) with considerations for auto-scaling, load balancing, and managed services would be essential.
 -   **Enhanced Configuration Management:** A more robust configuration system (e.g., using dedicated config libraries, environment-specific configs) would be needed.
--   **CI/CD Pipeline:** For automated testing, building, and deployment.
-
-## 13. Player View Output Generation (MVP Enhancement)
-
-In addition to the main structured JSON output, the system will generate a human-readable "Player View" file in Markdown format. This output is intended for easier review and playtesting of the generated mystery, primarily for the developer/author during the MVP phase and beyond.
-
--   **Purpose:** To present the initial mystery setup (theme, victim) and the discoverable elements (suspect profiles, evidence descriptions) in a shuffled, narrative-friendly format, withholding solution-critical information (killer identity, full MMOs, evidence connections/types).
--   **Module:** Logic for this will reside in `src/mystery_ai/core/player_view_generator.py`.
--   **Process:**
-    1.  After the complete `CaseContext` is generated and the main JSON file is written, the `main_orchestrator.py` will call a function in `player_view_generator.py`.
-    2.  This function will extract specific fields from the `CaseContext` into a dedicated `PlayerViewData` Pydantic model (subset of `CaseContext`).
-    3.  The lists of suspects (profiles including name, description, relationship to victim) and evidence items (descriptions only) within `PlayerViewData` will be randomly shuffled.
-    4.  The `PlayerViewData` will be formatted into a Markdown string with appropriate headings and lists.
-    5.  This string will be saved to a file (e.g., `mystery_<theme>_<timestamp>_player_view.md`) in the `generated_mysteries/` directory.
--   **Data Model:** A `PlayerViewData` Pydantic model will be defined in `src/mystery_ai/core/data_models.py` to represent the data subset for this view. 
+-   **CI/CD Pipeline:** For automated testing, building, and deployment. 
