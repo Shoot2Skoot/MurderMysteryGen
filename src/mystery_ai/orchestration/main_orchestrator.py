@@ -1,12 +1,17 @@
 import logging
+import json # Added for dumping dict to JSON string
+from typing import List, Dict, Any, Optional
 
-from ..core.data_models import CaseContext, VictimProfile
-from ..agents.case_initializer import case_initializer_agent # Import the agent instance
+from ..core.data_models import CaseContext, VictimProfile, SuspectProfile, MMO, Suspect
+from ..agents.case_initializer import case_initializer_agent
+from ..agents.suspect_generator import suspect_generator_agent
+from ..agents.mmo_generator import mmo_generator_agent
+
 from agents import Runner, ModelSettings # OpenAI Agents SDK components
 
 logger = logging.getLogger(__name__)
 
-def run_generation_pipeline(theme: str, trace_id: str) -> CaseContext:
+def run_generation_pipeline(theme: str, trace_id: str) -> Optional[CaseContext]:
     """
     Main orchestration function for the mystery generation pipeline.
 
@@ -15,57 +20,101 @@ def run_generation_pipeline(theme: str, trace_id: str) -> CaseContext:
         trace_id (str): The unique trace ID for this entire run.
 
     Returns:
-        CaseContext: The populated CaseContext object after initializiation.
+        Optional[CaseContext]: The populated CaseContext object, or None if a critical step fails.
     """
     logger.info(f"Orchestration pipeline started for theme: '{theme}'. Trace ID: {trace_id}")
 
-    # Initialize the main data structure
-    case_context = CaseContext(theme=theme, victim=None) # Suspects and evidence will be added later
+    case_context = CaseContext(theme=theme)
 
     # ----- EPIC 1: Case Initialization ----- 
-    logger.info("[Orchestrator] Current step: Case Initialization (Epic 1)")
-    
+    logger.info("[Orchestrator] === Stage: Case Initialization (Epic 1) ===")
     try:
         logger.info(f"Running CaseInitializationAgent for theme: {theme}")
-        # The input for an agent expecting structured output via output_type is the content it processes.
-        # The case_initializer_agent is instructed to take the theme as input.
         result = Runner.run_sync(case_initializer_agent, input=theme)
-        
         if result and result.final_output:
-            victim_profile_output = result.final_output_as(VictimProfile)
-            case_context.victim = victim_profile_output
+            case_context.victim = result.final_output_as(VictimProfile)
             logger.info(f"CaseInitializationAgent completed. Victim: {getattr(case_context.victim, 'name', 'N/A')}")
         else:
-            logger.error("CaseInitializationAgent did not produce the expected output.")
-            # Potentially raise an error or return a partially completed case_context
-            # For MVP, logging and continuing with a None victim might be handled by subsequent checks
-            # or simply lead to an incomplete final output, which is a form of failure.
-            # Let's assume for now that if victim is None, it's an issue.
-            raise ValueError("CaseInitializationAgent failed to produce a victim profile.")
-
+            logger.error("CaseInitializationAgent failed to produce a victim profile.")
+            return None # Critical failure
     except Exception as e:
         logger.error(f"Error running CaseInitializationAgent: {e}", exc_info=True)
-        # Re-raise the exception to halt the process if case initialization fails, as it's foundational.
-        raise
+        return None # Critical failure
     
-    logger.info(f"[Orchestrator] CaseContext after Epic 1: Victim '{getattr(case_context.victim, "name", "Unknown")}' generated for theme '{case_context.theme}'")
+    if not case_context.victim:
+        logger.error("Victim profile is missing after case initialization. Cannot proceed.")
+        return None
+    logger.info(f"[Orchestrator] CaseContext after Epic 1: Victim '{case_context.victim.name}' generated for theme '{case_context.theme}'")
 
-    # ----- EPIC 2: Suspect & MMO Generation (Placeholder) -----
-    logger.info("[Orchestrator] Next step: Suspect & MMO Generation (Epic 2) - Placeholder")
-    # ... logic for Epic 2 agents, passing and updating case_context ...
-    # case_context_after_epic2 = {**case_context_after_epic1, "suspects_placeholder": "List of suspects with MMOs from Epic 2"}
-    # logger.info(f"[Placeholder] CaseContext after Epic 2 (simulated): {case_context_after_epic2}")
+    # ----- EPIC 2: Suspect & MMO Generation ----- 
+    logger.info("[Orchestrator] === Stage: Suspect & MMO Generation (Epic 2) ===")
+    generated_suspects: List[Suspect] = []
+    try:
+        logger.info("Running SuspectGenerationAgent...")
+        suspect_gen_input_dict = {
+            "theme": case_context.theme,
+            "victim": case_context.victim.model_dump()
+        }
+        # Convert the input dictionary to a JSON string
+        suspect_gen_input_json_str = json.dumps(suspect_gen_input_dict)
+        logger.debug(f"SuspectGenerationAgent input (JSON string): {suspect_gen_input_json_str}")
+        
+        suspect_profiles_result = Runner.run_sync(suspect_generator_agent, input=suspect_gen_input_json_str)
+        
+        if not (suspect_profiles_result and suspect_profiles_result.final_output):
+            logger.error("SuspectGenerationAgent failed to produce output.")
+            return None # Critical failure
+
+        # The output_type=List[SuspectProfile] should handle parsing the JSON list output from the LLM
+        suspect_profiles: List[SuspectProfile] = suspect_profiles_result.final_output # No need for final_output_as here if output_type is set
+        logger.info(f"SuspectGenerationAgent completed. Generated {len(suspect_profiles)} suspect profiles.")
+
+        for i, s_profile in enumerate(suspect_profiles):
+            logger.info(f"Processing suspect {i+1}/{len(suspect_profiles)}: {s_profile.name} for MMO generation.")
+            mmo_gen_input_dict = {
+                "theme": case_context.theme,
+                "victim": case_context.victim.model_dump(),
+                "suspect_profile": s_profile.model_dump()
+            }
+            # Convert the input dictionary to a JSON string
+            mmo_gen_input_json_str = json.dumps(mmo_gen_input_dict)
+            logger.debug(f"MMOGenerationAgent input (JSON string): {mmo_gen_input_json_str}")
+            
+            mmo_result = Runner.run_sync(mmo_generator_agent, input=mmo_gen_input_json_str)
+            
+            if not (mmo_result and mmo_result.final_output):
+                logger.error(f"MMOGenerationAgent failed for suspect: {s_profile.name}")
+                # Decide: skip this suspect or halt? For MVP, let's try to continue if some fail, but log it.
+                # Or, more strictly, halt if any part fails.
+                # For now, let's halt if an MMO isn't generated, as it's core.
+                return None # Critical failure
+            
+            current_mmo = mmo_result.final_output # No need for final_output_as here
+            logger.info(f"MMOGenerationAgent completed for suspect: {s_profile.name}")
+            
+            # Create the full Suspect object
+            full_suspect = Suspect(profile=s_profile, original_mmo=current_mmo)
+            generated_suspects.append(full_suspect)
+        
+        case_context.suspects = generated_suspects
+        logger.info(f"Successfully generated MMOs for {len(generated_suspects)} suspects.")
+
+    except Exception as e:
+        logger.error(f"Error during Suspect/MMO Generation (Epic 2): {e}", exc_info=True)
+        return None # Critical failure
+
+    if not case_context.suspects or len(case_context.suspects) == 0:
+        logger.error("No suspects were generated. Cannot proceed.")
+        return None
+    logger.info(f"[Orchestrator] CaseContext after Epic 2: {len(case_context.suspects)} suspects with MMOs generated.")
 
     # ----- EPIC 3: Killer Selection, MMO Mod, Evidence (Placeholder) -----
-    logger.info("[Orchestrator] Next step: Killer Sel, MMO Mod, Evidence (Epic 3) - Placeholder")
+    logger.info("[Orchestrator] === Stage: Killer Sel, MMO Mod, Evidence (Epic 3) - Placeholder ===")
     # ... logic for Epic 3 agents ...
-    # case_context_after_epic3 = {**case_context_after_epic2, "killer_placeholder": "Designated Killer", "evidence_placeholder": "List of evidence"}
-    # logger.info(f"[Placeholder] CaseContext after Epic 3 (simulated): {case_context_after_epic3}")
     
     # ----- EPIC 4: Final Output Generation (Placeholder) -----
-    logger.info("[Orchestrator] Final step: JSON Output (Epic 4) - Placeholder")
-    # ... logic to serialize case_context to JSON and save to file ...
-    logger.info("Orchestration pipeline (Epic 1 part) complete.")
+    logger.info("[Orchestrator] === Stage: JSON Output (Epic 4) - Placeholder ===")
+    logger.info("Orchestration pipeline (Epic 1 & 2 parts) complete.")
     
     return case_context
 
