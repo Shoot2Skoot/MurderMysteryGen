@@ -1,6 +1,8 @@
 import logging
 import json # Added for dumping dict to JSON string
 from typing import List, Dict, Any, Optional
+import os # For path operations
+import datetime # For timestamp in filename
 
 from ..core.data_models import CaseContext, VictimProfile, SuspectProfile, MMO, Suspect, ModifiedMMOElement, EvidenceItem, MMOElementType
 from ..agents.case_initializer import case_initializer_agent
@@ -14,19 +16,30 @@ from agents import Runner, ModelSettings # OpenAI Agents SDK components
 
 logger = logging.getLogger(__name__)
 
+OUTPUT_DIRECTORY = "generated_mysteries"
+
+def ensure_output_directory():
+    """Ensures the output directory for JSON files exists."""
+    if not os.path.exists(OUTPUT_DIRECTORY):
+        os.makedirs(OUTPUT_DIRECTORY)
+        logger.info(f"Created output directory: {OUTPUT_DIRECTORY}")
+
+def generate_filename(theme: str) -> str:
+    """Generates a unique filename for the mystery JSON output."""
+    # Sanitize theme for filename
+    safe_theme = "".join(c if c.isalnum() or c in (' ', '-') else '' for c in theme).rstrip()
+    safe_theme = safe_theme.replace(' ', '_')
+    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    return os.path.join(OUTPUT_DIRECTORY, f"mystery_{safe_theme}_{timestamp}.json")
+
 def run_generation_pipeline(theme: str, trace_id: str) -> Optional[CaseContext]:
     """
     Main orchestration function for the mystery generation pipeline.
-
-    Args:
-        theme (str): The theme for the mystery.
-        trace_id (str): The unique trace ID for this entire run.
-
-    Returns:
-        Optional[CaseContext]: The populated CaseContext object, or None if a critical step fails.
+    Returns CaseContext or None if a critical step fails.
+    Also writes the final CaseContext to a JSON file if successful.
     """
     logger.info(f"Orchestration pipeline started for theme: '{theme}'. Trace ID: {trace_id}")
-
+    ensure_output_directory() # Ensure output directory exists
     case_context = CaseContext(theme=theme)
 
     # ----- EPIC 1: Case Initialization ----- 
@@ -181,6 +194,16 @@ def run_generation_pipeline(theme: str, trace_id: str) -> Optional[CaseContext]:
     logger.info("[Orchestrator] === Stage: JSON Output (Epic 4) - Placeholder ===")
     logger.info("Orchestration pipeline (Epic 1, 2 & 3 parts) complete.")
     
+    try:
+        output_filename = generate_filename(case_context.theme)
+        with open(output_filename, 'w') as f:
+            json.dump(case_context.model_dump(), f, indent=2)
+        logger.info(f"Successfully wrote mystery to {output_filename}")
+    except Exception as e:
+        logger.error(f"Failed to write output JSON to file: {e}", exc_info=True)
+        # Still return the case_context if generation was successful but file write failed
+        # The main.py can still print it. The user will see the error about file writing.
+
     return case_context
 
 # Example of how main.py might call this (actual call will be uncommented/refined in main.py later)

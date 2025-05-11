@@ -23,31 +23,27 @@
 ### Story 4.1: Finalize `CaseContext` Pydantic Model & Aggregation Logic
 
 - **User Story / Goal:** As a Developer, I need to ensure the main `CaseContext` Pydantic model accurately reflects all data elements generated throughout the pipeline and that there's clear logic for aggregating all components into this final model.
-- **Detailed Requirements:**
-  - Review and finalize the `CaseContext` Pydantic model to ensure it includes: theme, `VictimProfile`, `List[Suspect]` (where `Suspect` includes `SuspectProfile`, original `MMO`, `is_killer` flag, and modified MMO details), and `List[EvidenceItem]`.
-  - Ensure the `OrchestratorAgent` (or main script) correctly collects and assigns all these pieces of data into a single `CaseContext` instance at the end of the generation pipeline (after Epic 3's logic completes).
+- **Detailed Requirements:** Implemented and reviewed.
 - **Acceptance Criteria (ACs):**
-  - AC1: The `CaseContext` Pydantic model is complete and accurately represents the full mystery data structure.
-  - AC2: The orchestration logic correctly populates a single `CaseContext` instance with all generated data from previous steps.
-  - AC3: All sub-models (`VictimProfile`, `Suspect`, `MMO`, `EvidenceItem`) are correctly nested or referenced within `CaseContext`.
+  - AC1: The `CaseContext` Pydantic model is complete and accurately represents the full mystery data structure. **(COMPLETED)**
+  - AC2: The orchestration logic correctly populates a single `CaseContext` instance with all generated data from previous steps. **(COMPLETED)**
+  - AC3: All sub-models (`VictimProfile`, `Suspect`, `MMO`, `EvidenceItem`) are correctly nested or referenced within `CaseContext`. **(COMPLETED)**
 - **Dependencies:** Story 1.5, Story 2.3, Story 3.3.
+- **Status:** COMPLETED
 
 ---
 
 ### Story 4.2: Implement JSON Output Generation
 
 - **User Story / Goal:** As a Developer, I want the system to serialize the final `CaseContext` object into a well-formatted JSON string and save it to a file, so that the generated mystery can be easily reviewed and used.
-- **Detailed Requirements:**
-  - Implement a function/method that takes the final `CaseContext` Pydantic object.
-  - Serialize this object into a JSON string. Pydantic's `.model_dump_json(indent=2)` should be used for readability.
-  - Write the JSON string to a file. The filename should be unique and informative (e.g., `mystery_output_<theme>_<timestamp>.json`).
-  - The `OrchestratorAgent` (or main script) should call this function at the end of the generation process.
+- **Detailed Requirements:** Implemented in `main_orchestrator.py`.
 - **Acceptance Criteria (ACs):**
-  - AC1: A JSON file is created upon successful completion of a generation run.
-  - AC2: The content of the JSON file is a valid JSON representation of the `CaseContext` object.
-  - AC3: The JSON is well-formatted (indented) for human readability.
-  - AC4: Filename includes theme (sanitized) and a timestamp or unique ID.
+  - AC1: A JSON file is created upon successful completion of a generation run. **(COMPLETED)**
+  - AC2: The content of the JSON file is a valid JSON representation of the `CaseContext` object. **(COMPLETED)**
+  - AC3: The JSON is well-formatted (indented) for human readability. **(COMPLETED)**
+  - AC4: Filename includes theme (sanitized) and a timestamp or unique ID. **(COMPLETED)**
 - **Dependencies:** Story 4.1.
+- **Status:** COMPLETED
 
 ---
 
