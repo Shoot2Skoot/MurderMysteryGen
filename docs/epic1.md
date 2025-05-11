@@ -65,10 +65,11 @@
   - The agent should be configured to use an appropriate OpenAI model (e.g., `gpt-4.1-mini`).
   - The agent should be designed to output these details in a structured format (Pydantic model to be defined in Story 1.5).
 - **Acceptance Criteria (ACs):**
-  - AC1: `CaseInitializationAgent` class/definition exists with appropriate SDK constructs.
-  - AC2: Agent instructions clearly define its purpose regarding theme input and victim detail generation.
-  - AC3: Agent is configured with a specified LLM model.
+  - AC1: `CaseInitializationAgent` class/definition exists with appropriate SDK constructs. **(COMPLETED)**
+  - AC2: Agent instructions clearly define its purpose regarding theme input and victim detail generation. **(COMPLETED)**
+  - AC3: Agent is configured with a specified LLM model. **(COMPLETED)**
 - **Dependencies:** Story 1.1.
+- **Status:** COMPLETED
 
 ---
 
@@ -79,10 +80,11 @@
   - Modify the main orchestrator script (from Story 1.2) to use `argparse` (or a similar library) to accept a `--theme` command-line argument.
   - The theme string should be passed to the `CaseInitializationAgent`.
 - **Acceptance Criteria (ACs):**
-  - AC1: The main script can be run with a `--theme` argument (e.g., `python main.py --theme "Noir"`).
-  - AC2: The provided theme string is correctly captured and available for use by the `OrchestratorAgent` / main script.
-  - AC3: If no theme is provided, a default theme can be used or an error message shown.
+  - AC1: The main script can be run with a `--theme` argument (e.g., `python main.py --theme "Noir"`). **(COMPLETED)**
+  - AC2: The provided theme string is correctly captured and available for use by the `OrchestratorAgent` / main script. **(COMPLETED)**
+  - AC3: If no theme is provided, a default theme can be used or an error message shown. **(COMPLETED)**
 - **Dependencies:** Story 1.2.
+- **Status:** COMPLETED
 
 ---
 
