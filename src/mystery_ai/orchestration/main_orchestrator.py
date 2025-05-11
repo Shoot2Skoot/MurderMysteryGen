@@ -190,20 +190,20 @@ def run_generation_pipeline(theme: str, trace_id: str) -> Optional[CaseContext]:
         # However, our current logic halts on individual agent failures within Epic 3.
         logger.warning("No evidence items were generated. This might be an issue.")
 
-    # ----- EPIC 4: Final Output Generation (Placeholder) -----
-    logger.info("[Orchestrator] === Stage: JSON Output (Epic 4) - Placeholder ===")
-    logger.info("Orchestration pipeline (Epic 1, 2 & 3 parts) complete.")
-    
+    # ----- EPIC 4: Final Output Generation -----
+    logger.info("[Orchestrator] === Stage: JSON Output Generation (Epic 4) ===")
     try:
         output_filename = generate_filename(case_context.theme)
         with open(output_filename, 'w') as f:
-            json.dump(case_context.model_dump(), f, indent=2)
+            # Use model_dump_json for direct serialization from Pydantic model to JSON string
+            f.write(case_context.model_dump_json(indent=2))
         logger.info(f"Successfully wrote mystery to {output_filename}")
     except Exception as e:
         logger.error(f"Failed to write output JSON to file: {e}", exc_info=True)
         # Still return the case_context if generation was successful but file write failed
         # The main.py can still print it. The user will see the error about file writing.
 
+    logger.info("Orchestration pipeline fully complete.") # Updated log message
     return case_context
 
 # Example of how main.py might call this (actual call will be uncommented/refined in main.py later)

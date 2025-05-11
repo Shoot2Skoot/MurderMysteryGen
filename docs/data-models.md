@@ -15,8 +15,10 @@ Represents the details of the victim.
 ```python
 from pydantic import BaseModel, Field
 from typing import List, Optional
+from enum import Enum
 
 class VictimProfile(BaseModel):
+    """Represents the details of the victim."""
     name: str = Field(description="Full name of the victim.")
     occupation: str = Field(description="The victim's occupation or primary role.")
     personality: str = Field(description="A brief description of the victim's personality traits.")
@@ -29,6 +31,7 @@ Represents the Means, Motive, and Opportunity for a suspect.
 
 ```python
 class MMO(BaseModel):
+    """Represents the Means, Motive, and Opportunity for a suspect."""
     means: str = Field(description="How the suspect could have committed the crime.")
     motive: str = Field(description="Why the suspect might have wanted to commit the crime.")
     opportunity: str = Field(description="When and where the suspect could have committed the crime.")
@@ -40,97 +43,358 @@ Represents the profile of a suspect, distinct from their MMO.
 
 ```python
 class SuspectProfile(BaseModel):
+    """Represents the profile of a suspect, distinct from their MMO."""
     name: str = Field(description="Full name of the suspect.")
     description: str = Field(description="A brief description of the suspect (e.g., archetype, key characteristics).")
     relationship_to_victim: str = Field(description="The suspect's relationship to the victim.")
 ```
 
-### 1.4. `ModifiedMMOElement` (Optional - for storing modified MMO)
-
-Represents a single, modified MMO element for a non-killer suspect.
-This is one way to represent the modification; an alternative could be separate optional fields on the `Suspect` model. This nested model approach is cleaner if modifications become more complex.
+### 1.4. `MMOElementType`
 
 ```python
-from enum import Enum
-
 class MMOElementType(str, Enum):
+    """Enumeration for the types of MMO elements."""
     MEANS = "means"
     MOTIVE = "motive"
     OPPORTUNITY = "opportunity"
+```
 
+### 1.5. `ModifiedMMOElement`
+
+Represents a single, modified MMO element for a non-killer suspect.
+
+```python
 class ModifiedMMOElement(BaseModel):
+    """Represents a single, modified MMO element for a non-killer suspect."""
     element_type: MMOElementType = Field(description="Which MMO element was modified (means, motive, or opportunity).")
     original_element_description: str = Field(description="The original description of this MMO element before modification.")
     modified_element_description: str = Field(description="The new, weakened/invalidated description of this MMO element.")
     reason_for_modification: str = Field(description="Brief explanation of how or why this element makes them less likely the killer.")
 ```
 
-### 1.5. `Suspect`
+### 1.6. `Suspect`
 
-Represents a single suspect, including their profile, original MMO, killer status, and any modifications to their MMO.
+Represents a single suspect, including their profile, original MMO, and killer status.
 
 ```python
 class Suspect(BaseModel):
+    """Represents a single suspect, including their profile, original MMO, and killer status."""
     profile: SuspectProfile = Field(description="The suspect's profile information.")
     original_mmo: MMO = Field(description="The suspect's original, fully plausible Means, Motive, and Opportunity.")
     is_killer: bool = Field(default=False, description="True if this suspect is the designated killer, False otherwise.")
-    modified_mmo_elements: Optional[List[ModifiedMMOElement]] = Field(
-        default_factory=list, # Use default_factory for mutable default
+    modified_mmo_elements: List[ModifiedMMOElement] = Field(
+        default_factory=list, 
         description="A list of MMO elements that were modified for this suspect if they are not the killer. Typically one element."
     )
-    # Alternative to ModifiedMMOElement list:
-    # modified_means: Optional[str] = Field(default=None, description="Weakened/invalidated means, if applicable.")
-    # modified_motive: Optional[str] = Field(default=None, description="Weakened/invalidated motive, if applicable.")
-    # modified_opportunity: Optional[str] = Field(default=None, description="Weakened/invalidated opportunity, if applicable.")
 ```
-*Architect Note: Decided to go with `List[ModifiedMMOElement]` for now as it's more structured for potentially multiple modifications or richer modification details in the future, though for MVP only one element is modified. Using `default_factory=list` for the optional list.*
 
-### 1.6. `EvidenceItem`
+### 1.7. `EvidenceItem`
 
 Represents a single piece of evidence.
 
 ```python
 class EvidenceItem(BaseModel):
+    """Represents a single piece of evidence."""
     description: str = Field(description="A textual description of the evidence item.")
     related_suspect_name: str = Field(description="Name of the suspect this evidence primarily relates to.")
     points_to_mmo_element: MMOElementType = Field(description="Which MMO element of the suspect this evidence supports or alludes to.")
-    is_red_herring: bool = Field(description="True if this evidence is intended to mislead (typically for non-killers), False if it supports the true killer's narrative.")
-    # Optional: How it connects to the MMO element
+    is_red_herring: bool = Field(description="True if this evidence is intended to mislead, False if it supports the true killer's narrative.")
     connection_explanation: Optional[str] = Field(default=None, description="Brief explanation of how this evidence links to the suspect's MMO element.")
 ```
 
-### 1.7. `CaseContext` (Root Model)
+### 1.8. `CaseContext` (Root Model)
 
 The main data model that encapsulates the entire generated mystery. This will be the structure of the final JSON output.
 
 ```python
 class CaseContext(BaseModel):
-    theme: str = Field(description="The overall theme or setting of the mystery (e.g., 'Cyberpunk', 'Pirate Ship').")
-    victim: VictimProfile = Field(description="Details of the victim.")
-    suspects: List[Suspect] = Field(description="A list of all suspects involved in the case.")
-    evidence_items: List[EvidenceItem] = Field(description="A list of all evidence items generated for the case.")
-    # Optional: Overall case summary or solution notes for the author
+    """Main data model to hold all generated mystery elements, evolving per epic."""
+    theme: str = Field(description="The overall theme or setting of the mystery.")
+    victim: Optional[VictimProfile] = Field(default=None, description="Details of the victim.")
+    suspects: List[Suspect] = Field(default_factory=list, description="A list of all suspects involved in the case.")
+    evidence_items: List[EvidenceItem] = Field(default_factory=list, description="A list of all evidence items generated for the case.")
     author_notes: Optional[str] = Field(default=None, description="Internal notes or a brief summary of the solution for the author/designer.")
 
-    # It's good practice to provide a method to get the actual killer
     def get_killer(self) -> Optional[Suspect]:
-        for suspect in self.suspects:
-            if suspect.is_killer:
-                return suspect
+        if self.suspects:
+            for suspect in self.suspects:
+                if suspect.is_killer:
+                    return suspect
         return None
 ```
 
-## 2. JSON Schema Generation
+## 2. CaseContext JSON Schema
 
-The JSON schema for the `CaseContext` model can be generated programmatically using Pydantic's built-in capabilities:
+This is the JSON schema for the `CaseContext` Pydantic model, which defines the structure of the output `mystery_case.json` file.
+It is generated by `CaseContext.model_json_schema()`.
 
-```python
-# In a utility script or for documentation purposes:
-# from .data_models import CaseContext # Assuming relative import
-# print(CaseContext.model_json_schema(indent=2))
+```json
+{
+  "$defs": {
+    "EvidenceItem": {
+      "description": "Represents a single piece of evidence.",
+      "properties": {
+        "description": {
+          "description": "A textual description of the evidence item.",
+          "title": "Description",
+          "type": "string"
+        },
+        "related_suspect_name": {
+          "description": "Name of the suspect this evidence primarily relates to.",
+          "title": "Related Suspect Name",
+          "type": "string"
+        },
+        "points_to_mmo_element": {
+          "$ref": "#/$defs/MMOElementType",
+          "description": "Which MMO element of the suspect this evidence supports or alludes to."
+        },
+        "is_red_herring": {
+          "description": "True if this evidence is intended to mislead, False if it supports the true killer's narrative.",
+          "title": "Is Red Herring",
+          "type": "boolean"
+        },
+        "connection_explanation": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "description": "Brief explanation of how this evidence links to the suspect's MMO element.",
+          "title": "Connection Explanation"
+        }
+      },
+      "required": [
+        "description",
+        "related_suspect_name",
+        "points_to_mmo_element",
+        "is_red_herring"
+      ],
+      "title": "EvidenceItem",
+      "type": "object"
+    },
+    "MMO": {
+      "description": "Represents the Means, Motive, and Opportunity for a suspect.",
+      "properties": {
+        "means": {
+          "description": "How the suspect could have committed the crime.",
+          "title": "Means",
+          "type": "string"
+        },
+        "motive": {
+          "description": "Why the suspect might have wanted to commit the crime.",
+          "title": "Motive",
+          "type": "string"
+        },
+        "opportunity": {
+          "description": "When and where the suspect could have committed the crime.",
+          "title": "Opportunity",
+          "type": "string"
+        }
+      },
+      "required": [
+        "means",
+        "motive",
+        "opportunity"
+      ],
+      "title": "MMO",
+      "type": "object"
+    },
+    "MMOElementType": {
+      "description": "Enumeration for the types of MMO elements.",
+      "enum": [
+        "means",
+        "motive",
+        "opportunity"
+      ],
+      "title": "MMOElementType",
+      "type": "string"
+    },
+    "ModifiedMMOElement": {
+      "description": "Represents a single, modified MMO element for a non-killer suspect.",
+      "properties": {
+        "element_type": {
+          "$ref": "#/$defs/MMOElementType",
+          "description": "Which MMO element was modified (means, motive, or opportunity)."
+        },
+        "original_element_description": {
+          "description": "The original description of this MMO element before modification.",
+          "title": "Original Element Description",
+          "type": "string"
+        },
+        "modified_element_description": {
+          "description": "The new, weakened/invalidated description of this MMO element.",
+          "title": "Modified Element Description",
+          "type": "string"
+        },
+        "reason_for_modification": {
+          "description": "Brief explanation of how or why this element makes them less likely the killer.",
+          "title": "Reason For Modification",
+          "type": "string"
+        }
+      },
+      "required": [
+        "element_type",
+        "original_element_description",
+        "modified_element_description",
+        "reason_for_modification"
+      ],
+      "title": "ModifiedMMOElement",
+      "type": "object"
+    },
+    "Suspect": {
+      "description": "Represents a single suspect, including their profile, original MMO, and killer status.",
+      "properties": {
+        "profile": {
+          "$ref": "#/$defs/SuspectProfile",
+          "description": "The suspect's profile information."
+        },
+        "original_mmo": {
+          "$ref": "#/$defs/MMO",
+          "description": "The suspect's original, fully plausible Means, Motive, and Opportunity."
+        },
+        "is_killer": {
+          "default": false,
+          "description": "True if this suspect is the designated killer, False otherwise.",
+          "title": "Is Killer",
+          "type": "boolean"
+        },
+        "modified_mmo_elements": {
+          "description": "A list of MMO elements that were modified for this suspect if they are not the killer. Typically one element.",
+          "items": {
+            "$ref": "#/$defs/ModifiedMMOElement"
+          },
+          "title": "Modified Mmo Elements",
+          "type": "array"
+        }
+      },
+      "required": [
+        "profile",
+        "original_mmo"
+      ],
+      "title": "Suspect",
+      "type": "object"
+    },
+    "SuspectProfile": {
+      "description": "Represents the profile of a suspect, distinct from their MMO.",
+      "properties": {
+        "name": {
+          "description": "Full name of the suspect.",
+          "title": "Name",
+          "type": "string"
+        },
+        "description": {
+          "description": "A brief description of the suspect (e.g., archetype, key characteristics).",
+          "title": "Description",
+          "type": "string"
+        },
+        "relationship_to_victim": {
+          "description": "The suspect's relationship to the victim.",
+          "title": "Relationship To Victim",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "description",
+        "relationship_to_victim"
+      ],
+      "title": "SuspectProfile",
+      "type": "object"
+    },
+    "VictimProfile": {
+      "description": "Represents the details of the victim.",
+      "properties": {
+        "name": {
+          "description": "Full name of the victim.",
+          "title": "Name",
+          "type": "string"
+        },
+        "occupation": {
+          "description": "The victim's occupation or primary role.",
+          "title": "Occupation",
+          "type": "string"
+        },
+        "personality": {
+          "description": "A brief description of the victim's personality traits.",
+          "title": "Personality",
+          "type": "string"
+        },
+        "cause_of_death": {
+          "description": "The determined or apparent cause of death.",
+          "title": "Cause Of Death",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "occupation",
+        "personality",
+        "cause_of_death"
+      ],
+      "title": "VictimProfile",
+      "type": "object"
+    }
+  },
+  "description": "Main data model to hold all generated mystery elements, evolving per epic.",
+  "properties": {
+    "theme": {
+      "description": "The overall theme or setting of the mystery.",
+      "title": "Theme",
+      "type": "string"
+    },
+    "victim": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/VictimProfile"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Details of the victim."
+    },
+    "suspects": {
+      "description": "A list of all suspects involved in the case.",
+      "items": {
+        "$ref": "#/$defs/Suspect"
+      },
+      "title": "Suspects",
+      "type": "array"
+    },
+    "evidence_items": {
+      "description": "A list of all evidence items generated for the case.",
+      "items": {
+        "$ref": "#/$defs/EvidenceItem"
+      },
+      "title": "Evidence Items",
+      "type": "array"
+    },
+    "author_notes": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "description": "Internal notes or a brief summary of the solution for the author/designer.",
+      "title": "Author Notes"
+    }
+  },
+  "required": [
+    "theme"
+  ],
+  "title": "CaseContext",
+  "type": "object"
+}
 ```
-
-This schema will be the definitive structure for the output `mystery_case.json` file. It will also be used to validate the output during testing (as per Story 4.3 in `epic4.md`).
 
 ## 3. Adherence to OpenAI Structured Output Constraints
 
