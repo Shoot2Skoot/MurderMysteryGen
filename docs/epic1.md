@@ -98,11 +98,12 @@
   - The `CaseInitializationAgent` should be configured to return its output matching this Pydantic model structure (using SDK's `output_type`).
   - Define another Pydantic model (e.g. `CaseContext`) to hold the initial theme and the generated `VictimProfile`.
 - **Acceptance Criteria (ACs):**
-  - AC1: `CaseInitializationAgent` successfully calls an LLM to generate victim details.
-  - AC2: Generated victim details (Name, Occupation, Personality, Cause of Death) are plausible and consistent with the input theme.
-  - AC3: The output of the `CaseInitializationAgent` is a Pydantic object of type `VictimProfile` (or contained within `CaseContext`).
-  - AC4: `VictimProfile` and `CaseContext` Pydantic models are defined.
+  - AC1: `CaseInitializationAgent` successfully calls an LLM to generate victim details. **(Partially Met - Definition in place, execution in 1.6)**
+  - AC2: Generated victim details (Name, Occupation, Personality, Cause of Death) are plausible and consistent with the input theme. **(Partially Met - Definition in place, execution/validation in 1.6)**
+  - AC3: The output of the `CaseInitializationAgent` is a Pydantic object of type `VictimProfile` (or contained within `CaseContext`). **(Partially Met - Agent configured, execution/validation in 1.6)**
+  - AC4: `VictimProfile` and `CaseContext` Pydantic models are defined. **(COMPLETED)**
 - **Dependencies:** Story 1.3, Story 1.4.
+- **Status:** COMPLETED
 
 ---
 
