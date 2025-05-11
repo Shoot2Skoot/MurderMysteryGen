@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional
+from enum import Enum
 
 class VictimProfile(BaseModel):
     """Represents the details of the victim."""
@@ -20,24 +21,44 @@ class MMO(BaseModel):
     motive: str = Field(description="Why the suspect might have wanted to commit the crime.")
     opportunity: str = Field(description="When and where the suspect could have committed the crime.")
 
-# Forward reference for Suspect within CaseContext
-# We need to define Suspect before CaseContext uses List[Suspect]
-# However, Suspect itself might need MMO and SuspectProfile which are defined above.
+class MMOElementType(str, Enum):
+    """Enumeration for the types of MMO elements."""
+    MEANS = "means"
+    MOTIVE = "motive"
+    OPPORTUNITY = "opportunity"
+
+class ModifiedMMOElement(BaseModel):
+    """Represents a single, modified MMO element for a non-killer suspect."""
+    element_type: MMOElementType = Field(description="Which MMO element was modified (means, motive, or opportunity).")
+    original_element_description: str = Field(description="The original description of this MMO element before modification.")
+    modified_element_description: str = Field(description="The new, weakened/invalidated description of this MMO element.")
+    reason_for_modification: str = Field(description="Brief explanation of how or why this element makes them less likely the killer.")
 
 class Suspect(BaseModel):
-    """Represents a single suspect, including their profile and original MMO."""
+    """Represents a single suspect, including their profile, original MMO, and killer status."""
     profile: SuspectProfile = Field(description="The suspect's profile information.")
     original_mmo: MMO = Field(description="The suspect's original, fully plausible Means, Motive, and Opportunity.")
     is_killer: bool = Field(default=False, description="True if this suspect is the designated killer, False otherwise.")
-    # modified_mmo_elements will be added in Epic 3
+    modified_mmo_elements: List[ModifiedMMOElement] = Field(
+        default_factory=list, 
+        description="A list of MMO elements that were modified for this suspect if they are not the killer. Typically one element."
+    )
+
+class EvidenceItem(BaseModel):
+    """Represents a single piece of evidence."""
+    description: str = Field(description="A textual description of the evidence item.")
+    related_suspect_name: str = Field(description="Name of the suspect this evidence primarily relates to.")
+    points_to_mmo_element: MMOElementType = Field(description="Which MMO element of the suspect this evidence supports or alludes to.")
+    is_red_herring: bool = Field(description="True if this evidence is intended to mislead, False if it supports the true killer's narrative.")
+    connection_explanation: Optional[str] = Field(default=None, description="Brief explanation of how this evidence links to the suspect's MMO element.")
 
 class CaseContext(BaseModel):
     """Main data model to hold all generated mystery elements, evolving per epic."""
     theme: str = Field(description="The overall theme or setting of the mystery.")
     victim: Optional[VictimProfile] = Field(default=None, description="Details of the victim.")
-    suspects: Optional[List[Suspect]] = Field(default_factory=list, description="A list of all suspects involved in the case.")
-    # evidence_items: Optional[List['EvidenceItem']] = Field(default_factory=list, description="A list of all evidence items generated for the case.")
-    # author_notes: Optional[str] = Field(default=None, description="Internal notes or a brief summary of the solution for the author/designer.")
+    suspects: List[Suspect] = Field(default_factory=list, description="A list of all suspects involved in the case.")
+    evidence_items: List[EvidenceItem] = Field(default_factory=list, description="A list of all evidence items generated for the case.")
+    author_notes: Optional[str] = Field(default=None, description="Internal notes or a brief summary of the solution for the author/designer.")
 
     def get_killer(self) -> Optional[Suspect]:
         if self.suspects:
