@@ -1,0 +1,202 @@
+flowchart TD
+  classDef evidence fill:#00eeff,stroke-dasharray:4 2,color:#000;
+  classDef step fill:#e5e5e5,color:#000,stroke:#000;
+  classDef root fill:#ffddb3,stroke:#d2691e,color:#000,stroke-width:2px;
+
+%% ROOTS
+  R1["Bob MOTIVE → Tim was blackmailing him"]:::root
+  R2["Bob MEANS → Obtains granite pyramid"]:::root
+  R3["Bob OPPORTUNITY → Alone with Tim at sunset"]:::root
+
+  %% MOTIVE PATH
+  N1["Bob’s decoded note:<br/>“Toni called… Tax fraud…”"]:::step
+  R1-->N1
+  N2["Decode note with keyword BEACH"]:::step
+  N1-->N2
+  N3["Rule: keyword = guest's room"]:::step
+  N2-->N3
+  N4["Flower doodle = Green (Vida)"]:::step
+  N5["Vida’s cipher scribbles show key GREEN"]:::step
+  N3-->N4 & N5
+  EVV["Message Tim→Vida"]:::evidence
+  EVB["House Brochure"]:::evidence
+  EVBob["Message Tim→Bob"]:::evidence
+  N4-->EVV & EVB
+  N5-->EVV
+  N2-->EVBob & EVB
+
+  %% MEANS PATH
+  M1["Bob identified as shadowy figure and gets pyramid"]:::step
+  R2-->M1
+  M2["Only Bob’s route crosses corridor"]:::step
+  M1-->M2
+  M3["Murray hands pyramid to shadowy figure"]:::step
+  M2-->M3
+  M4["Murray picks pyramid in Mineral Room"]:::step
+  M3-->M4
+  EPM["Murray Participant Note"]:::evidence
+  M4-->EPM
+  M2-->EVB & EVV
+
+  %% OPPORTUNITY PATH
+  O1["Bob was in Master Bedroom at sunset"]:::step
+  R3-->O1
+  O2["Path from Night Room sighting leads back through Master Bedroom"]:::step
+  O1-->O2
+  O3["Roma sees Bob near Night Room (P4)"]:::step
+  O2-->O3
+  O4["Murder at sunset (Torn Page)"]:::step
+  O1-->O4
+  ERoma["Roma Participant Note"]:::evidence
+  ETorn["Torn Novel Page"]:::evidence
+  O3-->ERoma
+  O4-->ETorn
+  O2-->EVB
+
+  %% ROOTS
+  RootAM["Amber MOTIVE → Tim threatens to expose birth‑defect cover‑up"]:::root
+  RootAMeans["Amber MEANS → Never possessed murder weapon"]:::root
+  RootAOpp["Amber OPPORTUNITY → Couldn’t reach Master Bedroom at sunset"]:::root
+
+  %% MOTIVE chain
+  A1["Amber note decoded:<br/>“Reporter called. You’re covering up birth defects?”"]:::step
+  RootAM-->A1
+  A2["Decode note with keyword <b>MOUNT</b>"]:::step
+  A1-->A2
+  A3["Rule: keyword = guest’s room (established earlier)"]:::step
+  A2-->A3
+  A4["Mountain doodle ⇒ Mount Room"]:::step
+  A2-->A4
+  A5["Bottle (1800 µg vit‑A) + Pamphlet (700 µg limit) prove toxicity"]:::step
+  RootAM-->A5
+
+  EV_AmMsg["Msg Tim→Amber"]:::evidence
+  EV_Brochure["House Brochure"]:::evidence
+  EV_Bottle["Supplement Bottle"]:::evidence
+  EV_Pamphlet["Morpho Pamphlet"]:::evidence
+  A4-->EV_AmMsg & EV_Brochure
+  A2-->EV_AmMsg & EV_Brochure
+  A5-->EV_Bottle & EV_Pamphlet
+
+  %% MEANS chain
+  AM1["Amber’s Phase notes: Yoga Studio (P2) & Sauna (P4)"]:::step
+  RootAMeans-->AM1
+  AM2["Spa wing far from Mineral + Master Bedroom"]:::step
+  AM1-->AM2
+  EV_Notes["Participant Notes"]:::evidence
+  AM1-->EV_Notes
+  AM2-->EV_Brochure
+
+  %% OPPORTUNITY chain
+  AO1["Sauna & Yoga locations keep Amber on far side entire time"]:::step
+  RootAOpp-->AO1
+  AO2["Murder sunset timing (Torn Page)"]:::step
+  AO1-->AO2
+  EV_Torn["Torn Novel Page"]:::evidence
+  AO2-->EV_Torn
+
+  %% ROOTS
+  RootVM["Vida MOTIVE → None apparent"]:::root
+  RootVMeans["Vida MEANS → Never near weapon"]:::root
+  RootVOpp["Vida OPPORTUNITY → With Murray in Garden at sunset"]:::root
+
+  %% MOTIVE  (evidence but no motive)
+  EV_VMsg["Msg Tim→Vida (flower doodle)"]:::evidence
+  RootVM-->EV_VMsg
+
+  %% MEANS & OPPORTUNITY (shared)
+  V1["Vida & Murray together in Walled Garden"]:::step
+  RootVMeans-->V1
+  RootVOpp-->V1
+  EV_Notes["Participant Notes"]:::evidence
+  V1-->EV_Notes
+
+  %% ROOTS
+  RootRM["Roma MOTIVE → Hurt & anger from Tim’s rejection"]:::root
+  RootRMeans["Roma MEANS → Never touched pyramid"]:::root
+  RootROpp["Roma OPPORTUNITY → No evidence she left Night Room"]:::root
+
+  %% MOTIVE
+  R1["Tim’s note to Roma curtly rejects her"]:::step
+  RootRM-->R1
+  R2["Love Note found in lipstick (Roma handwriting)"]:::step
+  RootRM-->R2
+
+  EV_RMsg["Msg Tim→Roma"]:::evidence
+  EV_Lip["Lipstick Tube + Love Note"]:::evidence
+  R1-->EV_RMsg
+  R2-->EV_Lip
+
+  %% MEANS
+  RS1["Roma asleep Phase 3 in Night Room"]:::step
+  RootRMeans-->RS1
+  EV_Notes["Participant Notes"]:::evidence
+  RS1-->EV_Notes
+
+  %% OPPORTUNITY
+  RO1["Roma asleep; her later sighting actually implicates Bob"]:::step
+  RootROpp-->RO1
+  EV_RomaNote["Roma Participant Note (sees Bob P4)"]:::evidence
+  RO1-->EV_RomaNote
+
+    %% ROOTS
+  RootPM["Phoenix MOTIVE → Legal trouble could be exposed"]:::root
+  RootPMeans["Phoenix MEANS → Never near weapon"]:::root
+  RootPOpp["Phoenix OPPORTUNITY → Dining Room, far from scene"]:::root
+
+  %% MOTIVE
+  P1["Phoenix note decoded:<br/>“Sarabeth called… Trouble, Phoenix?”"]:::step
+  RootPM-->P1
+  P2["Decode with keyword OCEAN"]:::step
+  P1-->P2
+  P3["Jellyfish doodle ⇒ Ocean Room"]:::step
+  P2-->P3
+
+  EV_PMsg["Msg Tim→Phoenix"]:::evidence
+  EV_Brochure["House Brochure"]:::evidence
+  P3-->EV_PMsg & EV_Brochure
+  P2-->EV_PMsg & EV_Brochure
+
+  %% MEANS & OPPORTUNITY (shared chain)
+  PS1["Vida sees Phoenix in Dining Room (snake totem)"]:::step
+  RootPMeans-->PS1
+  RootPOpp-->PS1
+  EV_Notes["Participant Notes"]:::evidence
+  EV_Tokens["Token Location List"]:::evidence
+  PS1-->EV_Notes & EV_Tokens
+
+    %% ROOTS
+  RootMM["Murray MOTIVE → Tim blackmails over pollution scandal"]:::root
+  RootMMeans["Murray MEANS → Gives pyramid away before murder"]:::root
+  RootMOpp["Murray OPPORTUNITY → Alibi with Vida in Garden"]:::root
+
+  %% MOTIVE chain
+  M1["Murray note decoded:<br/>“Not enough… ruining earth for batteries.”"]:::step
+  RootMM-->M1
+  M2["Decode with keyword SUITE"]:::step
+  M1-->M2
+  M3["Suite (toilet doodle) = Master Suite"]:::step
+  M2-->M3
+  M4["Graduation card = one‑time payoff"]:::step
+  RootMM-->M4
+
+  EV_MurMsg["Msg Tim→Murray"]:::evidence
+  EV_Brochure["House Brochure"]:::evidence
+  EV_Grad["Graduation Card"]:::evidence
+  M3-->EV_MurMsg & EV_Brochure
+  M2-->EV_MurMsg & EV_Brochure
+  M4-->EV_Grad
+
+  %% MEANS chain
+  MM1["Murray picks granite pyramid (Mineral Room)"]:::step
+  RootMMeans-->MM1
+  MM2["Hands pyramid to shadowy figure (corridor)"]:::step
+  MM1-->MM2
+  EV_MurNotePyr["Murray Participant Note"]:::evidence
+  MM1-->EV_MurNotePyr
+
+  %% OPPORTUNITY chain
+  MO1["Murray & Vida together in Walled Garden at sunset"]:::step
+  RootMOpp-->MO1
+  EV_Notes["Participant Notes"]:::evidence
+  MO1-->EV_Notes
