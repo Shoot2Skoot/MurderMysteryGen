@@ -2,25 +2,36 @@
 
 **Goal:** Implement the logic for an agent to designate one suspect as the killer, appropriately weaken an MMO element for all non-killer suspects, and then generate a small, distinct set of initial evidence pieces (both direct and red herring) for all suspects.
 
-**Deployability:** This epic builds upon the `CaseContext` containing suspects with full MMOs (from Epic 2). It introduces agent capabilities for critical plot mechanics: selecting the killer, modifying other suspects to create red herrings, and generating initial evidence. The output will be the `CaseContext` now augmented with a designated killer, modified MMOs for non-killers, and a list of evidence items. This is a significant step towards a complete mystery core.
+**Deployability:** This epic builds upon `CaseContext` (with suspects and full MMOs from Epic 2). It introduced the `select_killer_randomly` function, `MMOModificationAgent`, and `EvidenceGenerationAgent`. The orchestrator now designates a killer, modifies non-killer MMOs, and generates evidence for all suspects. The output `CaseContext` (via console JSON and saved file) now includes these crucial plot mechanics, making the generated mystery structure nearly complete for the MVP.
 
 ## Epic-Specific Technical Context
 
-- **Agent Logic:** `select_killer_randomly` function implemented. `MMOModificationAgent` and `EvidenceGenerationAgent` defined and integrated.
-- **Pydantic Model Updates:** `Suspect` model updated with `is_killer` and `modified_mmo_elements`. `ModifiedMMOElement`, `MMOElementType`, and `EvidenceItem` models defined. `CaseContext` updated with `evidence_items`.
-- **Orchestration:** `main_orchestrator.py` now handles killer selection, MMO modification loop, and evidence generation loop for all suspects.
+- **Agent/Function Logic:**
+    - `select_killer_randomly` function (in `agents/killer_selector.py`) implemented for random killer assignment.
+    - `MMOModificationAgent` (in `agents/mmo_modifier.py`) defined and implemented; its helper `prepare_mmo_modification_input` prepares detailed input for it.
+    - `EvidenceGenerationAgent` (in `agents/evidence_generator.py`) defined and implemented; its helper `prepare_evidence_generation_input` prepares detailed input for it.
+- **Pydantic Model Updates:**
+    - `Suspect` model (in `core/data_models.py`) updated with `is_killer: bool` and `modified_mmo_elements: List[ModifiedMMOElement]`.
+    - `MMOElementType` (Enum), `ModifiedMMOElement`, and `EvidenceItem` models defined in `core/data_models.py`.
+    - `CaseContext` model updated to include `evidence_items: List[EvidenceItem]`.
+- **Orchestration:** `main_orchestrator.py` extended to:
+    - Call `select_killer_randomly`.
+    - Loop through non-killers, prepare input, and call `MMOModificationAgent`.
+    - Loop through all suspects, prepare input, and call `EvidenceGenerationAgent`.
+    - Aggregate all generated evidence into `CaseContext.evidence_items`.
 
 ## Local Testability & Command-Line Access
 
 - **Local Development:** Main script (`src/mystery_ai/main.py`) runs Epics 1, 2, and 3.
-- **Output:** Script outputs the `CaseContext` with killer identified, non-killer MMOs modified, and the initial evidence list for verification.
+- **Output:** Script outputs the full `CaseContext` (including victim, suspects with original/modified MMOs, killer identified, and evidence list) as JSON to console and saves it to `generated_mysteries/`.
+- **Verification:** Successful execution verified by inspecting the JSON output for a designated killer, appropriate MMO modifications for non-killers, and relevant evidence (direct and red herring) for each suspect.
 
 ## Story List
 
 ### Story 3.1: Define Killer Selection & MMO Modification Agent(s)
 
 - **User Story / Goal:** As a Developer, I want specialized agent capabilities/logic to select a killer from the suspect list and then modify the MMOs of non-killer suspects to create red herrings.
-- **Detailed Requirements:** Implemented (Python function for killer selection, `MMOModificationAgent` for modifications).
+- **Detailed Requirements:** Implemented (Python function `select_killer_randomly` for killer selection, `MMOModificationAgent` for modifications, with helper `prepare_mmo_modification_input`).
 - **Acceptance Criteria (ACs):**
   - AC1: `select_killer_randomly` function and `MMOModificationAgent` are defined and used. **(COMPLETED)**
   - AC2: Killer selection logic correctly flags one suspect as killer. **(COMPLETED)**
@@ -34,7 +45,7 @@
 ### Story 3.2: Define Evidence Generation Agent
 
 - **User Story / Goal:** As a Developer, I want a specialized `EvidenceGenerationAgent` that can create textual descriptions of evidence items, linking them to specific suspects and their MMO elements.
-- **Detailed Requirements:** Implemented.
+- **Detailed Requirements:** Implemented in `agents/evidence_generator.py` with helper `prepare_evidence_generation_input`.
 - **Acceptance Criteria (ACs):**
   - AC1: `EvidenceGenerationAgent` class/definition exists. **(COMPLETED)**
   - AC2: `EvidenceItem` Pydantic model is defined. **(COMPLETED)**
@@ -75,4 +86,5 @@
 | Change | Date | Version | Description | Author |
 | ------ | ---- | ------- | ----------- | ------ |
 |        |      | 0.1     | Initial draft of Epic 3 | PM Agent |
-|        |      | 0.2     | Marked stories 3.1-3.4 COMPLETED after successful integration and test. | Dev Agent | 
+|        |      | 0.2     | Marked stories 3.1-3.4 COMPLETED after successful integration and test. | Dev Agent |
+|        |      | 0.3     | Finalized documentation for Epic 3 reflecting its completed state. | Architect Agent | 

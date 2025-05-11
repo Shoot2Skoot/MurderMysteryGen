@@ -2,34 +2,31 @@
 
 **Goal:** Establish the basic multi-agent framework using the OpenAI Agents SDK, define the initial agent roles, and implement the capability to initialize a new mystery case with a theme and generate victim details.
 
-**Deployability:** This epic establishes the foundational Python project structure, installs necessary dependencies (OpenAI Agents SDK), and creates the first operational agent(s) capable of performing the initial step of a mystery generation (case/victim setup). The output will be a structured representation of the victim and case theme. This forms the basis upon which all subsequent epics will build.
+**Deployability:** This epic established the foundational Python project structure (`src/mystery_ai/`), installed necessary dependencies (`openai-agents`, `python-dotenv`), and created the first operational agent (`CaseInitializationAgent`) capable of performing the initial step of a mystery generation. The main script (`src/mystery_ai/main.py`) can be run, taking a theme as input, and the system will output a `CaseContext` object (printed as JSON to console) containing the theme and the generated `VictimProfile`. This forms the basis upon which all subsequent epics build.
 
 ## Epic-Specific Technical Context
 
-- **Project Scaffolding:** Create a new Python project directory (e.g., `src/mystery_generator` or similar within `MurderMysteryGen`), initialize `venv`, and set up `requirements.txt` including `openai-agents`.
-- **API Key Management:** Implement secure API key handling using an environment variable (`OPENAI_API_KEY`) and a `.env` file (added to `.gitignore`).
-- **Initial Agent Definitions:** Define Python classes or structures for the initial agents using the OpenAI Agents SDK syntax. This includes an `OrchestratorAgent` (or main script acting as orchestrator) and a `CaseInitializationAgent`.
-- **Data Structures:** Define initial Pydantic models for input (e.g., theme) and output (e.g., CaseDetails including VictimProfile).
+- **Project Scaffolding:** Python project structure created under `src/mystery_ai/` with sub-packages for `agents`, `core`, and `orchestration`. Virtual environment `.venv` and `requirements.txt` are in place.
+- **API Key Management:** Secure API key handling via `OPENAI_API_KEY` environment variable, loaded from a `.env` file (with `.env.example` provided and `.env` gitignored).
+- **Initial Agent Definition:** `CaseInitializationAgent` defined in `src/mystery_ai/agents/case_initializer.py` using OpenAI Agents SDK.
+- **Orchestration Entry Point:** `src/mystery_ai/main.py` (CLI) calls `src/mystery_ai/orchestration/main_orchestrator.py`.
+- **Data Structures:** Initial Pydantic models `VictimProfile` and `CaseContext` (holding theme and victim) defined in `src/mystery_ai/core/data_models.py`.
+- **Logging & Tracing:** Basic logging and OpenAI Agents SDK tracing (with workflow name, trace ID, metadata) are set up in `main.py`.
 
 ## Local Testability & Command-Line Access
 
-- **Local Development:** Developers can run a main Python script (e.g., `main.py` or `run_epic1_test.py`) that triggers the Epic 1 functionality.
-- **Command-Line Testing:** The script should accept a theme as a CLI argument (e.g., `python main.py --theme "Cyberpunk"`).
-- **Environment Testing:** The script should run successfully in the local development `venv` environment.
-- **Testing Prerequisites:** OpenAI API key must be set in the environment. Python and `openai-agents` SDK installed.
+- **Local Development:** Developers can run `python -m src.mystery_ai.main --theme "Your Theme"` from the `MurderMysteryGen` root directory.
+- **Command-Line Testing:** The script accepts a `--theme` argument. A `--debug` flag enables verbose logging.
+- **Environment Testing:** The script runs successfully in the local development `.venv` environment.
+- **Testing Prerequisites:** OpenAI API key must be set in the `.env` file. Python and dependencies from `requirements.txt` installed.
+- **Verification:** Successful execution of this epic is verified by console output showing the theme and a generated `VictimProfile` (name, occupation, personality, cause of death) consistent with the theme.
 
 ## Story List
 
 ### Story 1.1: Project & SDK Setup
 
 - **User Story / Goal:** As a Developer, I want a properly set up Python project with the OpenAI Agents SDK installed and API key management configured, so that I can start building the agentic system.
-- **Detailed Requirements:**
-  - Create a Python project structure within `MurderMysteryGen/src/`.
-  - Initialize a virtual environment (`.venv`).
-  - Install `openai-agents` and any other core libraries (e.g., `python-dotenv` for .env file handling) and save to `requirements.txt`.
-  - Create a `.env.example` file for `OPENAI_API_KEY`.
-  - Ensure `.env` is in `.gitignore`.
-  - Write a simple script to load the API key from `.env` to verify setup.
+- **Detailed Requirements:** Implemented.
 - **Acceptance Criteria (ACs):**
   - AC1: Virtual environment is created and can be activated. **(COMPLETED)**
   - AC2: `openai-agents` SDK is listed in `requirements.txt` and can be imported. **(COMPLETED)**
@@ -43,14 +40,11 @@
 ### Story 1.2: Define Orchestrator Agent (or Main Script)
 
 - **User Story / Goal:** As a Developer, I want a basic orchestrator agent (or main script structure) that can manage the overall flow and invoke other specialized agents, starting with case initialization.
-- **Detailed Requirements:**
-  - Create a main Python script (e.g., `orchestrator.py` or `main.py`) that will serve as the entry point.
-  - Define the basic structure for an `OrchestratorAgent` using the OpenAI Agents SDK (if adopting a full agent for orchestration) or outline the procedural flow in the main script.
-  - This agent/script will eventually call other agents. For this story, it should be set up to call the `CaseInitializationAgent`.
+- **Detailed Requirements:** `main.py` and `orchestration/main_orchestrator.py` created.
 - **Acceptance Criteria (ACs):**
   - AC1: A Python script exists that defines the entry point for the generation process. **(COMPLETED)**
   - AC2: The script/agent structure is prepared to integrate and call other agents. **(COMPLETED)**
-  - AC3: Placeholder for calling `CaseInitializationAgent` is present. **(COMPLETED)**
+  - AC3: Placeholder (now actual call) for `CaseInitializationAgent` is present in orchestrator. **(COMPLETED)**
 - **Dependencies:** Story 1.1.
 - **Status:** COMPLETED
 
@@ -59,15 +53,11 @@
 ### Story 1.3: Define Case Initialization Agent
 
 - **User Story / Goal:** As a Developer, I want a specialized `CaseInitializationAgent` that is responsible for taking a theme and generating the initial victim profile.
-- **Detailed Requirements:**
-  - Define a new agent, `CaseInitializationAgent`, using the OpenAI Agents SDK.
-  - Instructions for this agent should specify its role: to receive a theme and generate victim details (Name, Occupation, Personality, Cause of Death).
-  - The agent should be configured to use an appropriate OpenAI model (e.g., `gpt-4.1-mini`).
-  - The agent should be designed to output these details in a structured format (Pydantic model to be defined in Story 1.5).
+- **Detailed Requirements:** `CaseInitializationAgent` defined in `agents/case_initializer.py`.
 - **Acceptance Criteria (ACs):**
   - AC1: `CaseInitializationAgent` class/definition exists with appropriate SDK constructs. **(COMPLETED)**
   - AC2: Agent instructions clearly define its purpose regarding theme input and victim detail generation. **(COMPLETED)**
-  - AC3: Agent is configured with a specified LLM model. **(COMPLETED)**
+  - AC3: Agent is configured with a specified LLM model (`gpt-4.1-mini`). **(COMPLETED)**
 - **Dependencies:** Story 1.1.
 - **Status:** COMPLETED
 
@@ -76,13 +66,11 @@
 ### Story 1.4: Implement Theme Input Mechanism
 
 - **User Story / Goal:** As a Developer, I want the system to accept a basic theme (e.g., "Cyberpunk", "Pirate Ship") as input via a CLI argument, so that the generation can be guided.
-- **Detailed Requirements:**
-  - Modify the main orchestrator script (from Story 1.2) to use `argparse` (or a similar library) to accept a `--theme` command-line argument.
-  - The theme string should be passed to the `CaseInitializationAgent`.
+- **Detailed Requirements:** Implemented in `main.py` using `argparse`.
 - **Acceptance Criteria (ACs):**
   - AC1: The main script can be run with a `--theme` argument (e.g., `python main.py --theme "Noir"`). **(COMPLETED)**
-  - AC2: The provided theme string is correctly captured and available for use by the `OrchestratorAgent` / main script. **(COMPLETED)**
-  - AC3: If no theme is provided, a default theme can be used or an error message shown. **(COMPLETED)**
+  - AC2: The provided theme string is correctly captured and available for use by the orchestrator. **(COMPLETED)**
+  - AC3: If no theme is provided, a default theme is used. **(COMPLETED)**
 - **Dependencies:** Story 1.2.
 - **Status:** COMPLETED
 
@@ -91,17 +79,12 @@
 ### Story 1.5: Implement Victim Profile Generation
 
 - **User Story / Goal:** As a `CaseInitializationAgent`, I want to generate a victim's Name, Occupation, Personality, and Cause of Death based on the provided theme, so that the core of the mystery is established.
-- **Detailed Requirements:**
-  - The `CaseInitializationAgent` (from Story 1.3) prompts an LLM to generate the four victim attributes.
-  - The generation should be guided by the input theme.
-  - Define a Pydantic model (e.g., `VictimProfile`) for the victim's details (name: str, occupation: str, personality: str, cause_of_death: str).
-  - The `CaseInitializationAgent` should be configured to return its output matching this Pydantic model structure (using SDK's `output_type`).
-  - Define another Pydantic model (e.g. `CaseContext`) to hold the initial theme and the generated `VictimProfile`.
+- **Detailed Requirements:** `CaseInitializationAgent` prompts LLM; `VictimProfile` and `CaseContext` Pydantic models defined.
 - **Acceptance Criteria (ACs):**
-  - AC1: `CaseInitializationAgent` successfully calls an LLM to generate victim details. **(Partially Met - Definition in place, execution in 1.6)**
-  - AC2: Generated victim details (Name, Occupation, Personality, Cause of Death) are plausible and consistent with the input theme. **(Partially Met - Definition in place, execution/validation in 1.6)**
-  - AC3: The output of the `CaseInitializationAgent` is a Pydantic object of type `VictimProfile` (or contained within `CaseContext`). **(Partially Met - Agent configured, execution/validation in 1.6)**
-  - AC4: `VictimProfile` and `CaseContext` Pydantic models are defined. **(COMPLETED)**
+  - AC1: `CaseInitializationAgent` successfully calls an LLM to generate victim details. **(COMPLETED via Story 1.6 test)**
+  - AC2: Generated victim details are plausible and consistent with the input theme. **(COMPLETED via Story 1.6 test)**
+  - AC3: The output of `CaseInitializationAgent` is a Pydantic `VictimProfile` object. **(COMPLETED via Story 1.6 test)**
+  - AC4: `VictimProfile` and initial `CaseContext` Pydantic models are defined. **(COMPLETED)**
 - **Dependencies:** Story 1.3, Story 1.4.
 - **Status:** COMPLETED
 
@@ -110,15 +93,11 @@
 ### Story 1.6: Basic Handoff & Data Flow for Case Initialization
 
 - **User Story / Goal:** As an `OrchestratorAgent` (or main script), I want to invoke the `CaseInitializationAgent`, pass it the theme, and receive back the structured victim details and theme.
-- **Detailed Requirements:**
-  - Implement the logic in the `OrchestratorAgent` (or main script) to run the `CaseInitializationAgent`.
-  - The input to the `CaseInitializationAgent` run should be the theme string.
-  - The output from the `CaseInitializationAgent` (the `CaseContext` Pydantic model including `VictimProfile`) should be received and stored/printed by the orchestrator.
-  - This demonstrates the basic agent handoff/call mechanism of the SDK.
+- **Detailed Requirements:** Implemented in `orchestration/main_orchestrator.py`.
 - **Acceptance Criteria (ACs):**
-  - AC1: The `OrchestratorAgent` successfully runs/calls the `CaseInitializationAgent`. **(COMPLETED)**
+  - AC1: The orchestrator successfully runs/calls the `CaseInitializationAgent`. **(COMPLETED)**
   - AC2: The theme is correctly passed as input to the `CaseInitializationAgent`. **(COMPLETED)**
-  - AC3: The `OrchestratorAgent` receives the `CaseContext` (with `VictimProfile`) object from the `CaseInitializationAgent`. **(COMPLETED)**
+  - AC3: The orchestrator receives the `CaseContext` (with `VictimProfile`) object. **(COMPLETED)**
   - AC4: The orchestrator can print or log the received victim details and theme. **(COMPLETED)**
 - **Dependencies:** Story 1.2, Story 1.5.
 - **Status:** COMPLETED
@@ -127,4 +106,5 @@
 
 | Change | Date | Version | Description | Author |
 | ------ | ---- | ------- | ----------- | ------ |
-|        |      | 0.1     | Initial draft of Epic 1 | PM Agent | 
+|        |      | 0.1     | Initial draft of Epic 1 | PM Agent |
+|        |      | 0.2     | Stories 1.1-1.6 marked COMPLETED. Epic 1 fully implemented. | Dev Agent | 
