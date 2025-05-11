@@ -2,10 +2,13 @@ import logging
 import json # Added for dumping dict to JSON string
 from typing import List, Dict, Any, Optional
 
-from ..core.data_models import CaseContext, VictimProfile, SuspectProfile, MMO, Suspect
+from ..core.data_models import CaseContext, VictimProfile, SuspectProfile, MMO, Suspect, ModifiedMMOElement, EvidenceItem, MMOElementType
 from ..agents.case_initializer import case_initializer_agent
 from ..agents.suspect_generator import suspect_generator_agent
 from ..agents.mmo_generator import mmo_generator_agent
+from ..agents.killer_selector import select_killer_randomly # Direct function for MVP
+from ..agents.mmo_modifier import mmo_modifier_agent, prepare_mmo_modification_input
+from ..agents.evidence_generator import evidence_generator_agent, prepare_evidence_generation_input
 
 from agents import Runner, ModelSettings # OpenAI Agents SDK components
 
@@ -108,13 +111,75 @@ def run_generation_pipeline(theme: str, trace_id: str) -> Optional[CaseContext]:
         return None
     logger.info(f"[Orchestrator] CaseContext after Epic 2: {len(case_context.suspects)} suspects with MMOs generated.")
 
-    # ----- EPIC 3: Killer Selection, MMO Mod, Evidence (Placeholder) -----
-    logger.info("[Orchestrator] === Stage: Killer Sel, MMO Mod, Evidence (Epic 3) - Placeholder ===")
-    # ... logic for Epic 3 agents ...
-    
+    # ----- EPIC 3: Killer Selection, MMO Modification, Evidence Generation -----
+    logger.info("[Orchestrator] === Stage: Killer Selection & MMO Modification (Epic 3) ===")
+    try:
+        # Killer Selection (direct Python function for MVP)
+        if not case_context.suspects:
+            logger.error("No suspects available for killer selection.")
+            return None
+        case_context.suspects = select_killer_randomly(case_context.suspects)
+        killer = case_context.get_killer()
+        if killer:
+            logger.info(f"Killer selected: {killer.profile.name}")
+        else:
+            logger.error("Failed to select a killer.")
+            return None
+
+        # MMO Modification for non-killers
+        for i, suspect in enumerate(case_context.suspects):
+            if not suspect.is_killer:
+                logger.info(f"Modifying MMO for non-killer: {suspect.profile.name}")
+                mmo_mod_input_dict, chosen_element_type = prepare_mmo_modification_input(
+                    victim=case_context.victim,
+                    suspect=suspect
+                )
+                # Add theme to the input dict for mmo_modifier_agent, if its instructions expect it
+                mmo_mod_input_dict["theme"] = case_context.theme 
+                
+                logger.debug(f"MMOModifierAgent input: {json.dumps(mmo_mod_input_dict)}")
+                mmo_mod_result = Runner.run_sync(mmo_modifier_agent, input=json.dumps(mmo_mod_input_dict))
+                
+                if mmo_mod_result and mmo_mod_result.final_output:
+                    modified_element = mmo_mod_result.final_output_as(ModifiedMMOElement)
+                    suspect.modified_mmo_elements.append(modified_element)
+                    logger.info(f"MMO for {suspect.profile.name} modified (element: {modified_element.element_type.value}).")
+                else:
+                    logger.error(f"MMOModificationAgent failed for suspect: {suspect.profile.name}")
+                    # Optionally, decide if this is a critical failure for MVP
+                    return None # For now, consider it critical
+        logger.info("MMO modifications for non-killers complete.")
+
+        # Evidence Generation
+        logger.info("[Orchestrator] --- Stage: Evidence Generation (Epic 3) ---")
+        all_evidence: List[EvidenceItem] = []
+        for suspect in case_context.suspects:
+            logger.info(f"Generating evidence for suspect: {suspect.profile.name} (Killer: {suspect.is_killer})")
+            evidence_gen_input_dict = prepare_evidence_generation_input(case_context, suspect)
+            logger.debug(f"EvidenceGenerationAgent input: {json.dumps(evidence_gen_input_dict)}")
+            evidence_result = Runner.run_sync(evidence_generator_agent, input=json.dumps(evidence_gen_input_dict))
+
+            if evidence_result and evidence_result.final_output:
+                generated_evidence_for_suspect = evidence_result.final_output_as(List[EvidenceItem])
+                all_evidence.extend(generated_evidence_for_suspect)
+                logger.info(f"Generated {len(generated_evidence_for_suspect)} evidence items for {suspect.profile.name}.")
+            else:
+                logger.error(f"EvidenceGenerationAgent failed for suspect: {suspect.profile.name}")
+                return None # Critical failure
+        case_context.evidence_items = all_evidence
+        logger.info(f"Total evidence items generated: {len(case_context.evidence_items)}.")
+
+    except Exception as e:
+        logger.error(f"Error during Epic 3 processing: {e}", exc_info=True)
+        return None
+    if not case_context.evidence_items: 
+        # Allow empty evidence if generation for some suspects failed but we didn't halt earlier
+        # However, our current logic halts on individual agent failures within Epic 3.
+        logger.warning("No evidence items were generated. This might be an issue.")
+
     # ----- EPIC 4: Final Output Generation (Placeholder) -----
     logger.info("[Orchestrator] === Stage: JSON Output (Epic 4) - Placeholder ===")
-    logger.info("Orchestration pipeline (Epic 1 & 2 parts) complete.")
+    logger.info("Orchestration pipeline (Epic 1, 2 & 3 parts) complete.")
     
     return case_context
 

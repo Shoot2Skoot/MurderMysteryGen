@@ -4,63 +4,54 @@ from agents import Agent, ModelSettings
 from ..core.data_models import CaseContext, Suspect, EvidenceItem, MMOElementType, VictimProfile # For full context
 from typing import List, Dict, Any
 
-EVIDENCE_GENERATOR_INSTRUCTIONS_TEMPLATE = """
+EVIDENCE_GENERATOR_AGENT_INSTRUCTIONS = """
 You are the Evidence Generation Agent.
-Your task is to generate a list of 2-3 distinct pieces of evidence for a *specific suspect* based on the case context, their profile, their original MMO, and whether they are the killer (and if not, which MMO element was weakened).
+Your task is to generate a list of 1-3 distinct pieces of evidence for a *specific suspect* based on the detailed case and suspect context provided in your input.
 
-Case Context:
-- Theme: {theme}
-- Victim Name: {victim_name}
-- Victim Occupation: {victim_occupation}
-
-Suspect Details:
-- Name: {suspect_name}
-- Is Killer: {is_killer}
-- Original Means: {original_means}
-- Original Motive: {original_motive}
-- Original Opportunity: {original_opportunity}
-- Modified MMO Element Type (if not killer): {modified_element_type_str}
-- Modified MMO Element Description (if not killer): {modified_element_desc_str}
-- Reason for Modification (if not killer): {reason_for_modification_str}
+Input (received as a JSON dictionary):
+- `theme`: The overall theme of the mystery.
+- `victim_name`: Name of the victim.
+- `victim_occupation`: Occupation of the victim.
+- `suspect_name`: Name of the specific suspect for whom to generate evidence.
+- `is_killer`: Boolean, true if this suspect is the killer, false otherwise.
+- `original_means`: The suspect's original means.
+- `original_motive`: The suspect's original motive.
+- `original_opportunity`: The suspect's original opportunity.
+- `modified_element_type_str`: (String, e.g., "means", "motive", "opportunity", or "N/A" if killer) The MMO element that was weakened if the suspect is NOT the killer.
+- `modified_element_desc_str`: (String, or "N/A") The description of how the element was weakened.
+- `reason_for_modification_str`: (String, or "N/A") The reason the element was weakened.
 
 Task:
-1.  If `Is Killer` is TRUE:
-    *   Generate 2-3 pieces of evidence that *directly support* one or more aspects of their `Original Means`, `Original Motive`, or `Original Opportunity`.
+1.  Analyze all provided input details for the specific suspect.
+2.  If `is_killer` is TRUE:
+    *   Generate 2-3 pieces of evidence that *directly support* one or more aspects of their `original_means`, `original_motive`, or `original_opportunity`.
     *   Each piece of evidence should be distinct and clearly point towards their guilt.
     *   Mark these evidence items with `is_red_herring: false`.
-2.  If `Is Killer` is FALSE:
-    *   You are given which element of their original MMO was modified/weakened (`Modified MMO Element Type`) and why (`Reason for Modification`).
+3.  If `is_killer` is FALSE:
+    *   Consider the `modified_element_type_str` and `reason_for_modification_str` to understand how this suspect was made a red herring.
     *   Generate 1-2 pieces of "red herring" evidence.
-    *   This evidence should *initially appear to support* their `Original Means`, `Original Motive`, or `Original Opportunity` (especially the elements that were *not* weakened), OR it could subtly allude to the *original, unmodified version* of the weakened element, creating misdirection before the true alibi/weakness is found.
+    *   This evidence should *initially appear to support* their `original_means`, `original_motive`, or `original_opportunity` (especially the elements that were *not* weakened), OR it could subtly allude to the *original, unmodified version* of the weakened element, creating misdirection.
     *   The goal is to make them look suspicious at first glance.
     *   Mark these evidence items with `is_red_herring: true`.
-3.  For each piece of evidence, provide:
-    *   `description`: A textual description of the evidence item.
-    *   `related_suspect_name`: (This will be {suspect_name} as you are generating for this specific suspect).
-    *   `points_to_mmo_element`: Which element ("means", "motive", or "opportunity") of the suspect this evidence primarily relates to.
-    *   `is_red_herring`: Boolean (true if it's a red herring for a non-killer, false if it's true evidence for the killer).
-    *   `connection_explanation`: (Optional but helpful) A brief sentence on how this evidence connects to the suspect's MMO element.
+4.  For each piece of evidence, provide all fields required by the EvidenceItem schema.
 
 Output Format:
-- You MUST output your response as a single, valid JSON list of EvidenceItem objects. Each object must conform to the EvidenceItem schema.
-  Example fields: `description`, `related_suspect_name`, `points_to_mmo_element`, `is_red_herring`, `connection_explanation`.
+- You MUST output your response as a single, valid JSON list of EvidenceItem objects. Each object must conform to the EvidenceItem schema:
+  `description: str`
+  `related_suspect_name: str` (This MUST be the `suspect_name` from your input.)
+  `points_to_mmo_element: str` (Value must be one of "means", "motive", "opportunity")
+  `is_red_herring: bool`
+  `connection_explanation: str` (Optional but highly recommended; briefly explain how this evidence links to the suspect and their MMO element.)
 
-Example Output (for a killer):
+Example Output (for a killer suspect named 'Silas Blackwood'):
 ```json
 [
   {{
-    "description": "A partially burned love letter from the victim found in the suspect's fireplace, detailing a secret affair.",
-    "related_suspect_name": "{suspect_name}",
+    "description": "A threatening note written on Silas Blackwood's company letterhead found in the victim's safe.",
+    "related_suspect_name": "Silas Blackwood",
     "points_to_mmo_element": "motive",
     "is_red_herring": false,
-    "connection_explanation": "Suggests a passionate motive related to a secret relationship."
-  }},
-  {{
-    "description": "Security footage showing the suspect near the victim's apartment around the time of death.",
-    "related_suspect_name": "{suspect_name}",
-    "points_to_mmo_element": "opportunity",
-    "is_red_herring": false,
-    "connection_explanation": "Places the suspect at the scene providing opportunity."
+    "connection_explanation": "The note indicates a strong conflict and motive for Silas Blackwood."
   }}
 ]
 ```
@@ -72,7 +63,7 @@ Ensure the output is ONLY the JSON list of evidence items for this one suspect.
 
 evidence_generator_agent = Agent(
     name="Evidence Generation Agent",
-    instructions="You will be provided with detailed case and suspect context to generate evidence. Follow instructions precisely.", # Generic, actual instructions built dynamically by orchestrator
+    instructions=EVIDENCE_GENERATOR_AGENT_INSTRUCTIONS,
     model="gpt-4.1-mini", 
     output_type=List[EvidenceItem]
 )
@@ -88,8 +79,8 @@ def prepare_evidence_generation_input(
     reason_for_modification_str = "N/A"
 
     if not suspect.is_killer and suspect.modified_mmo_elements:
-        # For MVP, assume only one element is modified as per Epic 3 design
-        if suspect.modified_mmo_elements[0]:
+        # For MVP, assume only one element is modified
+        if suspect.modified_mmo_elements: # Check if list is not empty
             mod_element = suspect.modified_mmo_elements[0]
             modified_element_type_str = mod_element.element_type.value
             modified_element_desc_str = mod_element.modified_element_description
