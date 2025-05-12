@@ -9,10 +9,12 @@ import argparse
 import logging
 import os
 import uuid
+import json # Import json for schema dumping
 
 from dotenv import load_dotenv
 
 from .orchestration.main_orchestrator import run_generation_pipeline
+from .core.data_models import CaseContext # Import for schema printing
 
 # Set up OpenAI Agents tracing if needed
 has_trace = False
@@ -64,11 +66,19 @@ def main():
         help="The theme for the mystery (e.g., 'Cyberpunk Dystopia')",
     )
     parser.add_argument("--debug", action="store_true", help="Enable debug logging.")
+    parser.add_argument("--print-schema", action="store_true", help="Print the CaseContext JSON schema and exit.")
     args = parser.parse_args()
 
     # Setup logging
     setup_logging(args.debug)
     logger = logging.getLogger(__name__)
+
+    if args.print_schema:
+        print("--- CaseContext JSON Schema ---")
+        schema_dict = CaseContext.model_json_schema()
+        print(json.dumps(schema_dict, indent=2)) # Use json.dumps for indentation
+        print("--- End CaseContext JSON Schema ---")
+        return 0
 
     # Load environment variables from .env file
     dotenv_path = os.path.join(os.path.dirname(__file__), "..", "..", ".env")
