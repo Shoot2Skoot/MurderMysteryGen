@@ -48,7 +48,7 @@
     - AC2: The list contains at least 10 distinct and relevant evidence categories.
     - AC3: The list is loadable by the orchestrator.
 - **Dependencies:** None.
-- **Status:** To Do
+- **Status:** COMPLETED
 
 ---
 
@@ -64,7 +64,7 @@
     - AC2: `EvidenceItem.narrative_function_description` field is defined correctly with a description.
     - AC3: The `EvidenceItem` model remains valid and serializable.
 - **Dependencies:** None.
-- **Status:** To Do
+- **Status:** COMPLETED
 
 ---
 
@@ -84,7 +84,7 @@
     - AC4: Both new fields are correctly populated in all `EvidenceItem` objects returned by the agent.
     - AC5: The chosen category and narrative function description are coherent with the evidence's main `description` and its role (true clue vs. red herring).
 - **Dependencies:** Story 7.1, Story 7.2.
-- **Status:** To Do
+- **Status:** COMPLETED
 
 ---
 
@@ -100,6 +100,6 @@
     - AC2: Orchestrator provides a sub-list of evidence categories as input to `EvidenceGenerationAgent`.
     - AC3: The method of selecting the sub-list ensures a reasonable variety of options are presented to the agent over time or for different evidence items.
 - **Dependencies:** Story 7.1, Story 7.3.
-- **Status:** To Do
+- **Status:** COMPLETED
 
 --- 

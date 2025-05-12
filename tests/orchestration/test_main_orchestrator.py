@@ -8,7 +8,12 @@ from unittest.mock import patch, mock_open
 # This assumes tests/ is at the same level as src/ or MurderMysteryGen/src/
 # and PYTHONPATH is set up accordingly, or you're using a test runner that handles it.
 # If running directly, you might need to adjust sys.path or use relative imports carefully.
-from mystery_ai.orchestration.main_orchestrator import _load_master_list, NUM_ATTRIBUTE_OPTIONS # Assuming these can be imported
+from mystery_ai.orchestration.main_orchestrator import (
+    _load_master_list, 
+    _load_and_select_attributes, # Import the new function to test
+    NUM_ATTRIBUTE_OPTIONS,
+    NUM_EVIDENCE_CATEGORY_OPTIONS # Import the new constant
+)
 
 # Define a temporary directory for mock configuration files
 TEST_CONFIG_DIR = "temp_test_config_dir_orchestrator"
@@ -41,10 +46,19 @@ class TestMainOrchestratorLogic(unittest.TestCase):
         with open(os.path.join(FULL_TEST_CONFIG_PATH, "malformed.json"), "w") as f:
             f.write("this is not json")
 
+        # Create mock evidence categories list file for Story 7.4 tests
+        cls.mock_evidence_categories = {
+            "evidence_categories": [
+                "Cat A", "Cat B", "Cat C", "Cat D", "Cat E", "Cat F"
+            ]
+        }
+        with open(os.path.join(FULL_TEST_CONFIG_PATH, "evidence_categories.json"), "w") as f:
+            json.dump(cls.mock_evidence_categories, f)
+
     @classmethod
     def tearDownClass(cls):
         # Clean up temporary files and directory
-        for f_name in ["causes.json", "motives.json", "empty.json", "malformed.json"]:
+        for f_name in ["causes.json", "motives.json", "empty.json", "malformed.json", "evidence_categories.json"]:
             p = os.path.join(FULL_TEST_CONFIG_PATH, f_name)
             if os.path.exists(p):
                 os.remove(p)
@@ -161,6 +175,59 @@ class TestMainOrchestratorLogic(unittest.TestCase):
         with patch("mystery_ai.orchestration.main_orchestrator.open", mock_open(read_data=json.dumps(self.mock_causes))) as mocked_open_key_error:
             result = _load_master_list("causes.json", "non_existent_key")
             self.assertEqual(result, [])
+
+    # Test for Story 7.4: Loading evidence_categories.json
+    @patch("mystery_ai.orchestration.main_orchestrator.CONFIG_DIRECTORY", new=TEST_CONFIG_DIR + "/" + TEST_MASTER_LISTS_SUBDIR)
+    @patch("mystery_ai.orchestration.main_orchestrator.os.path.dirname")
+    def test_load_evidence_categories_list_success(self, mock_dirname):
+        mock_dirname.return_value = os.path.abspath(os.path.join(os.getcwd(), "src/mystery_ai/orchestration"))
+        with patch("mystery_ai.orchestration.main_orchestrator.open", mock_open(read_data=json.dumps(self.mock_evidence_categories))) as mocked_open:
+            result = _load_master_list("evidence_categories.json", "evidence_categories")
+            self.assertEqual(result, self.mock_evidence_categories["evidence_categories"])
+
+    # Test for Story 7.4: Sub-selection logic for evidence categories
+    @patch("mystery_ai.orchestration.main_orchestrator._load_master_list")
+    def test_load_and_select_attributes_includes_evidence_categories(self, mock_load_list):
+        """Test that _load_and_select_attributes selects and returns evidence_category_options."""
+        # Define what _load_master_list will return for each call
+        mock_cod = ["Cod1", "Cod2", "Cod3", "Cod4"]
+        mock_motive = ["Motive1", "Motive2", "Motive3", "Motive4"]
+        mock_occ = ["Occ1", "Occ2", "Occ3", "Occ4"]
+        mock_pers = ["Pers1", "Pers2", "Pers3", "Pers4"]
+        mock_ev_cat = ["EvCat1", "EvCat2", "EvCat3", "EvCat4", "EvCat5", "EvCat6"]
+
+        def side_effect_load_list(filename, key):
+            if filename == "cause_of_death.json": return mock_cod
+            if filename == "motive_categories.json": return mock_motive
+            if filename == "occupation_archetypes.json": return mock_occ
+            if filename == "personality_archetypes.json": return mock_pers
+            if filename == "evidence_categories.json": return mock_ev_cat
+            return []
+        
+        mock_load_list.side_effect = side_effect_load_list
+
+        result_options = _load_and_select_attributes()
+
+        self.assertIsNotNone(result_options)
+        self.assertIn("evidence_category_options", result_options)
+        
+        selected_evidence_cats = result_options["evidence_category_options"]
+        self.assertIsInstance(selected_evidence_cats, list)
+        
+        # Check length (should be NUM_EVIDENCE_CATEGORY_OPTIONS or len(mock_ev_cat) if shorter)
+        expected_len = min(NUM_EVIDENCE_CATEGORY_OPTIONS, len(mock_ev_cat))
+        self.assertEqual(len(selected_evidence_cats), expected_len)
+        
+        # Check that items are from the master list and unique
+        for item in selected_evidence_cats:
+            self.assertIn(item, mock_ev_cat)
+        self.assertEqual(len(set(selected_evidence_cats)), expected_len)
+
+        # Verify other keys are still present (smoke test)
+        self.assertIn("cause_of_death_options", result_options)
+        self.assertIn("motive_category_options", result_options)
+        self.assertIn("occupation_archetype_options", result_options)
+        self.assertIn("personality_archetype_options", result_options)
 
     def test_random_sample_selection(self):
         # Test the random.sample logic (as used in run_generation_pipeline)

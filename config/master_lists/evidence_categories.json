@@ -1,0 +1,19 @@
+{
+  "evidence_categories": [
+    "Personal Correspondence (Letter, Email, Diary Entry)",
+    "Official Document (Police Report, Certificate, Will)",
+    "Financial Record (Bank Statement, Ledger, Receipt)",
+    "Physical Object (Weapon, Clothing, Tool)",
+    "Witness Testimony Snippet",
+    "Digital Footprint (Browser History, Social Media Post, Text Message Log)",
+    "News Clipping / Public Record",
+    "Forensic Report Snippet (Fingerprints, DNA, Ballistics)",
+    "Security Footage Description",
+    "Voicemail / Audio Recording Transcript",
+    "Photograph / Video Still Description",
+    "Personal Item (Jewelry, Keychain, Book with Annotation)",
+    "Medical Record / Prescription",
+    "Map / Blueprint Fragment",
+    "Cryptic Note / Symbol"
+  ]
+} 

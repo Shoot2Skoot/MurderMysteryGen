@@ -50,6 +50,7 @@ NUM_ATTRIBUTE_OPTIONS = 3
 VICTIM_NAME_SAMPLE_SIZE = 3
 # Number of names to include in the random sample for suspect agent
 SUSPECT_NAME_SAMPLE_SIZE = 8
+NUM_EVIDENCE_CATEGORY_OPTIONS = 5 # Number of evidence categories to provide to the agent
 
 
 # Helper function to load master lists
@@ -198,9 +199,13 @@ def _load_and_select_attributes() -> Optional[dict]:
     personality_list = _load_master_list(
         "personality_archetypes.json", "personality_archetypes"
     )
+    # Load the new evidence categories list (Story 7.1)
+    evidence_categories_master_list = _load_master_list( # Renamed for clarity
+        "evidence_categories.json", "evidence_categories"
+    )
 
-    if not all([cod_list, motive_list, occupation_list, personality_list]):
-        logger.error("One or more master attribute lists failed to load.")
+    if not all([cod_list, motive_list, occupation_list, personality_list, evidence_categories_master_list]):
+        logger.error("One or more master attribute lists (including evidence categories) failed to load.")
         return None
 
     # Select Sub-lists
@@ -211,12 +216,16 @@ def _load_and_select_attributes() -> Optional[dict]:
     selected_motives = _safe_sample(motive_list, NUM_ATTRIBUTE_OPTIONS)
     selected_occupations = _safe_sample(occupation_list, NUM_ATTRIBUTE_OPTIONS)
     selected_personalities = _safe_sample(personality_list, NUM_ATTRIBUTE_OPTIONS)
+    selected_evidence_categories = _safe_sample( # Select sub-list for evidence categories
+        evidence_categories_master_list, NUM_EVIDENCE_CATEGORY_OPTIONS
+    )
 
     attribute_options = {
         "cause_of_death_options": selected_causes,
         "motive_category_options": selected_motives,
         "occupation_archetype_options": selected_occupations,
         "personality_archetype_options": selected_personalities,
+        "evidence_category_options": selected_evidence_categories # Add to dict
     }
     # Use dumps with indent for multi-line logging of the dict
     logger.info("Selected attribute options:")
@@ -368,10 +377,13 @@ def _run_suspect_mmo_generation_stage(
         return False
 
 
-def _run_killer_mod_evidence_stage(case_context: CaseContext) -> bool:
+def _run_killer_mod_evidence_stage(case_context: CaseContext, attribute_options: dict) -> bool:
     """Runs killer selection, MMO modification, and evidence generation."""
     stage_name = "[Orchestrator] === Stage: Killer Sel/MMO Mod/Evidence (Epic 3) ==="
     logger.info(stage_name)
+
+    evidence_category_options_for_agent = attribute_options.get("evidence_category_options", [])
+
     try:
         # --- Killer Selection ---
         if not case_context.suspects:
@@ -442,7 +454,9 @@ def _run_killer_mod_evidence_stage(case_context: CaseContext) -> bool:
         for suspect in case_context.suspects:
             logger.info("Generating evidence for suspect: %s", suspect.profile.name)
             evidence_gen_input = prepare_evidence_generation_input(
-                case_context, suspect
+                case_context, 
+                suspect,
+                evidence_category_options_for_agent # Pass the options
             )
             evidence_gen_input_json = json.dumps(evidence_gen_input)
             logger.debug(
@@ -549,7 +563,7 @@ def run_generation_pipeline(
     )
 
     # Stage: Killer Selection, MMO Modification, Evidence Generation
-    if not _run_killer_mod_evidence_stage(case_context):
+    if not _run_killer_mod_evidence_stage(case_context, attribute_options):
         logger.error("Killer selection/MMO mod/Evidence stage failed. Aborting.")
         return None
     logger.info("Stage complete: Killer selected, MMOs modified, Evidence generated.")

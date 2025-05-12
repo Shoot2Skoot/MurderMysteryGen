@@ -31,20 +31,20 @@ Input (received as a JSON dictionary):
 - `modified_element_type_str`: (String, e.g., "means", "motive", "opportunity", or "N/A" if killer) The MMO element that was weakened if the suspect is NOT the killer.
 - `modified_element_desc_str`: (String, or "N/A") The description of how the element was weakened.
 - `reason_for_modification_str`: (String, or "N/A") The reason the element was weakened.
+- `evidence_category_options`: A list of 3-5 potential evidence categories (e.g., "Personal Correspondence", "Forensic Report Snippet") you should choose from for each piece of evidence.
 
 Task:
 1.  Analyze all provided input details for the specific suspect.
-2.  If `is_killer` is TRUE:
-    *   Generate 2-3 pieces of evidence that *directly support* one or more aspects of their `original_means`, `original_motive`, or `original_opportunity`.
-    *   Each piece of evidence should be distinct and clearly point towards their guilt.
-    *   Mark these evidence items with `is_red_herring: false`.
-3.  If `is_killer` is FALSE:
-    *   Consider the `modified_element_type_str` and `reason_for_modification_str` to understand how this suspect was made a red herring.
-    *   Generate 1-2 pieces of "red herring" evidence.
-    *   This evidence should *initially appear to support* their `original_means`, `original_motive`, or `original_opportunity` (especially the elements that were *not* weakened), OR it could subtly allude to the *original, unmodified version* of the weakened element, creating misdirection.
-    *   The goal is to make them look suspicious at first glance.
-    *   Mark these evidence items with `is_red_herring: true`.
-4.  For each piece of evidence, provide all fields required by the EvidenceItem schema.
+2.  For each piece of evidence you generate (1-3 items total for this suspect):
+    a.  SELECT one `evidence_category` from the provided `evidence_category_options` that best fits the nature of the evidence you are creating.
+    b.  Generate a `description` for the evidence item.
+    c.  Generate a `narrative_function_description`. This crucial field should explain the evidence's intended role, its subtlety, or how it functions as a clue or red herring. For example: "This letter directly implicates the suspect if the handwriting can be matched.", "A seemingly innocent receipt that becomes incriminating when cross-referenced with the victim's diary.", "This object appears to support the suspect's alibi but is actually misleading due to a hidden detail."
+    d.  Determine `points_to_mmo_element` (means, motive, or opportunity).
+    e.  Determine `is_red_herring` (boolean).
+        - If `is_killer` is TRUE: The evidence should support their guilt (`is_red_herring: false`).
+        - If `is_killer` is FALSE: The evidence should be a red herring, making them look suspicious (`is_red_herring: true`). Consider the `modified_element_type_str` to make red herrings effective.
+    f.  Provide a brief `connection_explanation` (how the evidence links to the suspect and their MMO element).
+3.  Ensure each generated piece of evidence is distinct.
 
 Output Format:
 - You MUST output your response as a single, valid JSON list of EvidenceItem objects. Each object must conform to the EvidenceItem schema:
@@ -53,17 +53,21 @@ Output Format:
   `points_to_mmo_element: str` (Value must be one of "means", "motive", "opportunity")
   `is_red_herring: bool`
   `connection_explanation: str` (Optional but highly recommended; briefly explain how this evidence links to the suspect and their MMO element.)
+  `evidence_category: str` (The category you selected from `evidence_category_options`.)
+  `narrative_function_description: str` (Your explanation of the evidence's role/subtlety.)
 
 Example Output (for a killer suspect named 'Silas Blackwood'):
 ```json
 [
-  {{
+  {
     "description": "A threatening note written on Silas Blackwood's company letterhead found in the victim's safe.",
     "related_suspect_name": "Silas Blackwood",
     "points_to_mmo_element": "motive",
     "is_red_herring": false,
-    "connection_explanation": "The note indicates a strong conflict and motive for Silas Blackwood."
-  }}
+    "connection_explanation": "The note indicates a strong conflict and motive for Silas Blackwood.",
+    "evidence_category": "Personal Correspondence (Letter, Email, Diary Entry)",
+    "narrative_function_description": "This handwritten note directly establishes a strong motive and prior aggression from the suspect towards the victim."
+  }
 ]
 ```
 Ensure the output is ONLY the JSON list of evidence items for this one suspect.
@@ -84,8 +88,23 @@ evidence_generator_agent = Agent(
 def prepare_evidence_generation_input(
     case_context: CaseContext,  # Contains theme and victim
     suspect: Suspect,  # The specific suspect (with killer status and modified MMO if any)
+    evidence_category_options: List[str] # Add parameter for options
 ) -> Dict[str, Any]:
+    """
+    Prepares the input dictionary for the Evidence Generation Agent.
 
+    This function takes the overall case context, a specific suspect, and available
+    evidence categories, then constructs a dictionary containing all the necessary
+    information for the Evidence Generation Agent.
+
+    Args:
+        case_context: The main CaseContext object containing theme and victim details.
+        suspect: The Suspect object for whom evidence needs to be generated.
+        evidence_category_options: A list of evidence category strings to be offered to the agent.
+
+    Returns:
+        A dictionary formatted for the Evidence Generation Agent's input.
+    """
     modified_element_type_str = "N/A"
     modified_element_desc_str = "N/A"
     reason_for_modification_str = "N/A"
@@ -110,6 +129,7 @@ def prepare_evidence_generation_input(
         "modified_element_type_str": modified_element_type_str,
         "modified_element_desc_str": modified_element_desc_str,
         "reason_for_modification_str": reason_for_modification_str,
+        "evidence_category_options": evidence_category_options, # Use passed-in options
     }
     return input_dict
 

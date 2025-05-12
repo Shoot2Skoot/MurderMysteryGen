@@ -1,0 +1,258 @@
+{
+  "theme": "Haunted Library",
+  "thematic_first_names": [
+    "Edith",
+    "Alistair",
+    "Mabel",
+    "Silas",
+    "Lenora",
+    "Bram",
+    "Hazel",
+    "Victor",
+    "Agatha",
+    "Clarence",
+    "Drusilla",
+    "Phineas",
+    "Rosalind",
+    "Gideon",
+    "Selena",
+    "Ambrose",
+    "Beatrice",
+    "Cyrus",
+    "Evelina",
+    "Mortimer",
+    "Estelle",
+    "Ezra",
+    "Minerva",
+    "Thaddeus",
+    "Vera",
+    "Lucius",
+    "Cordelia",
+    "Nathaniel",
+    "Ivy",
+    "Orville",
+    "Lenore",
+    "Percival",
+    "Octavia",
+    "Quincy",
+    "Ophelia",
+    "Reginald",
+    "Delphine",
+    "Sebastian",
+    "Isadora",
+    "Ulysses",
+    "Rowena",
+    "Vincent",
+    "Seraphina",
+    "Wallace",
+    "Tatiana",
+    "Xavier",
+    "Emmeline",
+    "Yves",
+    "Gwendolyn",
+    "Zebulon",
+    "Helena"
+  ],
+  "thematic_last_names": [
+    "Crowley",
+    "Blackwood",
+    "Harper",
+    "Grimsbane",
+    "Ashcroft",
+    "Winthrop",
+    "Drake",
+    "Bottinger",
+    "Sinclair",
+    "Halloway",
+    "Strathmore",
+    "Penhaligon",
+    "Langley",
+    "Greaves",
+    "Fitzroy",
+    "Marwood",
+    "Hawthorne",
+    "Merrick",
+    "Valemont",
+    "Lockwood",
+    "Abernathy",
+    "Thorne",
+    "Blythe",
+    "Carradine",
+    "Davenport",
+    "Forsyth",
+    "Galloway",
+    "Huxley",
+    "Kingsley",
+    "Loxley",
+    "Morton",
+    "Oberon",
+    "Pemberton",
+    "Quinlan",
+    "Ravenscroft",
+    "Sedgewick",
+    "Tarrant",
+    "Vanderbilt",
+    "Westbrook",
+    "Wyndham",
+    "Yarwood",
+    "Zeller",
+    "Ellsworth",
+    "Fenwick",
+    "Graves",
+    "Hathaway",
+    "Ingram",
+    "Jenkins",
+    "Kensington"
+  ],
+  "victim": {
+    "name": "Rowena Ashcroft",
+    "occupation": "The dedicated archivist of the haunted library, renowned for her tireless efforts to preserve ancient tomes and decipher cryptic manuscripts concealed within its shadowed alcoves.",
+    "personality": "A woman of meticulous nature, Rowena approached her work with an obsessive attention to detail, often losing herself in the labyrinth of dusty pages and whispered secrets that surrounded her.",
+    "cause_of_death": "Electrocution resulting from a deliberate sabotage of the library's antiquated electrical system, turning the flickering lights into a fatal trap among the shelves.",
+    "chosen_cause_of_death_category": "Environmental Sabotage (Planned Technical Malfunction/Electrocution/)",
+    "chosen_occupation_archetype": "Student",
+    "chosen_personality_archetype": "Meticulous/Obsessive"
+  },
+  "suspects": [
+    {
+      "profile": {
+        "name": "Cyrus Zeller",
+        "description": "A burly construction foreman whose steady hands belied a fiercely disciplined mind, Cyrus was often found overseeing repairs in the library's aged infrastructure with unwavering focus and resolve.",
+        "relationship_to_victim": "Oversaw recent electrical renovations where the sabotage occurred.",
+        "chosen_motive_category": "Accident / Manslaughter (to be covered up)",
+        "chosen_occupation_archetype": "Construction Worker",
+        "chosen_personality_archetype": "Disciplined/Controlled"
+      },
+      "original_mmo": {
+        "means": "Manipulated the library's aging electrical system by deliberately miswiring circuits during the recent renovation he supervised, creating a hidden fault that caused fatal electrocution when Rowena handled certain equipment.",
+        "motive": "After realizing his careless oversight led to a dangerous malfunction risking lives, Cyrus panicked and chose to cover up his mistake to protect his reputation and avoid legal consequences, unintentionally causing Rowena's death.",
+        "opportunity": "Had unrestricted access to the library's electrical panels and wiring throughout the renovation period; he was physically present most evenings when the sabotage could be executed unnoticed amid ongoing work."
+      },
+      "is_killer": false,
+      "modified_mmo_elements": [
+        {
+          "element_type": "motive",
+          "original_element_description": "After realizing his careless oversight led to a dangerous malfunction risking lives, Cyrus panicked and chose to cover up his mistake to protect his reputation and avoid legal consequences, unintentionally causing Rowena's death.",
+          "modified_element_description": "Although initially concerned about the electrical issues, Cyrus promptly reported the malfunction to library management and advocated for comprehensive safety checks, showing no intent to conceal the problem or protect his reputation at the expense of others.",
+          "reason_for_modification": "Cyrus’s proactive reporting and transparent actions remove any motive to cover up or cause harm, greatly reducing his culpability."
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Rosalind Fitzroy",
+        "description": "A vigilant security officer with a reputation for her meticulous patrols and suspicious nature, always wary of unseen threats lurking within the eerie stacks.",
+        "relationship_to_victim": "Responsible for library security during the time of the incident and had prior confrontations with Rowena.",
+        "chosen_motive_category": "Blackmail / Extortion gone wrong",
+        "chosen_occupation_archetype": "Law Enforcement/Security",
+        "chosen_personality_archetype": "Paranoid/Suspicious"
+      },
+      "original_mmo": {
+        "means": "Rosalind, familiar with the library’s outdated electrical system through her security duties, rigged the wiring near Rowena’s usual work area to cause a deadly electrocution when the lights flickered.",
+        "motive": "She sought to silence Rowena, who had been threatening to expose Rosalind's involvement in a blackmail scheme targeting library staff, fearing ruin if the secrets came to light.",
+        "opportunity": "As the security officer on duty that night, Rosalind had unrestricted access to the electrical rooms and the library floors during Rowena's late working hours, allowing her to sabotage the system unnoticed."
+      },
+      "is_killer": true,
+      "modified_mmo_elements": []
+    },
+    {
+      "profile": {
+        "name": "Isadora Yarwood",
+        "description": "An earnest student whose obsessive devotion to uncovering the library's secrets sometimes bordered on paranoia, constantly shadowing Rowena's work and questioning her motives.",
+        "relationship_to_victim": "A devoted student and frequent assistant to Rowena, often privy to her research secrets.",
+        "chosen_motive_category": "Ideology / Principle",
+        "chosen_occupation_archetype": "Student",
+        "chosen_personality_archetype": "Meticulous/Obsessive"
+      },
+      "original_mmo": {
+        "means": "Isadora, having intimate access to the library’s electrical maintenance schedules and hidden wiring during her frequent late-night research sessions with Rowena, deliberately tampered with the antiquated electrical system to cause a fatal electrocution.",
+        "motive": "Believing that Rowena was concealing vital knowledge to maintain control over the library’s secrets, Isadora sought to eliminate her to gain full access and preserve what she saw as the true integrity and revelation of the library’s mysteries.",
+        "opportunity": "Isadora was alone with Rowena in the restricted section of the library during late hours, when the flickering lights and lack of supervision allowed her to sabotage the wiring unnoticed."
+      },
+      "is_killer": false,
+      "modified_mmo_elements": [
+        {
+          "element_type": "means",
+          "original_element_description": "Isadora, having intimate access to the library’s electrical maintenance schedules and hidden wiring during her frequent late-night research sessions with Rowena, deliberately tampered with the antiquated electrical system to cause a fatal electrocution.",
+          "modified_element_description": "Although Isadora had access to the electrical maintenance details, recent logs reveal that all critical wiring was under strict surveillance by library staff during her visits, and the fatal electrocution resulted from a previously undetected malfunction in a sealed fuse box inaccessible to outsiders.",
+          "reason_for_modification": "The library's surveillance and the sealed fuse box prevent Isadora from effectively tampering with the electrical system, removing her means to cause the electrocution."
+        }
+      ]
+    }
+  ],
+  "evidence_items": [
+    {
+      "description": "A voicemail recording left by a library staff member complaining about persistent electrical flickering and specifically mentioning Cyrus having recently adjusted the wiring, creating concern over possible safety hazards.",
+      "related_suspect_name": "Cyrus Zeller",
+      "points_to_mmo_element": "means",
+      "is_red_herring": true,
+      "connection_explanation": "The recording alludes to Cyrus's involvement with the electrical system, highlighting his technical means to cause harm.",
+      "evidence_category": "Voicemail / Audio Recording Transcript",
+      "narrative_function_description": "This audio snippet draws attention to Cyrus's technical control over the wiring, suggesting he had the means to cause an accident, but it does not prove intent or guilt, misleading investigators."
+    },
+    {
+      "description": "Testimony from a fellow contractor recalling seeing Cyrus late in the evenings near the electrical panels where the fatal fault was later found, but also noting he was seen openly discussing the need to fix the problems safely with other workers.",
+      "related_suspect_name": "Cyrus Zeller",
+      "points_to_mmo_element": "opportunity",
+      "is_red_herring": true,
+      "connection_explanation": "This witness places Cyrus physically at the scene with opportunity to cause harm but also emphasizes his visible concern and cooperation on safety.",
+      "evidence_category": "Witness Testimony Snippet",
+      "narrative_function_description": "The testimony highlights Cyrus's access and opportunity to sabotage wiring, seeming suspicious yet also revealing his attempts at remediation—casting doubt without confirming guilt."
+    },
+    {
+      "description": "A receipt found in Cyrus's personal items showing purchase of safety equipment and high-quality replacement electrical components shortly after the malfunction was reported.",
+      "related_suspect_name": "Cyrus Zeller",
+      "points_to_mmo_element": "motive",
+      "is_red_herring": true,
+      "connection_explanation": "This record suggests Cyrus's motivation was safety conscious rather than malicious concealment or harm.",
+      "evidence_category": "Financial Record (Bank Statement, Ledger, Receipt)",
+      "narrative_function_description": "This financial record challenges the notion of a cover-up motive by demonstrating investment in correcting problems, serving as a red herring that complicates the narrative."
+    },
+    {
+      "description": "A detailed schematic of the library's electrical wiring with several annotations in Rosalind Fitzroy's handwriting, highlighting the rigged section near Rowena Ashcroft's workstation.",
+      "related_suspect_name": "Rosalind Fitzroy",
+      "points_to_mmo_element": "means",
+      "is_red_herring": false,
+      "connection_explanation": "This schematic links Rosalind's knowledge and direct manipulation of the electrical system to the fatal setup causing Rowena's electrocution.",
+      "evidence_category": "Personal Item (Jewelry, Keychain, Book with Annotation)",
+      "narrative_function_description": "This annotated schematic serves as concrete evidence that Rosalind had the technical knowledge and opportunity to rig the deadly wiring, supporting the 'means' element of the murder."
+    },
+    {
+      "description": "An audio recording extracted from the library's security system capturing Rosalind threatening Rowena, warning her to stay silent about the blackmail scheme or face severe consequences.",
+      "related_suspect_name": "Rosalind Fitzroy",
+      "points_to_mmo_element": "motive",
+      "is_red_herring": false,
+      "connection_explanation": "The recording reveals Rosalind's motive to prevent Rowena from exposing her illicit actions.",
+      "evidence_category": "Voicemail / Audio Recording Transcript",
+      "narrative_function_description": "This threatening message directly establishes Rosalind's motive to silence Rowena, clearly showing emotional and situational pressure leading up to the murder."
+    },
+    {
+      "description": "A security log entry showing Rosalind's repeated access to the electrical rooms and floors during the late hours on the night of the murder, coinciding with the timing of the electrocution.",
+      "related_suspect_name": "Rosalind Fitzroy",
+      "points_to_mmo_element": "opportunity",
+      "is_red_herring": false,
+      "connection_explanation": "The log places Rosalind at the scene with unsupervised access, confirming her opportunity to sabotage the wiring unnoticed.",
+      "evidence_category": "Witness Testimony Snippet",
+      "narrative_function_description": "Though called a 'Witness Testimony Snippet', the log functions like surveillance testimony confirming Rosalind's opportunity; it is a key piece that completes the puzzle linking her to the crime scene at the critical time."
+    },
+    {
+      "description": "A fragment of a handwritten journal page belonging to Isadora Yarwood, expressing frustration over Rowena Ashcroft's refusal to share certain secret manuscripts, found tucked inside an obscure book on library history.",
+      "related_suspect_name": "Isadora Yarwood",
+      "points_to_mmo_element": "motive",
+      "is_red_herring": true,
+      "connection_explanation": "This journal excerpt reveals Isadora's resentful feelings and perceived motive against Rowena, suggesting a desire to gain control over the library's secrets.",
+      "evidence_category": "Personal Item (Jewelry, Keychain, Book with Annotation)",
+      "narrative_function_description": "This discovery hints at Isadora's motive by showcasing her dissatisfaction and secretive ambitions, misleading investigators to suspect her of wanting to remove Rowena for personal gain."
+    },
+    {
+      "description": "A recorded voicemail left by a library staff member recalling seeing Isadora near the fuse box area, despite official records stating it was off-limits and monitored.",
+      "related_suspect_name": "Isadora Yarwood",
+      "points_to_mmo_element": "means",
+      "is_red_herring": true,
+      "connection_explanation": "This voicemail suggests Isadora's possible unauthorized presence near the electrical controls, seemingly supporting her ability to tamper with the system.",
+      "evidence_category": "Voicemail / Audio Recording Transcript",
+      "narrative_function_description": "Though appearing to confirm means by placing Isadora near restricted wiring areas, this voicemail is misleading since surveillance shows she never accessed the sealed fuse box, casting doubt on this testimony's accuracy."
+    }
+  ],
+  "author_notes": null
+}

@@ -119,7 +119,13 @@ class EvidenceItem(BaseModel):
     )
     connection_explanation: Optional[str] = Field(
         default=None,
-        description="Brief explanation of how this evidence links to the suspect's MMO element.",
+        description="Brief explanation of how this evidence links to the suspect's MMO element."
+    )
+    evidence_category: str = Field(
+        description="The type or category of the evidence, e.g., 'Letter', 'Financial Record'."
+    )
+    narrative_function_description: str = Field(
+        description="An explanation of the evidence's intended narrative role, subtlety, or how it functions as a clue or red herring."
     )
 
 
