@@ -36,8 +36,18 @@ Input (received as a JSON dictionary):
 Task:
 1.  Analyze all provided input details for the specific suspect.
 2.  For each piece of evidence you generate (1-3 items total for this suspect):
-    a.  SELECT one `evidence_category` from the provided `evidence_category_options` that best fits the nature of the evidence you are creating.
-    b.  Generate a `description` for the evidence item.
+    a.  SELECT one `evidence_category` from the provided `evidence_category_options` that best fits the nature of the evidence you are creating. This category determines the *type* or *form* of the evidence.
+    b.  Generate a `description` for the evidence item. This `description` is CRITICAL: it should BE the evidence content itself, as if the player is directly observing or reading it. Do NOT just describe the type of evidence or restate the category. **Crucially, try to *imply* the nature of the item through its content rather than using the literal words from the `evidence_category` string in your description.** The category guides you on what *kind* of thing it is; the description is the thing itself. For example:
+        -   **Category Selected:** `Personal Correspondence (Letter, Email, Diary Entry)`
+            -   **GOOD Description (IS the evidence, implies category):** "A crumpled, tear-stained sheet of stationery found in the victim's waste bin, reading: 'My dearest Alistair, I cannot bear this deception any longer. The guilt consumes me. We must confess everything before it's too late. - E'"
+            -   **BAD Description (too literal):** "A letter was found that showed the victim was feeling guilty."
+        -   **Category Selected:** `Forensic Report Snippet (Fingerprints, DNA, Ballistics)`
+            -   **GOOD Description (IS the evidence, implies category):** "Lab analysis sheet, Case #7B, Section 4: 'Partial latent print lifted from the stem of the antique wine glass matches Subject B, Theron Volkov. Smudging consistent with an attempt to wipe clean.'"
+            -   **BAD Description (too literal):** "A forensic report showed Theron Volkov's fingerprints on the wine glass."
+        -   **Category Selected:** `Map / Blueprint Fragment`
+            -   **GOOD Description (IS the evidence, implies category):** "A tattered, oil-stained piece of drafting vellum, clearly torn from a larger schematic, detailed the conduits and access tunnels around the victim's quarters. A crudely drawn red 'X' marked a junction box near the main airlock."
+            -   **BAD Description (too literal):** "A blueprint fragment was found showing the area."
+        Make it specific, evocative, and deeply integrated with the theme and the suspect's situation.
     c.  Generate a `narrative_function_description`. This crucial field should explain the evidence's intended role, its subtlety, or how it functions as a clue or red herring. For example: "This letter directly implicates the suspect if the handwriting can be matched.", "A seemingly innocent receipt that becomes incriminating when cross-referenced with the victim's diary.", "This object appears to support the suspect's alibi but is actually misleading due to a hidden detail."
     d.  Determine `points_to_mmo_element` (means, motive, or opportunity).
     e.  Determine `is_red_herring` (boolean).
@@ -56,17 +66,17 @@ Output Format:
   `evidence_category: str` (The category you selected from `evidence_category_options`.)
   `narrative_function_description: str` (Your explanation of the evidence's role/subtlety.)
 
-Example Output (for a killer suspect named 'Silas Blackwood'):
+Example Output (for a killer suspect named 'Silas Blackwood', if 'Personal Correspondence' was chosen as category):
 ```json
 [
   {
-    "description": "A threatening note written on Silas Blackwood's company letterhead found in the victim's safe.",
+    "description": "A hastily scrawled note found in the victim's desk: 'Silas, you will pay for what you did to my family. Your time is coming.' The ink is smudged, as if written in anger or haste.",
     "related_suspect_name": "Silas Blackwood",
     "points_to_mmo_element": "motive",
     "is_red_herring": false,
-    "connection_explanation": "The note indicates a strong conflict and motive for Silas Blackwood.",
+    "connection_explanation": "The note clearly indicates someone (implied to be Silas, or someone framing him) had a strong vengeful motive against the victim.",
     "evidence_category": "Personal Correspondence (Letter, Email, Diary Entry)",
-    "narrative_function_description": "This handwritten note directly establishes a strong motive and prior aggression from the suspect towards the victim."
+    "narrative_function_description": "This handwritten note directly establishes a strong vengeful motive pointing towards Silas Blackwood, or suggests someone is trying to frame him."
   }
 ]
 ```

@@ -78,12 +78,12 @@ def _load_master_list(filename: str, list_key: str) -> List[str]:
                     "Master list '%s' is empty or not found in %s.", list_key, filename
                 )
             else:
-                logger.info(
-                    "Successfully loaded %d items for '%s' from %s.",
-                    len(master_list),
-                    list_key,
-                    filename,
-                )
+            logger.info(
+                "Successfully loaded %d items for '%s' from %s.",
+                len(master_list),
+                list_key,
+                filename,
+            )
                 logger.debug("First 3 items from '%s': %s", list_key, master_list[:3])
             return master_list
     except FileNotFoundError:
@@ -150,9 +150,9 @@ def generate_filename(theme: str) -> str:
 
 def _run_pre_initialization_stage(theme: str, case_context: CaseContext) -> bool:
     """Runs the pre-initialization stage to generate thematic names."""
-    logger.info(
-        "[Orchestrator] --- Stage: Generating Thematic Name Lists (Story 6.1 & 6.2) ---"
-    )
+        logger.info(
+            "[Orchestrator] --- Stage: Generating Thematic Name Lists (Story 6.1 & 6.2) ---"
+        )
     try:
         name_lists_result = Runner.run_sync(
             pre_initialization_ideation_agent,
@@ -367,7 +367,7 @@ def _run_suspect_mmo_generation_stage(
             generated_suspects.append(full_suspect)
 
         case_context.suspects = generated_suspects
-        logger.info(
+    logger.info(
             "Successfully generated MMOs for %d suspects.", len(generated_suspects)
         )
         return True
@@ -407,12 +407,12 @@ def _run_killer_mod_evidence_stage(case_context: CaseContext, attribute_options:
                 logger.info(
                      "  Chosen Occupation: %s",
                      suspect.profile.chosen_occupation_archetype
-                 )
+                )
             if suspect.profile.chosen_personality_archetype:
                 logger.info(
                      "  Chosen Personality: %s",
                      suspect.profile.chosen_personality_archetype
-                 )
+                )
 
             if not suspect.is_killer:
                 logger.info("Modifying MMO for non-killer: %s", suspect.profile.name)
