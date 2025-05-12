@@ -7,6 +7,12 @@ This document outlines the proposed project directory and file structure for the
 ```
 MurderMysteryGen/
 ├── .venv/                     # Python virtual environment
+├── config/                    # Project-wide configuration files
+│   └── master_lists/          # Specific master lists for generation diversity
+│       ├── cause_of_death.json
+│       ├── motive_categories.json
+│       ├── occupation_archetypes.json
+│       └── personality_archetypes.json
 ├── docs/                      # All project documentation
 │   ├── templates/             # Document templates
 │   ├── architecture.md
@@ -63,6 +69,8 @@ MurderMysteryGen/
 
 -   **`MurderMysteryGen/`**: The absolute root of this specific project.
     -   **`.venv/`**: Standard Python virtual environment. Not committed to Git.
+    -   **`config/`**: Contains project-wide configuration files. This includes master lists used for injecting diversity into the generation process (e.g., causes of death, motive categories, character archetypes) and could later include other global settings.
+        -   `master_lists/`: Subdirectory specifically for JSON-based master lists.
     -   **`docs/`**: Contains all markdown documentation (PRD, architecture, epics, tech stack, this file, etc.).
         -   `templates/`: Holds the templates used for generating various documents.
     -   **`src/`**: Contains all the source code for the application.
@@ -71,7 +79,7 @@ MurderMysteryGen/
             -   `core/`: For shared functionalities.
                 -   `data_models.py`: **Crucial file.** This will contain all Pydantic model definitions (`CaseContext`, `VictimProfile`, `SuspectProfile`, `MMO`, `EvidenceItem`, etc.) used throughout the application, ensuring a single source of truth for data structures. These models must adhere to OpenAI's structured output constraints.
                 -   `utils.py`: For any general utility functions that don't belong to a specific agent but might be used by multiple components (e.g., helper for sanitizing strings for filenames, if needed).
-                -   `config.py` (Optional): If configuration grows beyond simple CLI args and `.env`, this could house logic for loading and accessing configuration. For MVP, this might not be strictly necessary if constants in `main_orchestrator.py` or `main.py` suffice.
+                -   `config.py` (Optional): If configuration grows beyond simple CLI args and `.env`, this could house logic for loading and accessing configuration **from the `MurderMysteryGen/config/` directory** or for managing Python-specific configurations not suitable for JSON. For MVP, this might not be strictly necessary if constants in `main_orchestrator.py` or `main.py` suffice for simple parameters.
             -   `orchestration/`:
                 -   `main_orchestrator.py`: Contains the primary logic for the sequential execution of the agent pipeline as defined in `architecture.md`. This script will instantiate and run agents using the OpenAI Agents SDK's `Runner`. This might be the script named `run_mystery_generation.py` in earlier discussions.
             -   `main.py`: The top-level executable script for the CLI. It will handle `argparse` for CLI arguments (like `--theme`, `--debug`), set up logging, load the `.env` file, and then likely call a main function within `orchestration/main_orchestrator.py` to start the generation process.

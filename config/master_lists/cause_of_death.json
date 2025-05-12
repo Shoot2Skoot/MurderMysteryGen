@@ -1,0 +1,27 @@
+{
+  "causes_of_death": [
+    "Allergic Reaction",
+    "Airborne Toxin",
+    "Arson/Fire/Burned/Incinerated",
+    "Blunt Force Trauma",
+    "Chemicals",
+    "Crushing (Falling Object)",
+    "Environmental (Drowning, Hypothermia, Hyperthermia, other adverse conditions)",
+    "Environmental Sabotage (Disabled Safety Mechanism/Sabotaged Safety Equipment)",
+    "Environmental Sabotage (Electrocution)",
+    "Environmental Sabotage (Falling Object)",
+    "Environmental Sabotage (Mechanical Failure)",
+    "Explosion",
+    "Forced Drug Overdose",
+    "Impalement",
+    "Lethal Injection",
+    "Nerve Agent",
+    "Poisoning",
+    "Pushed from a Height",
+    "Shooting",
+    "Smothering",
+    "Stabbing",
+    "Strangulation",
+    "Swapped Medication"
+  ]
+} 

@@ -42,6 +42,13 @@ def run_generation_pipeline(theme: str, trace_id: str) -> Optional[CaseContext]:
     ensure_output_directory() # Ensure output directory exists
     case_context = CaseContext(theme=theme)
 
+    # Placeholder for loading master lists (Story 5.1 / 5.2)
+    # TODO (Story 5.2): Implement loading for cause_of_death_list
+    # TODO (Story 5.2): Implement loading for motive_categories_list
+    # TODO (Story 5.2): Implement loading for occupation_archetypes_list
+    # TODO (Story 5.2): Implement loading for personality_archetypes_list
+    # End of placeholder for loading master lists
+
     # ----- EPIC 1: Case Initialization ----- 
     logger.info("[Orchestrator] === Stage: Case Initialization (Epic 1) ===")
     try:

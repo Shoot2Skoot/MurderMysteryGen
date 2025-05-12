@@ -1,0 +1,19 @@
+{
+  "occupation_archetypes": [
+    "Executive/Manager",
+    "Business Owner",
+    "Office Worker/Clerk",
+    "Manual Laborer/Tradesperson",
+    "Artist/Musician/Writer",
+    "Scientist/Researcher/Scholar",
+    "Healthcare Professional (Doctor, Nurse)",
+    "Service Industry Worker (Waiter, Bartender, Cashier)",
+    "Law Enforcement/Security",
+    "Homemaker/Stay-at-home Parent",
+    "Student",
+    "Unemployed",
+    "Retired",
+    "Politician/Public Figure",
+    "Educator/Teacher"
+  ]
+} 
