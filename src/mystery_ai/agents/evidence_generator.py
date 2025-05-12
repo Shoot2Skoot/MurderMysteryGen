@@ -1,8 +1,19 @@
 # src/mystery_ai/agents/evidence_generator.py
 
-from agents import Agent, ModelSettings
-from ..core.data_models import CaseContext, Suspect, EvidenceItem, MMOElementType, VictimProfile # For full context
-from typing import List, Dict, Any
+"""
+Evidence Generator Agent for the Murder Mystery Generation system.
+
+This module defines the Evidence Generator Agent, which is responsible for creating
+evidence items that point to suspects in the mystery. For each suspect, it generates 
+plausible evidence items related to their means, motive, or opportunity, with
+appropriate consideration for whether they are the actual killer.
+"""
+
+from typing import Any, Dict, List
+
+from agents import Agent
+
+from ..core.data_models import CaseContext, EvidenceItem, Suspect  # For full context
 
 EVIDENCE_GENERATOR_AGENT_INSTRUCTIONS = """
 You are the Evidence Generation Agent.
@@ -64,23 +75,24 @@ Ensure the output is ONLY the JSON list of evidence items for this one suspect.
 evidence_generator_agent = Agent(
     name="Evidence Generation Agent",
     instructions=EVIDENCE_GENERATOR_AGENT_INSTRUCTIONS,
-    model="gpt-4.1-mini", 
-    output_type=List[EvidenceItem]
+    model="gpt-4.1-mini",
+    output_type=List[EvidenceItem],
 )
+
 
 # Helper function to prepare input for the EvidenceGenerationAgent for a single suspect
 def prepare_evidence_generation_input(
-    case_context: CaseContext, # Contains theme and victim
-    suspect: Suspect # The specific suspect (with killer status and modified MMO if any)
+    case_context: CaseContext,  # Contains theme and victim
+    suspect: Suspect,  # The specific suspect (with killer status and modified MMO if any)
 ) -> Dict[str, Any]:
-    
+
     modified_element_type_str = "N/A"
     modified_element_desc_str = "N/A"
     reason_for_modification_str = "N/A"
 
     if not suspect.is_killer and suspect.modified_mmo_elements:
         # For MVP, assume only one element is modified
-        if suspect.modified_mmo_elements: # Check if list is not empty
+        if suspect.modified_mmo_elements:  # Check if list is not empty
             mod_element = suspect.modified_mmo_elements[0]
             modified_element_type_str = mod_element.element_type.value
             modified_element_desc_str = mod_element.modified_element_description
@@ -89,7 +101,7 @@ def prepare_evidence_generation_input(
     input_dict = {
         "theme": case_context.theme,
         "victim_name": case_context.victim.name if case_context.victim else "N/A",
-        "victim_occupation": case_context.victim.occupation if case_context.victim else "N/A",
+        "victim_occupation": (case_context.victim.occupation if case_context.victim else "N/A"),
         "suspect_name": suspect.profile.name,
         "is_killer": suspect.is_killer,
         "original_means": suspect.original_mmo.means,
@@ -97,11 +109,11 @@ def prepare_evidence_generation_input(
         "original_opportunity": suspect.original_mmo.opportunity,
         "modified_element_type_str": modified_element_type_str,
         "modified_element_desc_str": modified_element_desc_str,
-        "reason_for_modification_str": reason_for_modification_str
+        "reason_for_modification_str": reason_for_modification_str,
     }
     return input_dict
-    
+
     # The instructions for the agent will be dynamically formatted with these details
     # by the orchestrator, similar to MMOModificationAgent, or this dict is passed as input
     # with more generic agent instructions.
-    # For consistency, let's assume the orchestrator will pass this dict as input to the agent. 
+    # For consistency, let's assume the orchestrator will pass this dict as input to the agent.

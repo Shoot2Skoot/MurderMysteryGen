@@ -1,8 +1,21 @@
 # src/mystery_ai/agents/suspect_generator.py
 
-from typing import List, Dict, Any
-from agents import Agent, ModelSettings
-from ..core.data_models import VictimProfile, SuspectProfile, CaseContext # Assuming CaseContext might be passed for full context
+"""
+Suspect Generator Agent for the Murder Mystery Generation system.
+
+This module defines the Suspect Generator Agent, which is responsible for creating
+the initial profiles for all suspects in the mystery. It generates suspects with names,
+descriptions, and relationships to the victim, ensuring they are thematically consistent
+and diverse enough to create an engaging mystery.
+"""
+
+from typing import List
+
+from agents import Agent
+
+from ..core.data_models import (
+    SuspectProfile,
+)  # Assuming CaseContext might be passed for full context
 
 SUSPECT_GENERATOR_INSTRUCTIONS = """
 You are the Suspect Generation Agent for a murder mystery generation system.
@@ -69,9 +82,9 @@ Ensure the output is ONLY the JSON list of suspect profiles.
 suspect_generator_agent = Agent(
     name="Suspect Generation Agent",
     instructions=SUSPECT_GENERATOR_INSTRUCTIONS,
-    model="gpt-4.1-mini", 
+    model="gpt-4.1-mini",
     # model_settings=ModelSettings(temperature=0.75), # Slightly higher temp for more varied suspects
-    output_type=List[SuspectProfile] # Expecting a list of SuspectProfile objects
+    output_type=List[SuspectProfile],  # Expecting a list of SuspectProfile objects
 )
 
 # Example Test Block (for isolated testing if needed)
@@ -93,21 +106,21 @@ suspect_generator_agent = Agent(
 #         print("OPENAI_API_KEY found for SuspectGenerator test.")
 #         # Construct a sample CaseContext input similar to what the agent expects
 #         sample_victim = VictimProfile(
-#             name="Dr. Evelyn Reed", 
-#             occupation="Lead Scientist at Chronos Corp", 
-#             personality="Brilliant, ambitious, but secretive and known for taking credit for others' work.", 
+#             name="Dr. Evelyn Reed",
+#             occupation="Lead Scientist at Chronos Corp",
+#             personality="Brilliant, ambitious, but secretive and known for taking credit for others' work.",
 #             cause_of_death="Found dead in her locked lab, apparently from a sabotaged experiment."
 #         )
 #         sample_case_context_dict = {
 #             "theme": "Near-Future Sci-Fi Corporate Espionage",
 #             "victim": sample_victim.model_dump() # Pass victim as a dict, as LLM expects JSON-like input
 #         }
-        
+
 #         print(f"\nTesting SuspectGenerationAgent with input:\n{sample_case_context_dict}")
-        
+
 #         try:
 #             # The input to the agent should match what its instructions expect.
-#             # Since instructions refer to receiving theme and victim (as an object), 
+#             # Since instructions refer to receiving theme and victim (as an object),
 #             # we should pass a dictionary representing this structure.
 #             result = Runner.run_sync(suspect_generator_agent, input=sample_case_context_dict)
 
@@ -122,4 +135,4 @@ suspect_generator_agent = Agent(
 #                     print(f"Raw output: {result.final_output}")
 #                     print(f"All messages: {result.messages}")
 #         except Exception as e:
-#             print(f"\nAn error occurred: {e}", exc_info=True) 
+#             print(f"\nAn error occurred: {e}", exc_info=True)

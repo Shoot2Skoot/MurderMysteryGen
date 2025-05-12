@@ -1,14 +1,27 @@
 # src/mystery_ai/agents/pre_initialization_ideation_agent.py
 
+"""
+Pre-Initialization Ideation Agent for the Murder Mystery Generation system.
+
+This module defines the Pre-Initialization Ideation Agent, which is responsible for
+generating thematically appropriate first and last names based on the given theme.
+These names are used for victims and suspects, ensuring consistent theming throughout
+the mystery.
+"""
+
+from typing import List, Optional
+
 from agents import Agent, ModelSettings
 from pydantic import BaseModel, Field
-from typing import List
+
 
 # Define the Pydantic model for the agent's output
 class ThematicNameLists(BaseModel):
     """Model representing thematically appropriate name lists for a given theme."""
+
     first_names: List[str] = Field(description="A list of thematically appropriate first names.")
     last_names: List[str] = Field(description="A list of thematically appropriate last names.")
+
 
 # Define the agent's instructions
 PRE_INITIALIZATION_IDEATION_INSTRUCTIONS = """
@@ -67,63 +80,71 @@ Ensure all lists contain 50 items each, are properly formatted as JSON arrays, a
 pre_initialization_ideation_agent = Agent(
     name="Pre-Initialization Ideation Agent",
     instructions=PRE_INITIALIZATION_IDEATION_INSTRUCTIONS,
-    model="gpt-4.1-mini", # Using the same model as other agents in the project
+    model="gpt-4.1-mini",  # Using the same model as other agents in the project
     # model_settings=ModelSettings(temperature=0.7), # Optional: can be adjusted for more variety
-    output_type=ThematicNameLists
+    output_type=ThematicNameLists,
 )
 
 # Example test block for direct testing
-if __name__ == '__main__':
+if __name__ == "__main__":
+    import logging
+    import os
+
     from agents import Runner
     from dotenv import load_dotenv
-    import os
-    import logging
-    import json
 
     # Setup basic logging to see agent activity
-    logging.basicConfig(level=logging.INFO,
-                        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    )
+
     # Load .env file from the project root
-    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
-    dotenv_path = os.path.join(project_root, '.env')
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+    dotenv_path = os.path.join(project_root, ".env")
     if not os.path.exists(dotenv_path):
-        print(f"Error: .env file not found at {dotenv_path}. Please create one with your OPENAI_API_KEY.")
+        print(
+            f"Error: .env file not found at {dotenv_path}. Please create one with your OPENAI_API_KEY."
+        )
     else:
         load_dotenv(dotenv_path=dotenv_path)
         if not os.getenv("OPENAI_API_KEY"):
             print("Error: OPENAI_API_KEY not found in .env file.")
         else:
             print("OPENAI_API_KEY found.")
-            
+
             # Test themes
             test_themes = [
                 "Cyberpunk Dystopia",
                 "Victorian London",
-                "Wild West Outpost"
+                "Wild West Outpost",
             ]
-            
+
             for theme in test_themes:
                 print(f"\n\n===== Testing with theme: {theme} =====")
                 try:
                     result = Runner.run_sync(pre_initialization_ideation_agent, input=theme)
-                    
+
                     if result and result.final_output:
                         name_lists = result.final_output_as(ThematicNameLists)
-                        print(f"\nSuccessfully generated ThematicNameLists:")
-                        print(f"Generated {len(name_lists.first_names)} first names and {len(name_lists.last_names)} last names.")
-                        
+                        print("\nSuccessfully generated ThematicNameLists:")
+                        print(
+                            f"Generated {len(name_lists.first_names)} first names and {len(name_lists.last_names)} last names."
+                        )
+
                         # Print first few names as a sample
                         print("\nSample of first names:")
                         print(", ".join(name_lists.first_names[:10]))
                         print("\nSample of last names:")
                         print(", ".join(name_lists.last_names[:10]))
-                        
+
                         # Optionally save to JSON file for review
                         output_dir = os.path.join(project_root, "test_outputs")
                         os.makedirs(output_dir, exist_ok=True)
-                        output_file = os.path.join(output_dir, f"{theme.replace(' ', '_')}_names.json")
-                        with open(output_file, 'w') as f:
+                        output_file = os.path.join(
+                            output_dir, f"{theme.replace(' ', '_')}_names.json"
+                        )
+                        with open(output_file, "w") as f:
                             f.write(name_lists.model_dump_json(indent=2))
                         print(f"\nFull output saved to: {output_file}")
                     else:
@@ -131,4 +152,4 @@ if __name__ == '__main__':
                         if result:
                             print(f"Raw output: {result.final_output}")
                 except Exception as e:
-                    print(f"\nAn error occurred: {e}") 
+                    print(f"\nAn error occurred: {e}")

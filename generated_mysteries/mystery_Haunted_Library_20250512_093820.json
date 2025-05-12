@@ -1,0 +1,236 @@
+{
+  "theme": "Haunted Library",
+  "thematic_first_names": [
+    "Evelyn",
+    "Silas",
+    "Mara",
+    "Thaddeus",
+    "Lenora",
+    "Alaric",
+    "Cordelia",
+    "Ambrose",
+    "Edith",
+    "Barnaby",
+    "Ophelia",
+    "Gideon",
+    "Isadora",
+    "Lucius",
+    "Agnes",
+    "Phineas",
+    "Helena",
+    "Octavius",
+    "Violetta",
+    "Mortimer",
+    "Cecily",
+    "Quentin",
+    "Eleanor",
+    "Magnus",
+    "Seraphina",
+    "Dorian",
+    "Beatrice",
+    "Casper",
+    "Rowena",
+    "Sebastian",
+    "Delphine",
+    "Felix",
+    "Imogen",
+    "Silvester",
+    "Annabelle",
+    "Jasper",
+    "Lavinia",
+    "Alfred",
+    "Estella",
+    "Caspian",
+    "Emmeline",
+    "Edmund",
+    "Lucinda",
+    "Horace",
+    "Mirabelle",
+    "Theodore",
+    "Emilia",
+    "Victor",
+    "Selene",
+    "Sullivan",
+    "Marcellus"
+  ],
+  "thematic_last_names": [
+    "Blackwood",
+    "Grimsbane",
+    "Ravenhurst",
+    "Holloway",
+    "Winterbourne",
+    "Ashcroft",
+    "Darkmoor",
+    "Moonshadow",
+    "Thornfield",
+    "Gravewell",
+    "Nightshade",
+    "Crowsley",
+    "Hawthorne",
+    "Lockwood",
+    "Eldridge",
+    "Fenwright",
+    "Briarstone",
+    "Ashenhurst",
+    "Silverpine",
+    "Crowhurst",
+    "Vexley",
+    "Duskmoor",
+    "Wraithbourne",
+    "Ebonvale",
+    "Stormrider",
+    "Gloomfield",
+    "Shadowend",
+    "Morgrave",
+    "Coldwell",
+    "Blackthorne",
+    "Graywick",
+    "Darkwell",
+    "Mistfield",
+    "Thornecroft",
+    "Sablewood",
+    "Ironhart",
+    "Frostvale",
+    "Corbinton",
+    "Shadebrook",
+    "Ashenvale",
+    "Wintersong",
+    "Draven",
+    "Mooncrest",
+    "Gravehurst",
+    "Hollowsong",
+    "Evershade",
+    "Nightwell",
+    "Silverthorne",
+    "Bloodworth",
+    "Gallows"
+  ],
+  "victim": {
+    "name": "Cecily Blackthorne",
+    "occupation": "A dedicated archivist responsible for preserving the ancient and mysterious tomes stored within the haunted library's shadowed walls.",
+    "personality": "Compassionate and warm-hearted, Cecily was known for her kindness and willingness to help others uncover the knowledge they sought, even amidst whispers of spectral presences.",
+    "cause_of_death": "Her charred remains were discovered amid the smoldering ruins of the library stacks, a devastating fire swallowing the knowledge she strove to protect.",
+    "chosen_cause_of_death_category": "Arson/Fire/Burned/Incinerated",
+    "chosen_occupation_archetype": "Librarian/Archivist",
+    "chosen_personality_archetype": "Kind/Compassionate"
+  },
+  "suspects": [
+    {
+      "profile": {
+        "name": "Ambrose Fenwright",
+        "description": "A reclusive scholar obsessed with the forbidden knowledge hidden in the library's archives, harboring secret ambitions to claim lost heirlooms.",
+        "relationship_to_victim": "Fellow archivist with a vested interest in the library's rare collections.",
+        "chosen_occupation_archetype": "Librarian/Archivist",
+        "chosen_personality_archetype": "Obsessive Scholar",
+        "chosen_motive_category": "Inheritance"
+      },
+      "original_mmo": {
+        "means": "Ambrose could have intentionally started the fire using a hidden flammable substance or oil he kept for preservation work, knowing the library's ancient wooden structure would quickly ignite and consume the stacks.",
+        "motive": "Obsessed with seizing rare heirlooms and secret manuscripts that Cecily guarded closely, Ambrose saw eliminating her as the only way to claim these treasures for himself without opposition.",
+        "opportunity": "As a fellow archivist, Ambrose had access to the restricted sections of the library during after-hours when he was alone with Cecily, providing the perfect moment to set the fire unnoticed."
+      },
+      "is_killer": true,
+      "modified_mmo_elements": []
+    },
+    {
+      "profile": {
+        "name": "Seraphina Briarstone",
+        "description": "A passionate local historian who often clashed with Cecily over access to the library's rare manuscripts, driven by her own jealous desires.",
+        "relationship_to_victim": "Academic rival and frequent opponent in matters of historical interpretation.",
+        "chosen_occupation_archetype": "Historian",
+        "chosen_personality_archetype": "Fiery and Ambitious",
+        "chosen_motive_category": "Passion / Jealousy"
+      },
+      "original_mmo": {
+        "means": "Seraphina, familiar with the library's layout and its old gas-lit lantern system used for evening research, sabotaged the lantern fueling mechanism in a rarely monitored section near the ancient manuscript stacks, deliberately igniting a fire that spread quickly throughout the wooden shelves.",
+        "motive": "Driven by fierce jealousy and frustration over repeated denials by Cecily to access certain rare manuscripts, Seraphina's ambition to claim historical discoveries and recognition pushed her to drastic measures to remove her academic rival.",
+        "opportunity": "In the evening before the fire, Seraphina was seen arguing with Cecily near the restricted archive section and was known to have remained in the library after closing hours, providing her the chance to tamper with the lantern and initiate the blaze unnoticed."
+      },
+      "is_killer": false,
+      "modified_mmo_elements": [
+        {
+          "element_type": "opportunity",
+          "original_element_description": "In the evening before the fire, Seraphina was seen arguing with Cecily near the restricted archive section and was known to have remained in the library after closing hours, providing her the chance to tamper with the lantern and initiate the blaze unnoticed.",
+          "modified_element_description": "Although initially believed to have stayed after hours, newly verified security camera footage shows Seraphina leaving the library well before closing, well before the fire began, making it impossible for her to tamper with the lantern that evening.",
+          "reason_for_modification": "The security footage provides Seraphina with a solid alibi, eliminating the possibility that she had the opportunity to start the fire."
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Theodore Nightwell",
+        "description": "A charming but shady figure rumored to have leveraged secrets from library patrons for personal gain.",
+        "relationship_to_victim": "Longtime acquaintance who occasionally used the library as a front for illicit deals.",
+        "chosen_occupation_archetype": "Information Broker",
+        "chosen_personality_archetype": "Cunning Manipulator",
+        "chosen_motive_category": "Blackmail / Extortion gone wrong"
+      },
+      "original_mmo": {
+        "means": "Theodore could have started the fire using flammable oils he secretly brought into the library, igniting the stacks when no one was watching to cover up evidence of his illicit dealings.",
+        "motive": "When Cecily threatened to expose Theodore's blackmail schemes involving patrons of the library, he panicked and decided to silence her to protect his reputation and operations.",
+        "opportunity": "As a longtime acquaintance with regular access to the library for his dealings, Theodore had ample opportunity late at night when the library was nearly empty to set the fire without being detected."
+      },
+      "is_killer": false,
+      "modified_mmo_elements": [
+        {
+          "element_type": "motive",
+          "original_element_description": "When Cecily threatened to expose Theodore's blackmail schemes involving patrons of the library, he panicked and decided to silence her to protect his reputation and operations.",
+          "modified_element_description": "Though Theodore was involved in blackmail, recent ledger entries show Cecily actually used this information to coerce Theodore into complying with her wishes, making it unlikely he would harm her.",
+          "reason_for_modification": "This reversal of power undermines Theodore's motive to kill Cecily, as she was controlling him rather than threatening him."
+        }
+      ]
+    }
+  ],
+  "evidence_items": [
+    {
+      "description": "Residue of a rare, highly flammable oil was found on Ambrose Fenwright's gloves, matching the accelerant used to ignite the library fire.",
+      "related_suspect_name": "Ambrose Fenwright",
+      "points_to_mmo_element": "means",
+      "is_red_herring": false,
+      "connection_explanation": "The presence of this oil on his gloves directly links Ambrose to the method used to start the fire."
+    },
+    {
+      "description": "Multiple witness statements confirm Ambrose was seen lingering near the restricted sections late at night, shortly before the fire began.",
+      "related_suspect_name": "Ambrose Fenwright",
+      "points_to_mmo_element": "opportunity",
+      "is_red_herring": false,
+      "connection_explanation": "His exclusive access to the area during those hours gave him the chance to start the fire without being noticed."
+    },
+    {
+      "description": "Secret letters discovered in Ambrose's quarters reveal his intense envy and desire to claim Cecily's rare manuscripts, expressing frustration over her refusal to share them.",
+      "related_suspect_name": "Ambrose Fenwright",
+      "points_to_mmo_element": "motive",
+      "is_red_herring": false,
+      "connection_explanation": "These writings clearly establish Ambrose's motive to eliminate Cecily in order to acquire the treasured heirlooms."
+    },
+    {
+      "description": "An old caretaker recalls seeing Seraphina near the ancient manuscript stacks earlier in the day, examining the gas-lit lantern system closely and taking notes.",
+      "related_suspect_name": "Seraphina Briarstone",
+      "points_to_mmo_element": "means",
+      "is_red_herring": true,
+      "connection_explanation": "This suggests Seraphina had knowledge and access to the lantern system, implying capability to sabotage it, aligning with her original means."
+    },
+    {
+      "description": "Several manuscripts requested by Seraphina regarding rare historical events were found open in restricted areas, indicating her strong interest and possible obsession with gaining access to them.",
+      "related_suspect_name": "Seraphina Briarstone",
+      "points_to_mmo_element": "motive",
+      "is_red_herring": true,
+      "connection_explanation": "This supports the motive of academic jealousy toward Cecily for denial of access to rare manuscripts."
+    },
+    {
+      "description": "A small vial of flammable oil was discovered tucked away in Theodore Nightwell's satchel when he was seen entering the library after hours.",
+      "related_suspect_name": "Theodore Nightwell",
+      "points_to_mmo_element": "means",
+      "is_red_herring": true,
+      "connection_explanation": "This vial suggests Theodore possessed the means to start a fire discreetly within the library."
+    },
+    {
+      "description": "Several patrons whispered that Theodore seemed particularly secretive and nervous about his dealings in the weeks leading up to Cecily's death.",
+      "related_suspect_name": "Theodore Nightwell",
+      "points_to_mmo_element": "opportunity",
+      "is_red_herring": true,
+      "connection_explanation": "His regular after-hours presence gave Theodore opportunity to act without being noticed."
+    }
+  ],
+  "author_notes": null
+}

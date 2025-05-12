@@ -1,9 +1,19 @@
 # src/mystery_ai/agents/killer_selector.py
 
-from agents import Agent, ModelSettings
-from ..core.data_models import CaseContext, Suspect # To update Suspect objects
-from typing import List
+"""
+Killer Selector module for the Murder Mystery Generation system.
+
+This module contains logic for selecting which suspect will be the killer. It provides
+both a random selection function and a more sophisticated agent-based approach for
+determining the most suitable suspect to be the killer based on their characteristics.
+"""
+
 import random
+from typing import List
+
+from agents import Agent
+
+from ..core.data_models import Suspect  # To update Suspect objects
 
 # This agent might not need an LLM call for MVP if selection is random.
 # It could directly modify the CaseContext or list of suspects.
@@ -37,18 +47,20 @@ Output Format:
 # If it *were* an LLM agent, it would need to understand to output the *full list* of suspects with one modified.
 # A simpler non-LLM approach for random selection:
 
+
 def select_killer_randomly(suspects: List[Suspect]) -> List[Suspect]:
     """Randomly selects one suspect as the killer and updates their status."""
     if not suspects:
         return []
-    
+
     # Ensure all are initially not the killer
     for s in suspects:
         s.is_killer = False
-        
+
     selected_killer = random.choice(suspects)
     selected_killer.is_killer = True
     return suspects
+
 
 # For Story 3.1, we are just defining the agent skeleton.
 # The actual implementation (LLM-based or Python-based) will be part of the story implementation.
@@ -59,9 +71,9 @@ def select_killer_randomly(suspects: List[Suspect]) -> List[Suspect]:
 killer_selector_agent_placeholder = Agent(
     name="Killer Selection Agent (Placeholder)",
     instructions="Processes a list of suspects and designates one as the killer (currently placeholder for random Python logic).",
-    model="gpt-4o-mini", # Or any model, may not be used if logic is pure Python
-    output_type=List[Suspect] # If it were to output the modified list
+    model="gpt-4o-mini",  # Or any model, may not be used if logic is pure Python
+    output_type=List[Suspect],  # If it were to output the modified list
 )
 
 # The actual function to be called by the orchestrator for MVP
-# will be select_killer_randomly directly for simplicity in main_orchestrator.py 
+# will be select_killer_randomly directly for simplicity in main_orchestrator.py

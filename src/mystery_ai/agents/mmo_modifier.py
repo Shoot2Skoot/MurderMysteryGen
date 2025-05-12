@@ -1,9 +1,20 @@
 # src/mystery_ai/agents/mmo_modifier.py
 
-from agents import Agent, ModelSettings
-from ..core.data_models import Suspect, MMOElementType, ModifiedMMOElement, VictimProfile, MMO
-from typing import List, Dict, Any
+"""
+MMO Modifier Agent for the Murder Mystery Generation system.
+
+This module defines the MMO Modifier Agent, which is responsible for taking a non-killer 
+suspect's original MMO (Means, Motive, Opportunity) and modifying one element to make it less
+plausible. This helps create red herrings and ensures the mystery has a solvable solution
+by weakening non-killer suspects' cases.
+"""
+
 import random
+from typing import Any, Dict, List
+
+from agents import Agent
+
+from ..core.data_models import MMOElementType, ModifiedMMOElement, Suspect, VictimProfile
 
 # This instruction tells the agent how to interpret the dictionary it receives as input.
 MMO_MODIFIER_AGENT_INSTRUCTIONS = """
@@ -48,38 +59,27 @@ Ensure all fields are populated and the JSON is correctly structured.
 
 mmo_modifier_agent = Agent(
     name="MMO Modification Agent",
-    instructions=MMO_MODIFIER_AGENT_INSTRUCTIONS, # Using the new, more direct instructions
+    instructions=MMO_MODIFIER_AGENT_INSTRUCTIONS,  # Using the new, more direct instructions
     model="gpt-4.1-mini",
-    output_type=ModifiedMMOElement 
+    output_type=ModifiedMMOElement,
 )
 
-# Helper function to choose which element to modify and prepare the input dictionary for the agent
-def prepare_mmo_modification_input( 
-    victim: VictimProfile, 
-    suspect: Suspect # Contains profile and original_mmo
-) -> tuple[Dict[str, Any], MMOElementType]: # Returns input dict and the chosen element type
-    
-    elements = [MMOElementType.MEANS, MMOElementType.MOTIVE, MMOElementType.OPPORTUNITY]
-    chosen_element_type: MMOElementType = random.choice(elements)
-    
-    original_value = ""
-    if chosen_element_type == MMOElementType.MEANS:
-        original_value = suspect.original_mmo.means
-    elif chosen_element_type == MMOElementType.MOTIVE:
-        original_value = suspect.original_mmo.motive
-    else: # opportunity
-        original_value = suspect.original_mmo.opportunity
 
-    input_dict_for_agent = {
-        # "theme" will be added by orchestrator if needed, or agent infers from other context
-        "victim": victim.model_dump(),
+def prepare_mmo_modification_input(suspect: Suspect) -> Dict:
+    """
+    Prepare the input for the MMO Modifier Agent.
+    
+    Args:
+        suspect: The suspect whose MMO needs modification
+        
+    Returns:
+        Dictionary containing the suspect's profile and original MMO information
+    """
+    return {
         "suspect_profile": suspect.profile.model_dump(),
         "original_mmo": suspect.original_mmo.model_dump(),
-        "element_to_modify": chosen_element_type.value, # e.g., "means"
-        "original_element_value_to_modify": original_value
     }
-    
-    return input_dict_for_agent, chosen_element_type
+
 
 # Removed MMO_MODIFIER_INSTRUCTIONS_TEMPLATE as the agent instructions are now static
-# The prepare_mmo_modification_input function now just prepares the input dictionary. 
+# The prepare_mmo_modification_input function now just prepares the input dictionary.
