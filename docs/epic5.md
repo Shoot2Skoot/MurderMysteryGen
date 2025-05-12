@@ -50,7 +50,7 @@
     - AC4: Master list file/module exists for Personality Archetypes (min 10 diverse archetypes).
     - AC5: Orchestrator includes placeholder logic to load these lists (actual loading can be part of story 5.2).
 - **Dependencies:** None.
-- **Status:** To Do
+- **Status:** COMPLETED
 
 ---
 
@@ -67,7 +67,7 @@
     - AC3: The selection process is random (or pseudo-random).
     - AC4: The sub-lists are correctly passed or prepared for the `CaseInitializationAgent`.
 - **Dependencies:** Story 5.1.
-- **Status:** To Do
+- **Status:** COMPLETED
 
 ---
 
@@ -88,7 +88,7 @@
     - AC6: The agent's output `VictimProfile` (and the scenario implied by it) thematically reflects the selected Motive Category for the crime against the victim.
     - AC7: The integration of selected attributes appears natural and consistent with the overall theme.
 - **Dependencies:** Story 5.2.
-- **Status:** To Do
+- **Status:** COMPLETED
 
 ---
 
@@ -105,6 +105,6 @@
     - AC3: (If yes) Relevant agent(s) correctly populate these new fields in their output.
     - AC4: (If yes) The final JSON output reflects these new fields when populated.
 - **Dependencies:** Story 5.3.
-- **Status:** To Do
+- **Status:** COMPLETED
 
 --- 

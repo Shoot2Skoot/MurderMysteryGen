@@ -55,7 +55,7 @@
     - AC4: For at least 3 diverse test themes (e.g., "Cyberpunk Dystopia", "Victorian London", "Wild West Outpost"), the generated name lists are >80% plausible and thematically appropriate upon manual review.
     - AC5: Generated lists demonstrate reasonable variety within each theme.
 - **Dependencies:** None.
-- **Status:** To Do
+- **Status:** COMPLETED
 
 ---
 
@@ -71,7 +71,7 @@
     - AC2: Orchestrator correctly extracts the first name list and last name list from the agent's response.
     - AC3: The extracted lists are made available for subsequent agent calls.
 - **Dependencies:** Story 6.1.
-- **Status:** To Do
+- **Status:** COMPLETED
 
 ---
 
@@ -88,7 +88,7 @@
     - AC3: The `VictimProfile.name` field in the agent's output is populated using names from these lists.
     - AC4: The chosen name combination is plausible.
 - **Dependencies:** Story 6.2.
-- **Status:** To Do
+- **Status:** COMPLETED
 
 ---
 
@@ -104,6 +104,6 @@
     - AC2: Agent successfully populates `SuspectProfile.name` for each generated suspect using names from the lists.
     - AC3: Generated suspect names are unique from each other and the victim, where feasible given list sizes.
 - **Dependencies:** Story 6.2.
-- **Status:** To Do
+- **Status:** COMPLETED
 
 --- 
