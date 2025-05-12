@@ -26,6 +26,9 @@ Input:
     - `motive_category_options`: A list of 2-3 potential motive categories (for later use with suspects, NOT for the victim).
     - `occupation_archetype_options`: A list of 2-3 potential occupation archetypes for the victim.
     - `personality_archetype_options`: A list of 2-3 potential personality archetypes for the victim.
+  - `thematic_names`: An object containing two lists of strings:
+    - `first_names`: A list of thematically appropriate first names (typically 50 names).
+    - `last_names`: A list of thematically appropriate last names (typically 50 names).
 
 Task:
 1.  Review the overall `theme`.
@@ -34,16 +37,20 @@ Task:
     - `occupation_archetype_options`
     - `personality_archetype_options`
     (Note: The `motive_category_options` are for suspects and will be handled later)
-3.  Based on the `theme` AND your selected options, generate the following details for the victim:
-    *   `name`: A plausible full name for the victim, fitting the theme and selected archetypes.
+3.  From the provided `thematic_names` lists, SELECT EXACTLY ONE name from each:
+    - Select ONE first name from the `first_names` list
+    - Select ONE last name from the `last_names` list
+    - Combine these to form the victim's full name
+4.  Based on the `theme`, your selected options, and the chosen name, generate the following details for the victim:
+    *   `name`: The combined first and last name you selected from the thematic name lists.
     *   `occupation`: The victim's occupation. This description should be inspired by and thematically consistent with your SELECTED `occupation_archetype_options` and the overall `theme`. Do not just state the archetype; describe the occupation.
     *   `personality`: A brief (1-2 sentence) description of the victim's key personality traits. This description should be inspired by and thematically consistent with your SELECTED `personality_archetype_options` and the overall `theme`.
     *   `cause_of_death`: The apparent or determined cause of death. This description should be inspired by and thematically consistent with your SELECTED `cause_of_death_options` and the overall `theme`.
-4.  Populate the explicit tracking fields with the exact string value of the option you selected in step 2:
+5.  Populate the explicit tracking fields with the exact string value of the option you selected in step 2:
     *   `chosen_cause_of_death_category`: The exact string you selected from `cause_of_death_options`.
     *   `chosen_occupation_archetype`: The exact string you selected from `occupation_archetype_options`.
     *   `chosen_personality_archetype`: The exact string you selected from `personality_archetype_options`.
-5. Ensure the overall victim profile, including their implied circumstances, is coherent and thematically consistent.
+6. Ensure the overall victim profile, including their name and implied circumstances, is coherent and thematically consistent.
 
 Output Format:
 - You MUST output your response as a single, valid JSON object that strictly conforms to the following Pydantic model schema (VictimProfile):
@@ -64,14 +71,18 @@ Example for input:
     "motive_category_options": ["Inheritance", "Forbidden Love", "Dark Secret"],
     "occupation_archetype_options": ["Reclusive Scholar", "Wealthy Dowager", "Disgraced Doctor"],
     "personality_archetype_options": ["Melancholy", "Manipulative", "Secretive"]
+  },
+  "thematic_names": {
+    "first_names": ["Beatrice", "Edmund", "Victoria", "Clarence", "Adelaide", "Theodore", "Florence", "Augustus", "Henrietta", "Reginald"],
+    "last_names": ["Blackwood", "Thornfield", "Ravenscroft", "Hawthorne", "Wellington", "Pembrooke", "Montgomery", "Greystone", "Devereux", "Winchester"]
   }
 }
 ```
 
-Example of corresponding output (if "Fall from height", "Wealthy Dowager", and "Manipulative" were selected):
+Example of corresponding output (if "Fall from height", "Wealthy Dowager", and "Manipulative" were selected, and "Beatrice" and "Blackwood" were chosen from the name lists):
 ```json
 {
-  "name": "Lady Beatrice Blackwood",
+  "name": "Beatrice Blackwood",
   "occupation": "The elderly, and exceedingly wealthy, matriarch of Blackwood Manor. Known for her vast fortune and control over the family estate.",
   "personality": "A woman of sharp intellect and a subtly manipulative nature, often pitting family members against each other for her amusement and to maintain her influence.",
   "cause_of_death": "Found at the bottom of the grand staircase, a tragic fall that many whisper was no accident, given the frayed nerves and simmering resentments within the household.",
@@ -92,68 +103,70 @@ case_initializer_agent = Agent(
 )
 
 # To test this agent (example usage, actual orchestration will be in main_orchestrator.py):
-# if __name__ == '__main__':
-#     from agents import Runner
-#     from dotenv import load_dotenv
-#     import os
-#     import logging
+if __name__ == '__main__':
+    from agents import Runner
+    from dotenv import load_dotenv
+    import os
+    import logging
+    import json
 
-#     # Setup basic logging to see agent activity
-#     logging.basicConfig(level=logging.INFO,
-#                         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    # Setup basic logging to see agent activity
+    logging.basicConfig(level=logging.INFO,
+                        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     
-#     # Load .env file from the project root
-#     # This script is in src/mystery_ai/agents/
-#     # Project root is ../../../ from here
-#     project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
-#     dotenv_path = os.path.join(project_root, '.env')
-#     if not os.path.exists(dotenv_path):
-#         print("Error: .env file not found. Please create one in the project root (MurderMysteryGen/) with your OPENAI_API_KEY.")
-#     else:
-#         load_dotenv(dotenv_path=dotenv_path)
-#         print(f".env loaded from {dotenv_path}")
-#         if not os.getenv("OPENAI_API_KEY"):
-#             print("Error: OPENAI_API_KEY not found in .env file.")
-#         else:
-#             print("OPENAI_API_KEY found.")
-#             test_theme = "Medieval Fantasy Kingdom"
-#             print(f"\nTesting CaseInitializationAgent with theme: {test_theme}")
+    # Load .env file from the project root
+    # This script is in src/mystery_ai/agents/
+    # Project root is ../../../ from here
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+    dotenv_path = os.path.join(project_root, '.env')
+    if not os.path.exists(dotenv_path):
+        print("Error: .env file not found. Please create one in the project root (MurderMysteryGen/) with your OPENAI_API_KEY.")
+    else:
+        load_dotenv(dotenv_path=dotenv_path)
+        print(f".env loaded from {dotenv_path}")
+        if not os.getenv("OPENAI_API_KEY"):
+            print("Error: OPENAI_API_KEY not found in .env file.")
+        else:
+            print("OPENAI_API_KEY found.")
             
-#             # The input to an agent using output_type is typically a string or a dict.
-#             # For this agent, the instructions imply it processes a theme passed as a simple string 
-#             # or a dict like {"theme": "your_theme"}. Let's assume simple string for direct input for now,
-#             # or the orchestrator can wrap it if needed.
-#             # For structured input, you might define an input Pydantic model for the agent too.
+            # Test with a theme and sample thematic name lists
+            test_input = {
+                "theme": "Haunted Library",
+                "attribute_options": {
+                    "cause_of_death_options": ["Poisoning", "Nerve Agent", "Blunt Force Trauma"],
+                    "motive_category_options": ["Revenge", "Mistaken Identity", "Eliminating a Rival"],
+                    "occupation_archetype_options": ["Librarian/Archivist", "Researcher", "Historian"],
+                    "personality_archetype_options": ["Naive/Gullible", "Curious/Inquisitive", "Reclusive/Reserved"]
+                },
+                "thematic_names": {
+                    "first_names": ["Evelyn", "Edgar", "Luna", "Theodore", "Agnes", "Silas", "Cordelia", "Gideon", "Mabel", "Ambrose"],
+                    "last_names": ["Blackwood", "Grimsley", "Carrington", "Hawthorne", "Ashcroft", "Winchester", "Lockwood", "Blythe", "Fairchild", "Hargrove"]
+                }
+            }
             
-#             try:
-#                 # SDK expects input_data to be a string, or a dict for models expecting multiple inputs not via tools.
-#                 # If instructions parse from a general input, a simple string might be fine.
-#                 # If the agent expects a specific field like `theme`, pass a dict.
-#                 # Let's try passing the theme as a simple string first, relying on the prompt to guide.
-#                 # A more robust way if the agent strictly needs {"theme": ...} is to pass that dict.
-#                 # For an agent expecting `output_type`, the `input_data` is the prompt or content it processes.
-#                 # The instructions guide how it should interpret this input_data to produce the structured output.
+            print(f"\nTesting CaseInitializationAgent with theme: {test_input['theme']}")
+            print(f"Sample first names: {', '.join(test_input['thematic_names']['first_names'][:5])}")
+            print(f"Sample last names: {', '.join(test_input['thematic_names']['last_names'][:5])}")
+            
+            try:
+                # Convert the input dictionary to a JSON string
+                test_input_json = json.dumps(test_input)
                 
-#                 # Option 1: Pass theme as direct input string for the agent to process based on instructions.
-#                 # result = Runner.run_sync(case_initializer_agent, test_theme)
+                # Run the agent with the test input
+                result = Runner.run_sync(case_initializer_agent, input=test_input_json)
 
-#                 # Option 2: More explicit if the agent were designed to always expect a dict with a 'theme' key.
-#                 # This is often better for clarity if the agent's prompt implies specific input fields.
-#                 # Since our instructions say "You will receive a theme for the mystery as a simple string", Option 1 is closer.
-#                 # However, the prompt for structured output often implies the LLM should *receive* the input data as part of its user message.
-#                 # The `input` to `Runner.run` forms this user message. So, sending the theme string directly is correct.
-                
-#                 result = Runner.run_sync(case_initializer_agent, test_theme)
+                if result and result.final_output:
+                    victim_profile: VictimProfile = result.final_output_as(VictimProfile)
+                    print("\nSuccessfully generated VictimProfile:")
+                    print(victim_profile.model_dump_json(indent=2))
+                    print(f"\nSelected victim name: {victim_profile.name}")
+                    print(f"Selected cause of death: {victim_profile.chosen_cause_of_death_category}")
+                    print(f"Selected occupation: {victim_profile.chosen_occupation_archetype}")
+                    print(f"Selected personality: {victim_profile.chosen_personality_archetype}")
+                else:
+                    print("\nAgent run did not produce the expected output or failed.")
+                    if result:
+                        print(f"Raw output: {result.final_output}")
 
-#                 if result and result.final_output:
-#                     victim_profile: VictimProfile = result.final_output_as(VictimProfile)
-#                     print("\nSuccessfully generated VictimProfile:")
-#                     print(victim_profile.model_dump_json(indent=2))
-#                 else:
-#                     print("\nAgent run did not produce the expected output or failed.")
-#                     if result:
-#                         print(f"Raw output: {result.final_output}")
-#                         print(f"All messages: {result.messages}")
-
-#             except Exception as e:
-#                 print(f"\nAn error occurred: {e}") 
+            except Exception as e:
+                print(f"\nAn error occurred: {e}") 

@@ -21,6 +21,8 @@ logger = logging.getLogger(__name__)
 OUTPUT_DIRECTORY = "generated_mysteries"
 CONFIG_DIRECTORY = "config/master_lists" # Added for master lists path
 NUM_ATTRIBUTE_OPTIONS = 3 # Configurable number of items to select for sub-lists
+VICTIM_NAME_SAMPLE_SIZE = 3  # Number of names to include in the random sample for victim agent
+SUSPECT_NAME_SAMPLE_SIZE = 8  # Number of names to include in the random sample for suspect agent
 
 # Helper function to load master lists
 def _load_master_list(filename: str, list_key: str) -> List[str]:
@@ -65,6 +67,31 @@ def _load_master_list(filename: str, list_key: str) -> List[str]:
     except Exception as e:
         logger.error(f"An unexpected error occurred while loading master list {file_path}: {e}")
         return []
+
+# Helper function to sample random names from the full list
+def _sample_names(names_list: List[str], sample_size: int) -> List[str]:
+    """
+    Takes a random sample of names from the provided list.
+    
+    Args:
+        names_list: The full list of names to sample from
+        sample_size: Number of names to include in the sample
+        
+    Returns:
+        A list containing randomly sampled names
+    """
+    if not names_list:
+        logger.warning("Empty names list provided for sampling")
+        return []
+        
+    # Ensure we don't try to sample more names than exist in the list
+    actual_sample_size = min(sample_size, len(names_list))
+    
+    # Take a random sample
+    sampled_names = random.sample(names_list, actual_sample_size)
+    logger.debug(f"Sampled {len(sampled_names)} names from list of {len(names_list)}")
+    
+    return sampled_names
 
 def ensure_output_directory():
     """Ensures the output directory for JSON files exists."""
@@ -154,12 +181,21 @@ def run_generation_pipeline(theme: str, trace_id: str) -> Optional[CaseContext]:
     try:
         logger.info(f"Running CaseInitializationAgent for theme: {theme} with attribute options.")
         
+        # Create random samples of names instead of using the full lists
+        # Use smaller sample size for victim (3 names)
+        sampled_first_names = _sample_names(case_context.thematic_first_names, VICTIM_NAME_SAMPLE_SIZE)
+        sampled_last_names = _sample_names(case_context.thematic_last_names, VICTIM_NAME_SAMPLE_SIZE)
+        
+        logger.info(f"Sending a random sample of {len(sampled_first_names)} first names and {len(sampled_last_names)} last names to CaseInitializationAgent")
+        logger.debug(f"First name sample: {', '.join(sampled_first_names)}")
+        logger.debug(f"Last name sample: {', '.join(sampled_last_names)}")
+        
         case_init_input = {
             "theme": theme,
             "attribute_options": attribute_options_for_agent,
             "thematic_names": {
-                "first_names": case_context.thematic_first_names,
-                "last_names": case_context.thematic_last_names
+                "first_names": sampled_first_names,
+                "last_names": sampled_last_names
             }
         }
         logger.debug(f"CaseInitializationAgent input: {json.dumps(case_init_input)}")
@@ -191,13 +227,24 @@ def run_generation_pipeline(theme: str, trace_id: str) -> Optional[CaseContext]:
     generated_suspects: List[Suspect] = []
     try:
         logger.info("Running SuspectGenerationAgent...")
+        
+        # Create fresh random samples of names for the suspect generator
+        # This ensures different name options than what was given to the victim initialization agent
+        # Use larger sample size for suspects (8 names)
+        sampled_first_names = _sample_names(case_context.thematic_first_names, SUSPECT_NAME_SAMPLE_SIZE)
+        sampled_last_names = _sample_names(case_context.thematic_last_names, SUSPECT_NAME_SAMPLE_SIZE)
+        
+        logger.info(f"Sending a random sample of {len(sampled_first_names)} first names and {len(sampled_last_names)} last names to SuspectGenerationAgent")
+        logger.debug(f"First name sample: {', '.join(sampled_first_names)}")
+        logger.debug(f"Last name sample: {', '.join(sampled_last_names)}")
+        
         suspect_gen_input_dict = {
             "theme": case_context.theme,
             "victim": case_context.victim.model_dump(),
             "motive_category_options": selected_motives,  # Pass the motive options to the suspect generator
             "thematic_names": {
-                "first_names": case_context.thematic_first_names,
-                "last_names": case_context.thematic_last_names
+                "first_names": sampled_first_names,
+                "last_names": sampled_last_names
             }
         }
         # Convert the input dictionary to a JSON string
