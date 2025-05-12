@@ -3,6 +3,7 @@ import json # Added for dumping dict to JSON string
 from typing import List, Dict, Any, Optional
 import os # For path operations
 import datetime # For timestamp in filename
+import random # Added for random selection
 
 from ..core.data_models import CaseContext, VictimProfile, SuspectProfile, MMO, Suspect, ModifiedMMOElement, EvidenceItem, MMOElementType
 from ..agents.case_initializer import case_initializer_agent
@@ -17,6 +18,52 @@ from agents import Runner, ModelSettings # OpenAI Agents SDK components
 logger = logging.getLogger(__name__)
 
 OUTPUT_DIRECTORY = "generated_mysteries"
+CONFIG_DIRECTORY = "config/master_lists" # Added for master lists path
+NUM_ATTRIBUTE_OPTIONS = 3 # Configurable number of items to select for sub-lists
+
+# Helper function to load master lists
+def _load_master_list(filename: str, list_key: str) -> List[str]:
+    """Loads a master list from a JSON file."""
+    # Construct the full path relative to the project root or a known base directory
+    # Assuming the script is run from a context where 'MurderMysteryGen' is accessible
+    # or this path needs adjustment based on execution context.
+    # For now, let's assume 'CONFIG_DIRECTORY' is relative to the project root.
+    # A more robust solution might use __file__ to determine base path if this script is part of a package.
+    
+    # Simplified path for now, assuming execution from project root or similar
+    # For a file like 'MurderMysteryGen/config/master_lists/cause_of_death.json'
+    # If this script is 'MurderMysteryGen/src/mystery_ai/orchestration/main_orchestrator.py'
+    # then relative path from this script to 'config' is '../../config/master_lists'
+    
+    # Let's assume CONFIG_DIRECTORY is a subdirectory of MurderMysteryGen,
+    # and this script might be run from the MurderMysteryGen directory.
+    # This path construction needs to be robust.
+    # For now:
+    base_path = os.path.join(os.path.dirname(__file__), "..", "..", "..") # Adjust if necessary to reach project root
+    # This navigates three levels up from src/mystery_ai/orchestration to MurderMysteryGen
+    
+    file_path = os.path.join(base_path, CONFIG_DIRECTORY, filename)
+    
+    logger.debug(f"Attempting to load master list from: {file_path}")
+    try:
+        with open(file_path, 'r') as f:
+            data = json.load(f)
+            master_list = data.get(list_key, [])
+            if not master_list:
+                logger.warning(f"Master list '{list_key}' is empty or not found in {filename}.")
+            logger.info(f"Successfully loaded {len(master_list)} items for '{list_key}' from {filename}.")
+            if master_list:
+                 logger.debug(f"First 3 items from '{list_key}': {master_list[:3]}")
+            return master_list
+    except FileNotFoundError:
+        logger.error(f"Master list file not found: {file_path}")
+        return []
+    except json.JSONDecodeError:
+        logger.error(f"Error decoding JSON from master list file: {file_path}")
+        return []
+    except Exception as e:
+        logger.error(f"An unexpected error occurred while loading master list {file_path}: {e}")
+        return []
 
 def ensure_output_directory():
     """Ensures the output directory for JSON files exists."""
@@ -42,18 +89,56 @@ def run_generation_pipeline(theme: str, trace_id: str) -> Optional[CaseContext]:
     ensure_output_directory() # Ensure output directory exists
     case_context = CaseContext(theme=theme)
 
-    # Placeholder for loading master lists (Story 5.1 / 5.2)
-    # TODO (Story 5.2): Implement loading for cause_of_death_list
-    # TODO (Story 5.2): Implement loading for motive_categories_list
-    # TODO (Story 5.2): Implement loading for occupation_archetypes_list
-    # TODO (Story 5.2): Implement loading for personality_archetypes_list
-    # End of placeholder for loading master lists
+    # ----- Load Master Attribute Lists (Story 5.2) -----
+    logger.info("[Orchestrator] --- Stage: Loading Master Attribute Lists (Story 5.2) ---")
+    cause_of_death_list = _load_master_list("cause_of_death.json", "causes_of_death")
+    motive_categories_list = _load_master_list("motive_categories.json", "motive_categories")
+    occupation_archetypes_list = _load_master_list("occupation_archetypes.json", "occupation_archetypes")
+    personality_archetypes_list = _load_master_list("personality_archetypes.json", "personality_archetypes")
+
+    # Check if all lists were loaded successfully (or handle partially loaded lists)
+    if not all([cause_of_death_list, motive_categories_list, occupation_archetypes_list, personality_archetypes_list]):
+        logger.error("One or more master attribute lists failed to load. Cannot proceed with attribute sub-list selection.")
+        # Depending on requirements, either return None or proceed without these options.
+        # For Story 5.2, these are crucial for the CaseInitializationAgent input.
+        return None
+
+    # ----- Select Sub-lists of Attributes (Story 5.2) -----
+    logger.info("[Orchestrator] --- Stage: Selecting Attribute Sub-lists (Story 5.2) ---")
+    
+    selected_causes = random.sample(cause_of_death_list, min(NUM_ATTRIBUTE_OPTIONS, len(cause_of_death_list)))
+    selected_motives = random.sample(motive_categories_list, min(NUM_ATTRIBUTE_OPTIONS, len(motive_categories_list)))
+    selected_occupations = random.sample(occupation_archetypes_list, min(NUM_ATTRIBUTE_OPTIONS, len(occupation_archetypes_list)))
+    selected_personalities = random.sample(personality_archetypes_list, min(NUM_ATTRIBUTE_OPTIONS, len(personality_archetypes_list)))
+
+    attribute_options_for_agent = {
+        "cause_of_death_options": selected_causes,
+        "motive_category_options": selected_motives,
+        "occupation_archetype_options": selected_occupations, # Key name matches story 5.1
+        "personality_archetype_options": selected_personalities, # Key name matches story 5.1
+    }
+    logger.info(f"Selected attribute options for CaseInitializationAgent: {json.dumps(attribute_options_for_agent, indent=2)}")
+    # TODO (Story 5.3): Pass 'attribute_options_for_agent' to CaseInitializationAgent.
+    # The agent's input signature and internal logic will need to be updated.
 
     # ----- EPIC 1: Case Initialization ----- 
     logger.info("[Orchestrator] === Stage: Case Initialization (Epic 1) ===")
     try:
         logger.info(f"Running CaseInitializationAgent for theme: {theme}")
-        result = Runner.run_sync(case_initializer_agent, input=theme)
+        # TODO (Story 5.3): Modify the input to case_initializer_agent
+        # Current input is just 'theme'. It will need to be a dictionary including 'theme'
+        # and 'attribute_options_for_agent'.
+        # For now, the agent call remains unchanged until Story 5.3.
+        # The 'attribute_options_for_agent' dictionary is prepared and logged above.
+        
+        # Example of how the input might look for Story 5.3:
+        # case_init_input = {
+        #     "theme": theme,
+        #     "attribute_options": attribute_options_for_agent
+        # }
+        # result = Runner.run_sync(case_initializer_agent, input=json.dumps(case_init_input))
+        
+        result = Runner.run_sync(case_initializer_agent, input=theme) # Keeping current call for now
         if result and result.final_output:
             case_context.victim = result.final_output_as(VictimProfile)
             logger.info(f"CaseInitializationAgent completed. Victim: {getattr(case_context.victim, 'name', 'N/A')}")

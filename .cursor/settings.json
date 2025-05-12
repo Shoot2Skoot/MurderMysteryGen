@@ -1,0 +1,13 @@
+{
+    "python.analysis.extraPaths": [
+        "./src"  // Tells the linter to look for packages in the 'src' directory
+    ],
+    "python.testing.unittestEnabled": true, // Assuming you are using unittest
+    "python.testing.cwd": "${workspaceFolder}", // Ensures tests run from project root
+    "python.testing.unittestArgs": [
+        "-s",
+        "./tests", // Or specify a pattern like "tests/orchestration"
+        "-p",
+        "test_*.py"
+    ]
+}
