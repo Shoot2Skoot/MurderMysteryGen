@@ -12,6 +12,7 @@ from ..agents.mmo_generator import mmo_generator_agent
 from ..agents.killer_selector import select_killer_randomly # Direct function for MVP
 from ..agents.mmo_modifier import mmo_modifier_agent, prepare_mmo_modification_input
 from ..agents.evidence_generator import evidence_generator_agent, prepare_evidence_generation_input
+from ..agents.pre_initialization_ideation_agent import pre_initialization_ideation_agent, ThematicNameLists
 
 from agents import Runner, ModelSettings # OpenAI Agents SDK components
 
@@ -89,6 +90,33 @@ def run_generation_pipeline(theme: str, trace_id: str) -> Optional[CaseContext]:
     ensure_output_directory() # Ensure output directory exists
     case_context = CaseContext(theme=theme)
 
+    # ----- Generate Thematic Name Lists (Story 6.1 & 6.2) -----
+    logger.info("[Orchestrator] --- Stage: Generating Thematic Name Lists (Story 6.1 & 6.2) ---")
+    try:
+        logger.info(f"Running PreInitializationIdeationAgent for theme: {theme}")
+        name_lists_result = Runner.run_sync(pre_initialization_ideation_agent, input=theme)
+        
+        if name_lists_result and name_lists_result.final_output:
+            name_lists = name_lists_result.final_output_as(ThematicNameLists)
+            case_context.thematic_first_names = name_lists.first_names
+            case_context.thematic_last_names = name_lists.last_names
+            logger.info(f"PreInitializationIdeationAgent completed. Generated {len(case_context.thematic_first_names)} first names and {len(case_context.thematic_last_names)} last names.")
+            
+            # Log a sample of the generated names
+            if case_context.thematic_first_names and case_context.thematic_last_names:
+                logger.info(f"Sample first names: {', '.join(case_context.thematic_first_names[:5])}")
+                logger.info(f"Sample last names: {', '.join(case_context.thematic_last_names[:5])}")
+        else:
+            logger.error("PreInitializationIdeationAgent failed to produce thematic name lists.")
+            # Consider if this is a critical failure or if we can proceed without thematic names
+            # For now, we'll log the error but continue the pipeline
+            logger.warning("Continuing without thematic names. Character names may not be thematically consistent.")
+    except Exception as e:
+        logger.error(f"Error running PreInitializationIdeationAgent: {e}", exc_info=True)
+        # Consider if this is a critical failure or if we can proceed without thematic names
+        # For now, we'll log the error but continue the pipeline
+        logger.warning("Continuing without thematic names. Character names may not be thematically consistent.")
+    
     # ----- Load Master Attribute Lists (Story 5.2) -----
     logger.info("[Orchestrator] --- Stage: Loading Master Attribute Lists (Story 5.2) ---")
     cause_of_death_list = _load_master_list("cause_of_death.json", "causes_of_death")
@@ -128,7 +156,11 @@ def run_generation_pipeline(theme: str, trace_id: str) -> Optional[CaseContext]:
         
         case_init_input = {
             "theme": theme,
-            "attribute_options": attribute_options_for_agent
+            "attribute_options": attribute_options_for_agent,
+            "thematic_names": {
+                "first_names": case_context.thematic_first_names,
+                "last_names": case_context.thematic_last_names
+            }
         }
         logger.debug(f"CaseInitializationAgent input: {json.dumps(case_init_input)}")
         result = Runner.run_sync(case_initializer_agent, input=json.dumps(case_init_input))
@@ -162,7 +194,11 @@ def run_generation_pipeline(theme: str, trace_id: str) -> Optional[CaseContext]:
         suspect_gen_input_dict = {
             "theme": case_context.theme,
             "victim": case_context.victim.model_dump(),
-            "motive_category_options": selected_motives  # Pass the motive options to the suspect generator
+            "motive_category_options": selected_motives,  # Pass the motive options to the suspect generator
+            "thematic_names": {
+                "first_names": case_context.thematic_first_names,
+                "last_names": case_context.thematic_last_names
+            }
         }
         # Convert the input dictionary to a JSON string
         suspect_gen_input_json_str = json.dumps(suspect_gen_input_dict)
@@ -308,18 +344,39 @@ def run_generation_pipeline(theme: str, trace_id: str) -> Optional[CaseContext]:
     return case_context
 
 # Example of how main.py might call this (actual call will be uncommented/refined in main.py later)
-# if __name__ == '__main__':
-#     # This is for direct testing of the orchestrator, assuming .env is loaded and logging set up
-#     # from dotenv import load_dotenv
-#     # import os
-#     # project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
-#     # dotenv_path = os.path.join(project_root, '.env')
-#     # load_dotenv(dotenv_path=dotenv_path)
-#     # logging.basicConfig(level=logging.INFO)
-# 
-#     test_theme = "Haunted Library"
-#     test_trace_id = f"trace_orchestrator_test_{uuid.uuid4().hex}"
-#     final_result = run_generation_pipeline(test_theme, test_trace_id)
-#     print("\n--- Orchestrator Test Output ---")
-#     print(final_result)
-#     print("------------------------------") 
+if __name__ == '__main__':
+    # This is for direct testing of the orchestrator
+    from dotenv import load_dotenv
+    import os
+    import uuid
+    import logging
+
+    # Configure logging
+    logging.basicConfig(level=logging.INFO, 
+                      format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    
+    # Load environment variables
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
+    dotenv_path = os.path.join(project_root, '.env')
+    load_dotenv(dotenv_path=dotenv_path)
+
+    # Test theme
+    test_theme = "Haunted Library"
+    test_trace_id = f"trace_orchestrator_test_{uuid.uuid4().hex}"
+    
+    # Run the orchestration pipeline
+    print(f"\nRunning orchestration pipeline with theme: {test_theme}")
+    final_result = run_generation_pipeline(test_theme, test_trace_id)
+    
+    print("\n--- Orchestration Test Output ---")
+    if final_result:
+        print(f"Pipeline completed successfully!")
+        print(f"Theme: {final_result.theme}")
+        print(f"Victim: {getattr(final_result.victim, 'name', 'N/A')}")
+        print(f"Suspects: {len(final_result.suspects)}")
+        print(f"Evidence items: {len(final_result.evidence_items)}")
+        print(f"Thematic first names (sample): {', '.join(final_result.thematic_first_names[:5])}")
+        print(f"Thematic last names (sample): {', '.join(final_result.thematic_last_names[:5])}")
+    else:
+        print("Pipeline failed!")
+    print("------------------------------") 

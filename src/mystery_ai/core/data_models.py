@@ -61,6 +61,8 @@ class EvidenceItem(BaseModel):
 class CaseContext(BaseModel):
     """Main data model to hold all generated mystery elements, evolving per epic."""
     theme: str = Field(description="The overall theme or setting of the mystery.")
+    thematic_first_names: List[str] = Field(default_factory=list, description="A list of thematically appropriate first names for the given theme.")
+    thematic_last_names: List[str] = Field(default_factory=list, description="A list of thematically appropriate last names for the given theme.")
     victim: Optional[VictimProfile] = Field(default=None, description="Details of the victim.")
     suspects: List[Suspect] = Field(default_factory=list, description="A list of all suspects involved in the case.")
     evidence_items: List[EvidenceItem] = Field(default_factory=list, description="A list of all evidence items generated for the case.")
