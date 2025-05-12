@@ -124,24 +124,24 @@ def run_generation_pipeline(theme: str, trace_id: str) -> Optional[CaseContext]:
     # ----- EPIC 1: Case Initialization ----- 
     logger.info("[Orchestrator] === Stage: Case Initialization (Epic 1) ===")
     try:
-        logger.info(f"Running CaseInitializationAgent for theme: {theme}")
-        # TODO (Story 5.3): Modify the input to case_initializer_agent
-        # Current input is just 'theme'. It will need to be a dictionary including 'theme'
-        # and 'attribute_options_for_agent'.
-        # For now, the agent call remains unchanged until Story 5.3.
-        # The 'attribute_options_for_agent' dictionary is prepared and logged above.
+        logger.info(f"Running CaseInitializationAgent for theme: {theme} with attribute options.")
         
-        # Example of how the input might look for Story 5.3:
-        # case_init_input = {
-        #     "theme": theme,
-        #     "attribute_options": attribute_options_for_agent
-        # }
-        # result = Runner.run_sync(case_initializer_agent, input=json.dumps(case_init_input))
+        case_init_input = {
+            "theme": theme,
+            "attribute_options": attribute_options_for_agent
+        }
+        logger.debug(f"CaseInitializationAgent input: {json.dumps(case_init_input)}")
+        result = Runner.run_sync(case_initializer_agent, input=json.dumps(case_init_input))
         
-        result = Runner.run_sync(case_initializer_agent, input=theme) # Keeping current call for now
         if result and result.final_output:
             case_context.victim = result.final_output_as(VictimProfile)
             logger.info(f"CaseInitializationAgent completed. Victim: {getattr(case_context.victim, 'name', 'N/A')}")
+            # Log the chosen categories for verification
+            if case_context.victim:
+                logger.info(f"  Chosen CoD Category: {case_context.victim.chosen_cause_of_death_category}")
+                # Removed motive category logging since it's now per-suspect
+                logger.info(f"  Chosen Occupation Archetype: {case_context.victim.chosen_occupation_archetype}")
+                logger.info(f"  Chosen Personality Archetype: {case_context.victim.chosen_personality_archetype}")
         else:
             logger.error("CaseInitializationAgent failed to produce a victim profile.")
             return None # Critical failure
@@ -161,7 +161,8 @@ def run_generation_pipeline(theme: str, trace_id: str) -> Optional[CaseContext]:
         logger.info("Running SuspectGenerationAgent...")
         suspect_gen_input_dict = {
             "theme": case_context.theme,
-            "victim": case_context.victim.model_dump()
+            "victim": case_context.victim.model_dump(),
+            "motive_category_options": selected_motives  # Pass the motive options to the suspect generator
         }
         # Convert the input dictionary to a JSON string
         suspect_gen_input_json_str = json.dumps(suspect_gen_input_dict)
@@ -233,6 +234,14 @@ def run_generation_pipeline(theme: str, trace_id: str) -> Optional[CaseContext]:
 
         # MMO Modification for non-killers
         for i, suspect in enumerate(case_context.suspects):
+            # Log the chosen categories for each suspect
+            logger.info(f"Suspect {i+1}: {suspect.profile.name}")
+            logger.info(f"  Chosen Motive Category: {suspect.profile.chosen_motive_category}")
+            if suspect.profile.chosen_occupation_archetype:
+                logger.info(f"  Chosen Occupation Archetype: {suspect.profile.chosen_occupation_archetype}")
+            if suspect.profile.chosen_personality_archetype:
+                logger.info(f"  Chosen Personality Archetype: {suspect.profile.chosen_personality_archetype}")
+                
             if not suspect.is_killer:
                 logger.info(f"Modifying MMO for non-killer: {suspect.profile.name}")
                 mmo_mod_input_dict, chosen_element_type = prepare_mmo_modification_input(

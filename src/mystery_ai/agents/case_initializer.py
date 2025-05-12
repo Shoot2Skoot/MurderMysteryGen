@@ -4,7 +4,9 @@ from agents import Agent, ModelSettings # Assuming ModelSettings might be used l
 from ..core.data_models import VictimProfile
 
 # Define the CaseInitializationAgent
-# This agent is responsible for taking a theme and generating the initial victim profile.
+# This agent is responsible for taking a theme, a set of attribute options, 
+# selecting one from each option list, and generating the initial victim profile,
+# thematically integrating the selected attributes and populating chosen category fields.
 
 # Instructions for the agent:
 # - It will receive a theme (e.g., "Cyberpunk", "Haunted Mansion").
@@ -14,17 +16,34 @@ from ..core.data_models import VictimProfile
 
 CASE_INITIALIZER_INSTRUCTIONS = """
 You are the Case Initialization Agent for a murder mystery generation system.
-Your primary role is to establish the foundational details of the victim based on a given theme.
+Your primary role is to establish the foundational details of the victim.
 
 Input:
-- You will receive a theme for the mystery as a simple string (e.g., "Cyberpunk", "Haunted Mansion", "Pirate Ship").
+- You will receive a JSON object containing:
+  - `theme`: A string for the mystery's overall theme (e.g., "Cyberpunk", "Haunted Mansion").
+  - `attribute_options`: An object containing four lists of strings:
+    - `cause_of_death_options`: A list of 2-3 potential cause of death categories.
+    - `motive_category_options`: A list of 2-3 potential motive categories (for later use with suspects, NOT for the victim).
+    - `occupation_archetype_options`: A list of 2-3 potential occupation archetypes for the victim.
+    - `personality_archetype_options`: A list of 2-3 potential personality archetypes for the victim.
 
 Task:
-1.  Based *only* on the provided theme, generate the following details for the victim:
-    *   `name`: A plausible full name for the victim, fitting the theme.
-    *   `occupation`: The victim's occupation or primary role within the story's setting, consistent with the theme.
-    *   `personality`: A brief (1-2 sentence) description of the victim's key personality traits relevant to a mystery, fitting the theme.
-    *   `cause_of_death`: The apparent or determined cause of death, plausible within the theme and suitable for a murder mystery.
+1.  Review the overall `theme`.
+2.  From the relevant lists within `attribute_options`, SELECT EXACTLY ONE option from:
+    - `cause_of_death_options` 
+    - `occupation_archetype_options`
+    - `personality_archetype_options`
+    (Note: The `motive_category_options` are for suspects and will be handled later)
+3.  Based on the `theme` AND your selected options, generate the following details for the victim:
+    *   `name`: A plausible full name for the victim, fitting the theme and selected archetypes.
+    *   `occupation`: The victim's occupation. This description should be inspired by and thematically consistent with your SELECTED `occupation_archetype_options` and the overall `theme`. Do not just state the archetype; describe the occupation.
+    *   `personality`: A brief (1-2 sentence) description of the victim's key personality traits. This description should be inspired by and thematically consistent with your SELECTED `personality_archetype_options` and the overall `theme`.
+    *   `cause_of_death`: The apparent or determined cause of death. This description should be inspired by and thematically consistent with your SELECTED `cause_of_death_options` and the overall `theme`.
+4.  Populate the explicit tracking fields with the exact string value of the option you selected in step 2:
+    *   `chosen_cause_of_death_category`: The exact string you selected from `cause_of_death_options`.
+    *   `chosen_occupation_archetype`: The exact string you selected from `occupation_archetype_options`.
+    *   `chosen_personality_archetype`: The exact string you selected from `personality_archetype_options`.
+5. Ensure the overall victim profile, including their implied circumstances, is coherent and thematically consistent.
 
 Output Format:
 - You MUST output your response as a single, valid JSON object that strictly conforms to the following Pydantic model schema (VictimProfile):
@@ -32,15 +51,33 @@ Output Format:
   `occupation: str` (The victim's occupation or primary role.)
   `personality: str` (A brief description of the victim's personality traits.)
   `cause_of_death: str` (The determined or apparent cause of death.)
+  `chosen_cause_of_death_category: Optional[str]` (The specific category of cause of death selected by the agent.)
+  `chosen_occupation_archetype: Optional[str]` (The specific occupation archetype selected by the agent for the victim.)
+  `chosen_personality_archetype: Optional[str]` (The specific personality archetype selected by the agent for the victim.)
 
-Example for theme "Noir Detective Agency":
-Output:
+Example for input:
 ```json
 {
-  "name": "Johnny 'Silas' Marlowe",
-  "occupation": "Private Investigator, Owner of 'The Shadowed Lens' Detective Agency",
-  "personality": "Cynical and world-weary, but with a hidden sense of justice. Known for his sharp wit and ability to blend into the city's underbelly.",
-  "cause_of_death": "Single gunshot wound to the chest, found slumped over his oak desk."
+  "theme": "Gothic Victorian Manor",
+  "attribute_options": {
+    "cause_of_death_options": ["Poisoning", "Fall from height", "Asphyxiation"],
+    "motive_category_options": ["Inheritance", "Forbidden Love", "Dark Secret"],
+    "occupation_archetype_options": ["Reclusive Scholar", "Wealthy Dowager", "Disgraced Doctor"],
+    "personality_archetype_options": ["Melancholy", "Manipulative", "Secretive"]
+  }
+}
+```
+
+Example of corresponding output (if "Fall from height", "Wealthy Dowager", and "Manipulative" were selected):
+```json
+{
+  "name": "Lady Beatrice Blackwood",
+  "occupation": "The elderly, and exceedingly wealthy, matriarch of Blackwood Manor. Known for her vast fortune and control over the family estate.",
+  "personality": "A woman of sharp intellect and a subtly manipulative nature, often pitting family members against each other for her amusement and to maintain her influence.",
+  "cause_of_death": "Found at the bottom of the grand staircase, a tragic fall that many whisper was no accident, given the frayed nerves and simmering resentments within the household.",
+  "chosen_cause_of_death_category": "Fall from height",
+  "chosen_occupation_archetype": "Wealthy Dowager",
+  "chosen_personality_archetype": "Manipulative"
 }
 ```
 Ensure all fields are populated and the JSON is correctly structured.
