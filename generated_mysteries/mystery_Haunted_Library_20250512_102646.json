@@ -1,0 +1,236 @@
+{
+  "theme": "Haunted Library",
+  "thematic_first_names": [
+    "Edgar",
+    "Mabel",
+    "Silas",
+    "Agatha",
+    "Barnaby",
+    "Lenora",
+    "Ambrose",
+    "Greta",
+    "Alaric",
+    "Ivy",
+    "Phineas",
+    "Eloise",
+    "Ebenezer",
+    "Hazel",
+    "Lucius",
+    "Miriam",
+    "Dorian",
+    "Beatrice",
+    "Thaddeus",
+    "Lavinia",
+    "Bram",
+    "Ophelia",
+    "Mortimer",
+    "Celeste",
+    "Ezekiel",
+    "Isolde",
+    "Cassius",
+    "Vera",
+    "Quentin",
+    "Rowena",
+    "Jasper",
+    "Coraline",
+    "Silvester",
+    "Minerva",
+    "Reuben",
+    "Selene",
+    "Ambrosia",
+    "Theodore",
+    "Raven",
+    "Felix",
+    "Marigold",
+    "Constantine",
+    "Delilah",
+    "Hester",
+    "Octavius",
+    "Pandora",
+    "Gideon",
+    "Elsa",
+    "Morton",
+    "Cecilia",
+    "Torin"
+  ],
+  "thematic_last_names": [
+    "Blackwood",
+    "Hawthorne",
+    "Grimsbane",
+    "Ashcroft",
+    "Darkmoor",
+    "Fairchild",
+    "Ravenwood",
+    "Winterbourne",
+    "Gravehurst",
+    "Thornfield",
+    "Crowley",
+    "Lockwood",
+    "Merrick",
+    "Bloodworth",
+    "Vandermeer",
+    "Nightshade",
+    "Briarcliff",
+    "Moonfall",
+    "Sable",
+    "Duskmoor",
+    "Wintergrave",
+    "Fallowmere",
+    "Mistwood",
+    "Shade",
+    "Coldwell",
+    "Wolfhart",
+    "Gallows",
+    "Fenwick",
+    "Halloway",
+    "Blackthorne",
+    "Ashenford",
+    "Silverquill",
+    "Barrow",
+    "Grimshaw",
+    "Wraithborne",
+    "Duskhaven",
+    "Crowhurst",
+    "Nightbloom",
+    "Rookwood",
+    "Stormrider",
+    "Ebonhart",
+    "Mothwing",
+    "Frostgrave",
+    "Hearthstone",
+    "Nocturne",
+    "Shadowend",
+    "Corbain",
+    "Larkspur",
+    "Ravenscar",
+    "Sablewood"
+  ],
+  "victim": {
+    "name": "Silas Mistwood",
+    "occupation": "A diligent engineering student specializing in restoration of ancient mechanical devices found within the haunted library’s hidden archives.",
+    "personality": "Idealistic and principled, Silas approached the mysteries of the library with honest curiosity, believing wholeheartedly in uncovering truth beneath the supernatural veil.",
+    "cause_of_death": "Discovered trapped in a spectral trap—an eerie phenomenon unique to the haunted library that drained his life force as he attempted to solve its secrets.",
+    "chosen_cause_of_death_category": "Thematically Unique (Something you'd only see in this theme)",
+    "chosen_occupation_archetype": "Engineer",
+    "chosen_personality_archetype": "Honest/Principled"
+  },
+  "suspects": [
+    {
+      "profile": {
+        "name": "Lucius Crowhurst",
+        "description": "A seasoned manual laborer with extensive knowledge of the library's ancient mechanisms, Lucius is pragmatic and extroverted, often seen coordinating repair crews within the haunted stacks.",
+        "relationship_to_victim": "Colleague assisting Silas with the restoration of mechanical devices.",
+        "chosen_motive_category": "Thrill / Excitement",
+        "chosen_occupation_archetype": "Manual Laborer/Tradesperson",
+        "chosen_personality_archetype": "Extroverted/Outgoing"
+      },
+      "original_mmo": {
+        "means": "Lucius manipulated the intricate levers and gears controlling the spectral trap within the haunted library's hidden archives, using his intimate knowledge of the mechanical systems to activate the deadly mechanism while Silas was investigating the device.",
+        "motive": "Craving excitement beyond his routine repair work, Lucius sought to test the supernatural legends firsthand and saw trapping Silas in the spectral mechanism as a thrilling challenge, driven by his extroverted desire to dominate the haunted environment.",
+        "opportunity": "As the coordinator of repair crews, Lucius had unsupervised access to the hidden archives during the restoration work and was present when Silas was examining the mechanical device, allowing him to trigger the spectral trap unnoticed."
+      },
+      "is_killer": true,
+      "modified_mmo_elements": []
+    },
+    {
+      "profile": {
+        "name": "Hazel Duskhaven",
+        "description": "A fellow engineering student, timid and somewhat naive, Hazel trusted Silas implicitly yet harbored doubts about the dangers lurking within the haunted library.",
+        "relationship_to_victim": "Study partner and apprentice in ancient mechanical restoration.",
+        "chosen_motive_category": "Accident / Manslaughter (to be covered up)",
+        "chosen_occupation_archetype": "Student",
+        "chosen_personality_archetype": "Naive/Gullible"
+      },
+      "original_mmo": {
+        "means": "Hazel unwittingly triggered the spectral trap by mishandling an ancient mechanical device they had been restoring together, which activated the library's eerie mechanism that drained Silas's life force.",
+        "motive": "Fearing she caused Silas's death through her carelessness, Hazel was desperate to cover up the accidental activation of the trap to protect herself from blame and guilt.",
+        "opportunity": "Hazel was alone with Silas in the hidden archives late at night, working side by side on the restoration project when the spectral trap was activated."
+      },
+      "is_killer": false,
+      "modified_mmo_elements": [
+        {
+          "element_type": "motive",
+          "original_element_description": "Fearing she caused Silas's death through her carelessness, Hazel was desperate to cover up the accidental activation of the trap to protect herself from blame and guilt.",
+          "modified_element_description": "Though worried about the trap activation, Hazel was more concerned with Silas's well-being and openly sought help to reverse the effects, showing no signs of wanting to cover anything up.",
+          "reason_for_modification": "By removing her desire to cover up the accident, her motive for concealment is invalidated, lessening suspicion of deliberate wrongdoing."
+        }
+      ]
+    },
+    {
+      "profile": {
+        "name": "Torin Blackthorne",
+        "description": "An earnest and principled engineer, Torin was competitive with Silas but respected his ideals, often debating the ethics of tampering with supernatural elements.",
+        "relationship_to_victim": "Friendly academic rival in engineering and restoration.",
+        "chosen_motive_category": "Mistaken Identity",
+        "chosen_occupation_archetype": "Engineer",
+        "chosen_personality_archetype": "Honest/Principled"
+      },
+      "original_mmo": {
+        "means": "Torin ingeniously manipulated the spectral trap's ancient mechanical components—devices both understood and respected by engineers skilled in restoration like himself—to activate it remotely, thereby causing Silas to be caught and drained of life force.",
+        "motive": "Torin intended to activate the trap to expose someone else tampering with forbidden knowledge, but mistakenly believed Silas was the saboteur threatening the integrity of their shared field and the library's secrets, leading to a fatal error in judgment.",
+        "opportunity": "Torin was working late alongside Silas in the hidden archives of the haunted library, where he had full access and ample time to discreetly trigger the spectral trap while Silas was engrossed in his investigation."
+      },
+      "is_killer": false,
+      "modified_mmo_elements": [
+        {
+          "element_type": "means",
+          "original_element_description": "Torin ingeniously manipulated the spectral trap's ancient mechanical components—devices both understood and respected by engineers skilled in restoration like himself—to activate it remotely, thereby causing Silas to be caught and drained of life force.",
+          "modified_element_description": "While Torin was familiar with the spectral trap's design from his engineering background, he lacked the specialized knowledge needed to safely or remotely activate its arcane mechanisms without triggering a fail-safe lock that would have prevented any harm.",
+          "reason_for_modification": "The fail-safe lock on the trap invalidates Torin's ability to manipulate it remotely, removing his means to cause Silas's death."
+        }
+      ]
+    }
+  ],
+  "evidence_items": [
+    {
+      "description": "Fingerprints of Lucius Crowhurst found on the critical control levers of the spectral trap mechanism, indicating direct physical interaction with the device shortly before Silas Mistwood's death.",
+      "related_suspect_name": "Lucius Crowhurst",
+      "points_to_mmo_element": "means",
+      "is_red_herring": false,
+      "connection_explanation": "Lucius's fingerprints on the controls prove he had the means to activate the deadly trap."
+    },
+    {
+      "description": "A personal journal entry by Lucius expressing boredom with routine repairs and a fascination with the haunted library's legends, outlining his plan to provoke a supernatural event.",
+      "related_suspect_name": "Lucius Crowhurst",
+      "points_to_mmo_element": "motive",
+      "is_red_herring": false,
+      "connection_explanation": "The journal reveals Lucius's craving for excitement and his motive to challenge Silas through the spectral trap."
+    },
+    {
+      "description": "Security logs and eyewitness accounts confirm Lucius was alone in the hidden archives at the time when Silas was trapped, showing he had the opportunity to trigger the mechanism without interruption.",
+      "related_suspect_name": "Lucius Crowhurst",
+      "points_to_mmo_element": "opportunity",
+      "is_red_herring": false,
+      "connection_explanation": "Lucius's unsupervised presence during the incident establishes his opportunity to commit the crime."
+    },
+    {
+      "description": "A torn page from a restoration manual was found near Hazel's workstation, with notes suggesting she was unsure about handling the device's delicate components.",
+      "related_suspect_name": "Hazel Duskhaven",
+      "points_to_mmo_element": "means",
+      "is_red_herring": true,
+      "connection_explanation": "This evidence suggests Hazel may have mishandled the device, implicating her in triggering the trap."
+    },
+    {
+      "description": "Witnesses recalled Hazel expressing deep concern and fear immediately after the trap activated, but also asking for assistance to save Silas rather than conceal the incident.",
+      "related_suspect_name": "Hazel Duskhaven",
+      "points_to_mmo_element": "motive",
+      "is_red_herring": true,
+      "connection_explanation": "Though her worry is genuine, initial appearances might misleadingly suggest she feared responsibility and sought to hide it."
+    },
+    {
+      "description": "A partially disassembled schematic of the spectral trap was found in Torin Blackthorne's work area, annotated with notes on its mechanical components and possible activation methods.",
+      "related_suspect_name": "Torin Blackthorne",
+      "points_to_mmo_element": "means",
+      "is_red_herring": true,
+      "connection_explanation": "This suggests Torin was studying the trap's mechanism and could have understood how to manipulate it."
+    },
+    {
+      "description": "Witnesses recall seeing Torin working late with Silas in the hidden archives on the night of the incident, providing him the chance to access and manipulate the spectral trap unnoticed.",
+      "related_suspect_name": "Torin Blackthorne",
+      "points_to_mmo_element": "opportunity",
+      "is_red_herring": true,
+      "connection_explanation": "His late presence alongside Silas gives him the opportunity to activate the trap."
+    }
+  ],
+  "author_notes": null
+}

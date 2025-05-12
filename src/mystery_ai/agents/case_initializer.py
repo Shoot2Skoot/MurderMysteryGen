@@ -54,8 +54,8 @@ Task:
     - Combine these to form the victim's full name
 4.  Based on the `theme`, your selected options, and the chosen name, generate the following details for the victim:
     *   `name`: The combined first and last name you selected from the thematic name lists.
-    *   `occupation`: The victim's occupation. This description should be inspired by and thematically consistent with your SELECTED `occupation_archetype_options` and the overall `theme`. Do not just state the archetype; describe the occupation.
-    *   `personality`: A brief (1-2 sentence) description of the victim's key personality traits. This description should be inspired by and thematically consistent with your SELECTED `personality_archetype_options` and the overall `theme`.
+    *   `occupation`: The victim's occupation. This description should be thematically consistent with the overall `theme`. It must be *inspired by* your SELECTED `occupation_archetype_options` but ***do not simply restate the archetype***. Instead, weave its essence into a unique, descriptive narrative about the victim's role or job. For example, if the archetype is 'Reclusive Scholar' for a "Gothic Victorian Manor" theme, the occupation might be 'The enigmatic historian of Blackwood Manor, rarely seen outside the sprawling, cobweb-laden library he curated.'
+    *   `personality`: A brief (1-2 sentence) description of the victim's key personality traits. This description should be thematically consistent with the overall `theme`. It must be *inspired by* your SELECTED `personality_archetype_options` but ***do not simply restate the archetype***. Instead, use it as a foundation to describe their character in a vivid way. For instance, if the archetype is 'Manipulative', the personality could be 'A woman of sharp intellect and a subtly persuasive nature, often guiding conversations and influencing those around her with an almost uncanny grace.'
     *   `cause_of_death`: The apparent or determined cause of death. This description should be inspired by and thematically consistent with your SELECTED `cause_of_death_options` and the overall `theme`.
 5.  Populate the explicit tracking fields with the exact string value of the option you selected in step 2:
     *   `chosen_cause_of_death_category`: The exact string you selected from `cause_of_death_options`.
@@ -94,8 +94,8 @@ Example of corresponding output (if "Fall from height", "Wealthy Dowager", and "
 ```json
 {
   "name": "Beatrice Blackwood",
-  "occupation": "The elderly, and exceedingly wealthy, matriarch of Blackwood Manor. Known for her vast fortune and control over the family estate.",
-  "personality": "A woman of sharp intellect and a subtly manipulative nature, often pitting family members against each other for her amusement and to maintain her influence.",
+  "occupation": "The elderly matriarch of Blackwood Manor, whose immense wealth and control over the family estate were as legendary as her secluded lifestyle within its ancient walls.",
+  "personality": "A woman of formidable intellect and a subtly manipulative charm, Beatrice was known to orchestrate family affairs from the shadows, her influence felt more often than her presence.",
   "cause_of_death": "Found at the bottom of the grand staircase, a tragic fall that many whisper was no accident, given the frayed nerves and simmering resentments within the household.",
   "chosen_cause_of_death_category": "Fall from height",
   "chosen_occupation_archetype": "Wealthy Dowager",

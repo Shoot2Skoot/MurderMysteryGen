@@ -33,24 +33,22 @@ class VictimProfile(BaseModel):
 
 
 class SuspectProfile(BaseModel):
-    """Represents the profile of a suspect, distinct from their MMO."""
+    """Defines the profile of a suspect, including their name, description, and relationship to the victim."""
 
     name: str = Field(description="Full name of the suspect.")
-    description: str = Field(
-        description="A brief description of the suspect (e.g., archetype, key characteristics)."
-    )
+    description: str = Field(description="A brief description of the suspect.")
     relationship_to_victim: str = Field(description="The suspect's relationship to the victim.")
+    chosen_motive_category: Optional[str] = Field(
+        default=None,
+        description="The specific motive category selected by the agent for this suspect."
+    )
     chosen_occupation_archetype: Optional[str] = Field(
         default=None,
-        description="The specific occupation archetype selected by the agent for the suspect, if applicable.",
+        description="The specific occupation archetype selected by the agent for this suspect."
     )
     chosen_personality_archetype: Optional[str] = Field(
         default=None,
-        description="The specific personality archetype selected by the agent for the suspect, if applicable.",
-    )
-    chosen_motive_category: Optional[str] = Field(
-        default=None,
-        description="The specific motive category selected by the agent for this suspect.",
+        description="The specific personality archetype selected by the agent for this suspect."
     )
 
 

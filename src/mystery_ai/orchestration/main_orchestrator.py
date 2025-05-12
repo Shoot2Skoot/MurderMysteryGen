@@ -280,7 +280,7 @@ def _run_case_initialization_stage(
 
 
 def _run_suspect_mmo_generation_stage(
-    case_context: CaseContext, motive_options: List[str]
+    case_context: CaseContext, attribute_options: dict
 ) -> bool:
     """Runs suspect generation and MMO generation for each suspect."""
     logger.info("[Orchestrator] === Stage: Suspect & MMO Generation (Epic 2) ===")
@@ -305,7 +305,9 @@ def _run_suspect_mmo_generation_stage(
         suspect_gen_input_dict = {
             "theme": case_context.theme,
             "victim": case_context.victim.model_dump(),
-            "motive_category_options": motive_options,
+            "motive_category_options": attribute_options.get("motive_category_options", []),
+            "occupation_archetype_options": attribute_options.get("occupation_archetype_options", []),
+            "personality_archetype_options": attribute_options.get("personality_archetype_options", []),
             "thematic_names": {
                 "first_names": sampled_first,
                 "last_names": sampled_last,
@@ -391,14 +393,14 @@ def _run_killer_mod_evidence_stage(case_context: CaseContext) -> bool:
             logger.info("  Chosen Motive: %s", suspect.profile.chosen_motive_category)
             if suspect.profile.chosen_occupation_archetype:
                 logger.info(
-                    "  Chosen Occupation: %s",
-                    suspect.profile.chosen_occupation_archetype
-                )
+                     "  Chosen Occupation: %s",
+                     suspect.profile.chosen_occupation_archetype
+                 )
             if suspect.profile.chosen_personality_archetype:
                 logger.info(
-                    "  Chosen Personality: %s",
-                    suspect.profile.chosen_personality_archetype
-                )
+                     "  Chosen Personality: %s",
+                     suspect.profile.chosen_personality_archetype
+                 )
 
             if not suspect.is_killer:
                 logger.info("Modifying MMO for non-killer: %s", suspect.profile.name)
@@ -532,12 +534,11 @@ def run_generation_pipeline(
         return None
     # Linter might still complain here due to complex type inference
     victim_name = getattr(case_context.victim, 'name', 'UNKNOWN')
-    logger.info("Stage complete: Victim '%s' generated.", victim_name)
+    logger.info(f"Stage complete: Victim '{victim_name}' generated.")
 
 
     # Stage: Suspect & MMO Generation
-    motive_options = attribute_options.get("motive_category_options", [])
-    if not _run_suspect_mmo_generation_stage(case_context, motive_options):
+    if not _run_suspect_mmo_generation_stage(case_context, attribute_options):
         logger.error("Suspect/MMO generation stage failed. Aborting pipeline.")
         return None
     if not case_context.suspects: # Double check after stage completion
