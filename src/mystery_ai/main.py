@@ -9,7 +9,6 @@ import argparse
 import logging
 import os
 import uuid
-from typing import Optional
 
 from dotenv import load_dotenv
 
@@ -18,7 +17,8 @@ from .orchestration.main_orchestrator import run_generation_pipeline
 # Set up OpenAI Agents tracing if needed
 has_trace = False
 try:
-    from agents import trace
+    import agents
+
     has_trace = True
 except ImportError:
     # OpenAI Agents SDK not available
@@ -81,7 +81,9 @@ def main():
     # Check for OPENAI_API_KEY
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
-        logger.error("OPENAI_API_KEY not found in environment variables. Please set it in the .env file.")
+        logger.error(
+            "OPENAI_API_KEY not found in environment variables. Please set it in the .env file."
+        )
         return 1
 
     # Setup trace_id for debugging/tracking if using the OpenAI Agents SDK
@@ -93,7 +95,7 @@ def main():
     try:
         logger.info("Starting mystery generation with theme: %s", args.theme)
         case_context = run_generation_pipeline(theme=args.theme, trace_id=trace_id)
-        
+
         if case_context:
             logger.info("Mystery generation completed successfully!")
             return 0

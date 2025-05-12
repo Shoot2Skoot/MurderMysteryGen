@@ -4,7 +4,7 @@
 Evidence Generator Agent for the Murder Mystery Generation system.
 
 This module defines the Evidence Generator Agent, which is responsible for creating
-evidence items that point to suspects in the mystery. For each suspect, it generates 
+evidence items that point to suspects in the mystery. For each suspect, it generates
 plausible evidence items related to their means, motive, or opportunity, with
 appropriate consideration for whether they are the actual killer.
 """

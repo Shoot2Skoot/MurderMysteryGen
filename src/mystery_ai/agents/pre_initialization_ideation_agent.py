@@ -9,9 +9,9 @@ These names are used for victims and suspects, ensuring consistent theming throu
 the mystery.
 """
 
-from typing import List, Optional
+from typing import List
 
-from agents import Agent, ModelSettings
+from agents import Agent
 from pydantic import BaseModel, Field
 
 

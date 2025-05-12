@@ -3,18 +3,17 @@
 """
 MMO Modifier Agent for the Murder Mystery Generation system.
 
-This module defines the MMO Modifier Agent, which is responsible for taking a non-killer 
+This module defines the MMO Modifier Agent, which is responsible for taking a non-killer
 suspect's original MMO (Means, Motive, Opportunity) and modifying one element to make it less
 plausible. This helps create red herrings and ensures the mystery has a solvable solution
 by weakening non-killer suspects' cases.
 """
 
-import random
-from typing import Any, Dict, List
+from typing import Dict
 
 from agents import Agent
 
-from ..core.data_models import MMOElementType, ModifiedMMOElement, Suspect, VictimProfile
+from ..core.data_models import ModifiedMMOElement, Suspect
 
 # This instruction tells the agent how to interpret the dictionary it receives as input.
 MMO_MODIFIER_AGENT_INSTRUCTIONS = """
@@ -68,10 +67,10 @@ mmo_modifier_agent = Agent(
 def prepare_mmo_modification_input(suspect: Suspect) -> Dict:
     """
     Prepare the input for the MMO Modifier Agent.
-    
+
     Args:
         suspect: The suspect whose MMO needs modification
-        
+
     Returns:
         Dictionary containing the suspect's profile and original MMO information
     """

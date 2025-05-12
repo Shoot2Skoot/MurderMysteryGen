@@ -153,7 +153,7 @@ class CaseContext(BaseModel):
     def get_killer(self) -> Optional[Suspect]:
         """
         Finds and returns the killer from the list of suspects.
-        
+
         Returns:
             The suspect marked as the killer, or None if no killer is found or no suspects exist.
         """

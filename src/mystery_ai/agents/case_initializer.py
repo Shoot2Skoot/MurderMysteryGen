@@ -2,7 +2,7 @@
 Case Initialization Agent for the Murder Mystery Generation system.
 
 This module defines the Case Initialization Agent, which is responsible for generating
-the initial victim profile based on the theme and selected attributes. It generates 
+the initial victim profile based on the theme and selected attributes. It generates
 a plausible victim with a name, occupation, personality, and cause of death that are
 thematically consistent.
 """
@@ -20,7 +20,8 @@ from ..core.data_models import VictimProfile
 
 # Instructions for the agent:
 # - It will receive a theme (e.g., "Cyberpunk", "Haunted Mansion").
-# - Its goal is to generate plausible victim details: Name, Occupation, Personality, and Cause of Death.
+# - Its goal is to generate plausible victim details: Name, Occupation,
+#   Personality, and Cause of Death.
 # - These details must be consistent with the provided theme.
 # - The output must be a JSON object matching the VictimProfile schema.
 
@@ -134,7 +135,8 @@ if __name__ == "__main__":
     dotenv_path = os.path.join(project_root, ".env")
     if not os.path.exists(dotenv_path):
         print(
-            "Error: .env file not found. Please create one in the project root (MurderMysteryGen/) with your OPENAI_API_KEY."
+            "Error: .env file not found. Please create one in the project root "
+            "(MurderMysteryGen/) with your OPENAI_API_KEY."
         )
     else:
         load_dotenv(dotenv_path=dotenv_path)
@@ -200,7 +202,8 @@ if __name__ == "__main__":
             print(f"\nTesting CaseInitializationAgent with theme: {test_input['theme']}")
             # Simply mention that we have names without trying to display them
             print(
-                f"Using thematically appropriate first and last names for '{test_input['theme']}'..."
+                f"Using thematically appropriate first and last names for "
+                f"'{test_input['theme']}'..."
             )
 
             try:
@@ -216,7 +219,8 @@ if __name__ == "__main__":
                     print(victim_profile.model_dump_json(indent=2))
                     print(f"\nSelected victim name: {victim_profile.name}")
                     print(
-                        f"Selected cause of death: {victim_profile.chosen_cause_of_death_category}"
+                        f"Selected CoD category: "
+                        f"{victim_profile.chosen_cause_of_death_category}"
                     )
                     print(f"Selected occupation: {victim_profile.chosen_occupation_archetype}")
                     print(f"Selected personality: {victim_profile.chosen_personality_archetype}")

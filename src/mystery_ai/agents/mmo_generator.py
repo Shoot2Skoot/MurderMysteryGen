@@ -5,7 +5,7 @@ MMO Generator Agent for the Murder Mystery Generation system.
 
 This module defines the MMO (Means, Motive, Opportunity) Generator Agent, which is
 responsible for creating plausible means, motives, and opportunities for each suspect.
-These elements form the core of the mystery's logic and provide the foundation for the 
+These elements form the core of the mystery's logic and provide the foundation for the
 suspect's potential involvement in the crime.
 """
 
