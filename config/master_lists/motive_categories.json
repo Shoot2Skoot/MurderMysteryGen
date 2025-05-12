@@ -2,10 +2,19 @@
   "motive_categories": [
     "Revenge",
     "Financial Gain",
-    "Jealousy/Passion",
-    "Fear/Self-preservation",
-    "Ideological Differences",
-    "Accidental/Manslaughter",
-    "Cover-up (silencing a witness/preventing exposure)"
+    "Passion / Jealousy",
+    "Fear / Self-preservation",
+    "Ideology / Principle",
+    "Accident / Manslaughter (to be covered up)",
+    "Power / Control",
+    "Protecting a Secret",
+    "Thrill / Excitement",
+    "Mercy Killing / Euthanasia",
+    "Mistaken Identity",
+    "Eliminating a Rival (Professional or Personal)",
+    "Desperation (e.g., to escape debt or dire situation)",
+    "Blackmail / Extortion gone wrong",
+    "Obsession / Stalking",
+    "Inheritance"
   ]
 } 

@@ -14,6 +14,21 @@
     "Unemployed",
     "Retired",
     "Politician/Public Figure",
-    "Educator/Teacher"
+    "Educator/Teacher",
+    "Athlete/Sports Professional",
+    "Chef/Cook",
+    "Clergy/Religious Figure",
+    "Construction Worker",
+    "Detective/Private Investigator",
+    "Engineer",
+    "Farmer/Agricultural Worker",
+    "Fashion Designer",
+    "Firefighter",
+    "Journalist/Reporter",
+    "Judge/Lawyer",
+    "Librarian/Archivist",
+    "Mechanic",
+    "Musician (Classical/Jazz/Rock etc.)",
+    "Pilot/Flight Attendant"
   ]
 } 

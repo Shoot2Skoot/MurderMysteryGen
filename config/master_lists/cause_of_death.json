@@ -1,6 +1,6 @@
 {
   "causes_of_death": [
-    "Allergic Reaction",
+    "Induced Allergic Reaction",
     "Airborne Toxin",
     "Arson/Fire/Burned/Incinerated",
     "Blunt Force Trauma",
@@ -8,7 +8,7 @@
     "Crushing (Falling Object)",
     "Environmental (Drowning, Hypothermia, Hyperthermia, other adverse conditions)",
     "Environmental Sabotage (Disabled Safety Mechanism/Sabotaged Safety Equipment)",
-    "Environmental Sabotage (Electrocution)",
+    "Environmental Sabotage (Planned Technical Malfunction/Electrocution/)",
     "Environmental Sabotage (Falling Object)",
     "Environmental Sabotage (Mechanical Failure)",
     "Explosion",
@@ -18,10 +18,13 @@
     "Nerve Agent",
     "Poisoning",
     "Pushed from a Height",
-    "Shooting",
+    "Shooting (Bullet)",
+    "Shooting (Arrow)",
     "Smothering",
     "Stabbing",
     "Strangulation",
-    "Swapped Medication"
+    "Swapped Medication",
+    "Thematically Unique (Something you'd only see in this theme)",
+    "Unique Weapon"
   ]
 } 
