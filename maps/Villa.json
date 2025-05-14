@@ -1,0 +1,1056 @@
+[
+    {
+        "location_id": "loc_green",
+        "name": "The Green Room",
+        "description": "The Green.",
+        "connected_location_ids": [
+            "loc_c1"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_batha",
+            "loc_beach",
+            "loc_c2",
+            "loc_c3",
+            "loc_c4",
+            "loc_ocean"
+        ]
+    },
+    {
+        "location_id": "loc_ocean",
+        "name": "The Ocean Room",
+        "description": "The Ocean.",
+        "connected_location_ids": [
+            "loc_c1"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_batha",
+            "loc_beach",
+            "loc_c2",
+            "loc_c3",
+            "loc_c4",
+            "loc_green"
+        ]
+    },
+    {
+        "location_id": "loc_beach",
+        "name": "The Beach Room",
+        "description": "The Beach.",
+        "connected_location_ids": [
+            "loc_c1"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [
+            "loc_garden"
+        ],
+        "can_be_heard_from_ids": [
+            "loc_batha",
+            "loc_c2",
+            "loc_c3",
+            "loc_c4",
+            "loc_green",
+            "loc_ocean"
+        ]
+    },
+    {
+        "location_id": "loc_yoga",
+        "name": "Yoga Studio",
+        "description": "The Yoga.",
+        "connected_location_ids": [
+            "loc_c4"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_bathd",
+            "loc_c1",
+            "loc_c2",
+            "loc_c3",
+            "loc_c5",
+            "loc_game",
+            "loc_night",
+            "loc_pool"
+        ]
+    },
+    {
+        "location_id": "loc_game",
+        "name": "Game Room",
+        "description": "The Game.",
+        "connected_location_ids": [
+            "loc_c4",
+            "loc_c6",
+            "loc_c7",
+            "loc_c8"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_ballroom",
+            "loc_bathb",
+            "loc_bathc",
+            "loc_bathd",
+            "loc_c1",
+            "loc_c10",
+            "loc_c2",
+            "loc_c3",
+            "loc_c5",
+            "loc_c9",
+            "loc_courtyard",
+            "loc_dining",
+            "loc_lounge",
+            "loc_night",
+            "loc_pool",
+            "loc_yoga"
+        ]
+    },
+    {
+        "location_id": "loc_sauna",
+        "name": "Sauna",
+        "description": "The Sauna.",
+        "connected_location_ids": [
+            "loc_pool"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_c4"
+        ]
+    },
+    {
+        "location_id": "loc_pool",
+        "name": "Pool",
+        "description": "The Pool.",
+        "connected_location_ids": [
+            "loc_c4",
+            "loc_sauna"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_bathd",
+            "loc_c1",
+            "loc_c2",
+            "loc_c3",
+            "loc_c5",
+            "loc_game",
+            "loc_night",
+            "loc_yoga"
+        ]
+    },
+    {
+        "location_id": "loc_lounge",
+        "name": "Lounge",
+        "description": "The Lounge.",
+        "connected_location_ids": [
+            "loc_c8",
+            "loc_closetb"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_ballroom",
+            "loc_c10",
+            "loc_c5",
+            "loc_c6",
+            "loc_c7",
+            "loc_c9",
+            "loc_game"
+        ]
+    },
+    {
+        "location_id": "loc_night",
+        "name": "The Night Room",
+        "description": "The Night.",
+        "connected_location_ids": [
+            "loc_c4",
+            "loc_c5",
+            "loc_closetc"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_bathd",
+            "loc_c1",
+            "loc_c10",
+            "loc_c2",
+            "loc_c3",
+            "loc_c8",
+            "loc_c9",
+            "loc_game",
+            "loc_mount",
+            "loc_pool",
+            "loc_yoga"
+        ]
+    },
+    {
+        "location_id": "loc_mount",
+        "name": "The Mount Room",
+        "description": "The Mount.",
+        "connected_location_ids": [
+            "loc_c5"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_c10",
+            "loc_c4",
+            "loc_c8",
+            "loc_c9",
+            "loc_night"
+        ]
+    },
+    {
+        "location_id": "loc_library",
+        "name": "Library",
+        "description": "The Library.",
+        "connected_location_ids": [
+            "loc_c10",
+            "loc_hall"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_c14",
+            "loc_c5",
+            "loc_c8",
+            "loc_c9",
+            "loc_conservatory",
+            "loc_courtyard",
+            "loc_entrance"
+        ]
+    },
+    {
+        "location_id": "loc_ballroom",
+        "name": "Ballroom",
+        "description": "The Ballroom.",
+        "connected_location_ids": [
+            "loc_c8",
+            "loc_courtyard"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_c10",
+            "loc_c11",
+            "loc_c12",
+            "loc_c14",
+            "loc_c5",
+            "loc_c6",
+            "loc_c7",
+            "loc_c9",
+            "loc_closete",
+            "loc_conservatory",
+            "loc_game",
+            "loc_hall",
+            "loc_kitchen",
+            "loc_lounge",
+            "loc_mineral"
+        ]
+    },
+    {
+        "location_id": "loc_dining",
+        "name": "Dining Room",
+        "description": "The Dining.",
+        "connected_location_ids": [
+            "loc_c7",
+            "loc_closeta"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [
+            "loc_garden"
+        ],
+        "can_be_heard_from_ids": [
+            "loc_c6",
+            "loc_c8",
+            "loc_courtyard",
+            "loc_game"
+        ]
+    },
+    {
+        "location_id": "loc_kitchen",
+        "name": "Kitchen",
+        "description": "The Kitchen.",
+        "connected_location_ids": [
+            "loc_courtyard"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [
+            "loc_garden"
+        ],
+        "can_be_heard_from_ids": [
+            "loc_ballroom",
+            "loc_c11",
+            "loc_c12",
+            "loc_c14",
+            "loc_c7",
+            "loc_c9",
+            "loc_closete",
+            "loc_conservatory",
+            "loc_hall",
+            "loc_mineral"
+        ]
+    },
+    {
+        "location_id": "loc_courtyard",
+        "name": "Courtyard",
+        "description": "The Courtyard.",
+        "connected_location_ids": [
+            "loc_ballroom",
+            "loc_c11",
+            "loc_c12",
+            "loc_c14",
+            "loc_c7",
+            "loc_c9",
+            "loc_closete",
+            "loc_conservatory",
+            "loc_hall",
+            "loc_kitchen",
+            "loc_mineral"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_c10",
+            "loc_c13",
+            "loc_c5",
+            "loc_c6",
+            "loc_c8",
+            "loc_dining",
+            "loc_entrance",
+            "loc_game",
+            "loc_garden",
+            "loc_library",
+            "loc_masterbed",
+            "loc_staff",
+            "loc_study"
+        ]
+    },
+    {
+        "location_id": "loc_hall",
+        "name": "Hall",
+        "description": "The Hall.",
+        "connected_location_ids": [
+            "loc_c14",
+            "loc_c9",
+            "loc_conservatory",
+            "loc_courtyard",
+            "loc_entrance",
+            "loc_library"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_ballroom",
+            "loc_c10",
+            "loc_c11",
+            "loc_c12",
+            "loc_c13",
+            "loc_c5",
+            "loc_c7",
+            "loc_c8",
+            "loc_closete",
+            "loc_kitchen",
+            "loc_mineral",
+            "loc_staff"
+        ]
+    },
+    {
+        "location_id": "loc_entrance",
+        "name": "Entrance",
+        "description": "The Entrance.",
+        "connected_location_ids": [
+            "loc_hall"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_c14",
+            "loc_c9",
+            "loc_conservatory",
+            "loc_courtyard",
+            "loc_library"
+        ]
+    },
+    {
+        "location_id": "loc_garden",
+        "name": "Walled Garden",
+        "description": "The Garden.",
+        "connected_location_ids": [
+            "loc_c11"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [
+            "loc_beach",
+            "loc_dining",
+            "loc_kitchen",
+            "loc_masterbed"
+        ],
+        "can_be_heard_from_ids": [
+            "loc_courtyard",
+            "loc_masterbed"
+        ]
+    },
+    {
+        "location_id": "loc_masterbed",
+        "name": "Master Bedroom",
+        "description": "The MasterBed.",
+        "connected_location_ids": [
+            "loc_bathmaster",
+            "loc_c11"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [
+            "loc_garden"
+        ],
+        "can_be_heard_from_ids": [
+            "loc_courtyard",
+            "loc_garden"
+        ]
+    },
+    {
+        "location_id": "loc_study",
+        "name": "Study",
+        "description": "The Study.",
+        "connected_location_ids": [
+            "loc_c13",
+            "loc_mineral"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_c12",
+            "loc_c14",
+            "loc_courtyard",
+            "loc_staff"
+        ]
+    },
+    {
+        "location_id": "loc_mineral",
+        "name": "Mineral Room",
+        "description": "The Mineral.",
+        "connected_location_ids": [
+            "loc_c13",
+            "loc_courtyard",
+            "loc_study"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_ballroom",
+            "loc_c11",
+            "loc_c12",
+            "loc_c14",
+            "loc_c7",
+            "loc_c9",
+            "loc_closete",
+            "loc_conservatory",
+            "loc_hall",
+            "loc_kitchen",
+            "loc_staff"
+        ]
+    },
+    {
+        "location_id": "loc_staff",
+        "name": "Staff Quarters",
+        "description": "The Staff.",
+        "connected_location_ids": [
+            "loc_c13",
+            "loc_c14"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_c12",
+            "loc_conservatory",
+            "loc_courtyard",
+            "loc_hall",
+            "loc_mineral",
+            "loc_study"
+        ]
+    },
+    {
+        "location_id": "loc_conservatory",
+        "name": "Conservatory",
+        "description": "The Conservatory.",
+        "connected_location_ids": [
+            "loc_c14",
+            "loc_courtyard",
+            "loc_hall"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_ballroom",
+            "loc_c11",
+            "loc_c12",
+            "loc_c13",
+            "loc_c7",
+            "loc_c9",
+            "loc_closete",
+            "loc_entrance",
+            "loc_kitchen",
+            "loc_library",
+            "loc_mineral",
+            "loc_staff"
+        ]
+    },
+    {
+        "location_id": "loc_batha",
+        "name": "Guest Bathroom A",
+        "description": "The BathA.",
+        "connected_location_ids": [
+            "loc_c1"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_beach",
+            "loc_c2",
+            "loc_c3",
+            "loc_c4",
+            "loc_green",
+            "loc_ocean"
+        ]
+    },
+    {
+        "location_id": "loc_bathb",
+        "name": "Guest Bathroom B",
+        "description": "The BathB.",
+        "connected_location_ids": [
+            "loc_bathc",
+            "loc_c3",
+            "loc_c6"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_c1",
+            "loc_c2",
+            "loc_c4",
+            "loc_c7",
+            "loc_c8",
+            "loc_game"
+        ]
+    },
+    {
+        "location_id": "loc_bathc",
+        "name": "Guest Bathroom C",
+        "description": "The BathC.",
+        "connected_location_ids": [
+            "loc_bathb",
+            "loc_c3",
+            "loc_c6"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_c1",
+            "loc_c2",
+            "loc_c4",
+            "loc_c7",
+            "loc_c8",
+            "loc_game"
+        ]
+    },
+    {
+        "location_id": "loc_bathd",
+        "name": "Guest Bathroom D",
+        "description": "The BathD.",
+        "connected_location_ids": [
+            "loc_c4"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_c1",
+            "loc_c2",
+            "loc_c3",
+            "loc_c5",
+            "loc_game",
+            "loc_night",
+            "loc_pool",
+            "loc_yoga"
+        ]
+    },
+    {
+        "location_id": "loc_bathmaster",
+        "name": "Master Bathroom",
+        "description": "The BathMaster.",
+        "connected_location_ids": [
+            "loc_masterbed"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_c11"
+        ]
+    },
+    {
+        "location_id": "loc_closeta",
+        "name": "Closet A",
+        "description": "The ClosetA.",
+        "connected_location_ids": [
+            "loc_dining"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_c7"
+        ]
+    },
+    {
+        "location_id": "loc_closetb",
+        "name": "Closet B",
+        "description": "The ClosetB.",
+        "connected_location_ids": [
+            "loc_lounge"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_c8"
+        ]
+    },
+    {
+        "location_id": "loc_closetc",
+        "name": "Closet C",
+        "description": "The ClosetC.",
+        "connected_location_ids": [
+            "loc_night"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_c4",
+            "loc_c5"
+        ]
+    },
+    {
+        "location_id": "loc_closetd",
+        "name": "Closet D",
+        "description": "The ClosetD.",
+        "connected_location_ids": [],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": []
+    },
+    {
+        "location_id": "loc_closete",
+        "name": "Closet E",
+        "description": "The ClosetE.",
+        "connected_location_ids": [
+            "loc_courtyard"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_ballroom",
+            "loc_c11",
+            "loc_c12",
+            "loc_c14",
+            "loc_c7",
+            "loc_c9",
+            "loc_conservatory",
+            "loc_hall",
+            "loc_kitchen",
+            "loc_mineral"
+        ]
+    },
+    {
+        "location_id": "loc_c1",
+        "name": "Corridor 1",
+        "description": "The c1.",
+        "connected_location_ids": [
+            "loc_batha",
+            "loc_beach",
+            "loc_c2",
+            "loc_c3",
+            "loc_c4",
+            "loc_green",
+            "loc_ocean"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_bathb",
+            "loc_bathc",
+            "loc_bathd",
+            "loc_c5",
+            "loc_c6",
+            "loc_game",
+            "loc_night",
+            "loc_pool",
+            "loc_yoga"
+        ]
+    },
+    {
+        "location_id": "loc_c2",
+        "name": "Corridor 2",
+        "description": "The c2.",
+        "connected_location_ids": [
+            "loc_c1",
+            "loc_c3",
+            "loc_c4"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_batha",
+            "loc_bathb",
+            "loc_bathc",
+            "loc_bathd",
+            "loc_beach",
+            "loc_c5",
+            "loc_c6",
+            "loc_game",
+            "loc_green",
+            "loc_night",
+            "loc_ocean",
+            "loc_pool",
+            "loc_yoga"
+        ]
+    },
+    {
+        "location_id": "loc_c3",
+        "name": "c3",
+        "description": "The c3.",
+        "connected_location_ids": [
+            "loc_bathb",
+            "loc_bathc",
+            "loc_c1",
+            "loc_c2",
+            "loc_c4",
+            "loc_c6"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_batha",
+            "loc_bathd",
+            "loc_beach",
+            "loc_c5",
+            "loc_c7",
+            "loc_c8",
+            "loc_game",
+            "loc_green",
+            "loc_night",
+            "loc_ocean",
+            "loc_pool",
+            "loc_yoga"
+        ]
+    },
+    {
+        "location_id": "loc_c4",
+        "name": "Corridor 4",
+        "description": "The c4.",
+        "connected_location_ids": [
+            "loc_bathd",
+            "loc_c1",
+            "loc_c2",
+            "loc_c3",
+            "loc_c5",
+            "loc_game",
+            "loc_night",
+            "loc_pool",
+            "loc_yoga"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_batha",
+            "loc_bathb",
+            "loc_bathc",
+            "loc_beach",
+            "loc_c10",
+            "loc_c6",
+            "loc_c7",
+            "loc_c8",
+            "loc_c9",
+            "loc_closetc",
+            "loc_green",
+            "loc_mount",
+            "loc_ocean",
+            "loc_sauna"
+        ]
+    },
+    {
+        "location_id": "loc_c5",
+        "name": "Corridor 5",
+        "description": "The c5.",
+        "connected_location_ids": [
+            "loc_c10",
+            "loc_c4",
+            "loc_c8",
+            "loc_c9",
+            "loc_mount",
+            "loc_night"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_ballroom",
+            "loc_bathd",
+            "loc_c1",
+            "loc_c2",
+            "loc_c3",
+            "loc_c6",
+            "loc_c7",
+            "loc_closetc",
+            "loc_courtyard",
+            "loc_game",
+            "loc_hall",
+            "loc_library",
+            "loc_lounge",
+            "loc_pool",
+            "loc_yoga"
+        ]
+    },
+    {
+        "location_id": "loc_c6",
+        "name": "Corridor 6",
+        "description": "The c6.",
+        "connected_location_ids": [
+            "loc_bathb",
+            "loc_bathc",
+            "loc_c3",
+            "loc_c7",
+            "loc_c8",
+            "loc_game"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_ballroom",
+            "loc_c1",
+            "loc_c10",
+            "loc_c2",
+            "loc_c4",
+            "loc_c5",
+            "loc_c9",
+            "loc_courtyard",
+            "loc_dining",
+            "loc_lounge"
+        ]
+    },
+    {
+        "location_id": "loc_c7",
+        "name": "Corridor 7",
+        "description": "The c7.",
+        "connected_location_ids": [
+            "loc_c6",
+            "loc_c8",
+            "loc_courtyard",
+            "loc_dining",
+            "loc_game"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_ballroom",
+            "loc_bathb",
+            "loc_bathc",
+            "loc_c10",
+            "loc_c11",
+            "loc_c12",
+            "loc_c14",
+            "loc_c3",
+            "loc_c4",
+            "loc_c5",
+            "loc_c9",
+            "loc_closeta",
+            "loc_closete",
+            "loc_conservatory",
+            "loc_hall",
+            "loc_kitchen",
+            "loc_lounge",
+            "loc_mineral"
+        ]
+    },
+    {
+        "location_id": "loc_c8",
+        "name": "Corridor 8",
+        "description": "The c8.",
+        "connected_location_ids": [
+            "loc_ballroom",
+            "loc_c10",
+            "loc_c5",
+            "loc_c6",
+            "loc_c7",
+            "loc_c9",
+            "loc_game",
+            "loc_lounge"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_bathb",
+            "loc_bathc",
+            "loc_c3",
+            "loc_c4",
+            "loc_closetb",
+            "loc_courtyard",
+            "loc_dining",
+            "loc_hall",
+            "loc_library",
+            "loc_mount",
+            "loc_night"
+        ]
+    },
+    {
+        "location_id": "loc_c9",
+        "name": "Corridor 9",
+        "description": "The c9.",
+        "connected_location_ids": [
+            "loc_c10",
+            "loc_c5",
+            "loc_c8",
+            "loc_courtyard",
+            "loc_hall"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_ballroom",
+            "loc_c11",
+            "loc_c12",
+            "loc_c14",
+            "loc_c4",
+            "loc_c6",
+            "loc_c7",
+            "loc_closete",
+            "loc_conservatory",
+            "loc_entrance",
+            "loc_game",
+            "loc_kitchen",
+            "loc_library",
+            "loc_lounge",
+            "loc_mineral",
+            "loc_mount",
+            "loc_night"
+        ]
+    },
+    {
+        "location_id": "loc_c10",
+        "name": "Corridor 10",
+        "description": "The c10.",
+        "connected_location_ids": [
+            "loc_c5",
+            "loc_c8",
+            "loc_c9",
+            "loc_library"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_ballroom",
+            "loc_c4",
+            "loc_c6",
+            "loc_c7",
+            "loc_courtyard",
+            "loc_game",
+            "loc_hall",
+            "loc_lounge",
+            "loc_mount",
+            "loc_night"
+        ]
+    },
+    {
+        "location_id": "loc_c11",
+        "name": "Corridor 11",
+        "description": "The c11.",
+        "connected_location_ids": [
+            "loc_courtyard",
+            "loc_garden",
+            "loc_masterbed"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_ballroom",
+            "loc_bathmaster",
+            "loc_c12",
+            "loc_c14",
+            "loc_c7",
+            "loc_c9",
+            "loc_closete",
+            "loc_conservatory",
+            "loc_hall",
+            "loc_kitchen",
+            "loc_mineral"
+        ]
+    },
+    {
+        "location_id": "loc_c12",
+        "name": "Corridor 12",
+        "description": "The c12.",
+        "connected_location_ids": [
+            "loc_c13",
+            "loc_courtyard"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_ballroom",
+            "loc_c11",
+            "loc_c14",
+            "loc_c7",
+            "loc_c9",
+            "loc_closete",
+            "loc_conservatory",
+            "loc_hall",
+            "loc_kitchen",
+            "loc_mineral",
+            "loc_staff",
+            "loc_study"
+        ]
+    },
+    {
+        "location_id": "loc_c13",
+        "name": "Corridor 13",
+        "description": "The c13.",
+        "connected_location_ids": [
+            "loc_c12",
+            "loc_c14",
+            "loc_mineral",
+            "loc_staff",
+            "loc_study"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_conservatory",
+            "loc_courtyard",
+            "loc_hall"
+        ]
+    },
+    {
+        "location_id": "loc_c14",
+        "name": "Corridor 14",
+        "description": "The c14.",
+        "connected_location_ids": [
+            "loc_c13",
+            "loc_conservatory",
+            "loc_courtyard",
+            "loc_hall",
+            "loc_staff"
+        ],
+        "secret_connections": [],
+        "can_be_seen_from_ids": [],
+        "can_be_heard_from_ids": [
+            "loc_ballroom",
+            "loc_c11",
+            "loc_c12",
+            "loc_c7",
+            "loc_c9",
+            "loc_closete",
+            "loc_entrance",
+            "loc_kitchen",
+            "loc_library",
+            "loc_mineral",
+            "loc_study"
+        ]
+    }
+]
