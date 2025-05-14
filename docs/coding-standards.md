@@ -66,11 +66,12 @@ This document outlines the coding standards and best practices to be followed du
 
 ## 3. Pydantic Model Standards
 
--   **Location:** All core Pydantic data models for the application will reside in `src/mystery_ai/core/data_models.py`.
+-   **Location:** Core Pydantic data models for the foundational mystery generation reside in `src/mystery_ai/core/data_models.py`. Pydantic data models specific to the Branching Evidence System (e.g., `BranchingCaseContext` and its components) will reside in `src/mystery_ai/core/data_models_branching.py`.
 -   **Clarity:** Models should be clearly named (`PascalCase`) and fields should have descriptive names and type hints.
 -   **Field Descriptions:** Use `Field(description="...")` for all Pydantic model fields.
 -   **OpenAI Constraints:** Models used for `output_type` in agents must adhere to OpenAI's structured output limitations.
 -   **Defaults:** Use `default=...` or `default_factory=...` for optional fields. `default_factory=list` for mutable list defaults.
+-   **Model Configuration:** For top-level context models like `CaseContext` or `BranchingCaseContext` that aggregate many sub-models, consider using `model_config = {"extra": "ignore"}` to allow for graceful handling of unexpected fields from LLM responses or other sources.
 
 ## 4. Version Control (Git)
 
